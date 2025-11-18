@@ -1,15 +1,16 @@
 /**
- * 商品列表頁面樣式
- * Product List Page Styles
+ * 商品列表頁面樣式 - Gemini 風格
+ * Product List Page Styles - Gemini Design
  *
  * 教學重點 / Teaching Points:
  * 1. CSS Grid 佈局
  * 2. 響應式設計
- * 3. 卡片 hover 效果
+ * 3. Gemini 風格卡片
  * 4. 深淺主題支援
  */
 
 @use '@angular/material' as mat;
+@use '../../../../../../styles/theme' as theme;
 
 .product-list-page {
   padding: 2rem;
@@ -100,20 +101,21 @@
     margin-bottom: 2rem;
 
     /**
-     * 商品卡片
-     * Product card
+     * 商品卡片 - Gemini 風格
+     * Product card - Gemini style
      */
     .product-card {
+      @include theme.gemini-card;
       position: relative;
       cursor: pointer;
-      transition: all 0.3s ease;
       display: flex;
       flex-direction: column;
       height: 100%;
+      overflow: hidden;
 
       &:hover {
         transform: translateY(-4px);
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        box-shadow: var(--shadow-float);
 
         .product-overlay {
           opacity: 1;

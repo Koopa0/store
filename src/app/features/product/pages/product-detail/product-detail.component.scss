@@ -1,16 +1,17 @@
 /**
- * 商品詳情頁面樣式
- * Product Detail Page Styles
+ * 商品詳情頁面樣式 - Gemini 風格
+ * Product Detail Page Styles - Gemini Design
  *
  * 教學重點 / Teaching Points:
  * 1. 響應式佈局 (Responsive layout)
  * 2. CSS Grid 應用 (CSS Grid usage)
- * 3. Material Design 整合
+ * 3. Gemini 風格元件 (Gemini-styled components)
  * 4. 暗色主題支援 (Dark theme support)
- * 5. 動畫效果 (Animations)
+ * 5. 流暢動畫效果 (Smooth animations)
  */
 
 @use '@angular/material' as mat;
+@use '../../../../../../styles/theme' as theme;
 
 .product-detail-page {
   min-height: calc(100vh - 200px);
@@ -142,15 +143,14 @@
       margin-bottom: 3rem;
 
       /**
-       * 商品圖片區
-       * Product images section
+       * 商品圖片區 - Gemini 卡片樣式
+       * Product images section - Gemini card style
        */
       .product-images {
         .main-image {
+          @include theme.gemini-card;
           position: relative;
           width: 100%;
-          background: var(--surface);
-          border-radius: 12px;
           overflow: hidden;
           aspect-ratio: 1;
           display: flex;
@@ -161,7 +161,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.3s;
+            transition: transform var(--transition-normal);
           }
 
           &:hover .product-image {
@@ -425,32 +425,35 @@
         }
 
         /**
-         * 總計價格
-         * Total price
+         * 總計價格 - Gemini 卡片樣式
+         * Total price - Gemini card style
          */
         .total-price {
+          @include theme.gemini-card;
           display: flex;
           align-items: center;
           justify-content: space-between;
-          padding: 1rem;
-          background: var(--surface);
-          border-radius: 8px;
+          padding: 1.5rem;
 
           .label {
             color: var(--text-secondary);
             font-size: 1rem;
+            font-weight: 500;
           }
 
           .price {
-            color: var(--primary);
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             font-size: 1.75rem;
             font-weight: 700;
           }
         }
 
         /**
-         * 操作按鈕
-         * Action buttons
+         * 操作按鈕 - Gemini 按鈕樣式
+         * Action buttons - Gemini button style
          */
         .action-buttons {
           display: flex;
@@ -461,18 +464,45 @@
             height: 56px;
             font-size: 1rem;
             font-weight: 600;
+            border-radius: var(--radius-full);
+            transition: all var(--transition-fast);
 
             mat-icon {
               margin-right: 0.5rem;
             }
+
+            &:hover:not(:disabled) {
+              transform: translateY(-2px);
+              box-shadow: var(--shadow-lg);
+            }
+
+            &:active:not(:disabled) {
+              transform: translateY(0);
+            }
           }
 
           .add-to-cart-btn {
-            // 使用 accent 顏色
+            // Gemini accent 按鈕樣式
+            &:not(:disabled) {
+              background: linear-gradient(135deg, #26c6da 0%, #00acc1 100%);
+              color: white;
+
+              &:hover {
+                background: linear-gradient(135deg, #4dd0e1 0%, #26c6da 100%);
+              }
+            }
           }
 
           .buy-now-btn {
-            // 使用 primary 顏色
+            // Gemini primary 按鈕樣式（使用漸層）
+            &:not(:disabled) {
+              background: var(--primary-gradient);
+              color: white;
+
+              &:hover {
+                background: var(--primary-gradient-hover);
+              }
+            }
           }
         }
       }
