@@ -33,25 +33,17 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 // Services
 import { CartService } from '@features/cart/services/cart.service';
 import { OrderService } from '@features/order/services/order.service';
+import { PaymentService } from '@core/services/payment.service';
 import { NotificationService } from '@core/services/notification.service';
 
 // Models
 import { CreateOrderRequest, OrderAddress } from '@core/models/order.model';
 import { CartItem } from '@core/models/cart.model';
+import { PaymentMethod, PaymentRequest } from '@core/models/payment.model';
 
 // Pipes
 import { TranslateModule } from '@ngx-translate/core';
 import { CurrencyFormatPipe } from '@shared/pipes/currency-format.pipe';
-
-/**
- * 支付方式介面
- */
-interface PaymentMethod {
-  id: number;
-  name: string;
-  icon: string;
-  description: string;
-}
 
 @Component({
   selector: 'app-checkout',
@@ -81,6 +73,7 @@ export class CheckoutComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
   private readonly cartService = inject(CartService);
   private readonly orderService = inject(OrderService);
+  private readonly paymentService = inject(PaymentService);
   private readonly notificationService = inject(NotificationService);
 
   /**
@@ -113,34 +106,19 @@ export class CheckoutComponent implements OnInit {
   readonly processing = signal<boolean>(false);
 
   /**
-   * 支付方式列表（Mock）
+   * 支付處理狀態
    */
-  readonly paymentMethods: PaymentMethod[] = [
-    {
-      id: 1,
-      name: '信用卡',
-      icon: 'credit_card',
-      description: 'Visa, MasterCard, JCB',
-    },
-    {
-      id: 2,
-      name: 'PayPal',
-      icon: 'paypal',
-      description: '安全的線上支付',
-    },
-    {
-      id: 3,
-      name: '銀行轉帳',
-      icon: 'account_balance',
-      description: '轉帳後需人工確認',
-    },
-    {
-      id: 4,
-      name: '貨到付款',
-      icon: 'local_shipping',
-      description: '送達時付款',
-    },
-  ];
+  readonly paymentProcessing = this.paymentService.processing;
+
+  /**
+   * 處理階段（用於顯示當前處理步驟）
+   */
+  readonly processingStage = signal<'order' | 'payment' | 'complete'>('order');
+
+  /**
+   * 支付方式列表
+   */
+  readonly paymentMethods = signal<PaymentMethod[]>([]);
 
   /**
    * 表單群組
@@ -157,6 +135,31 @@ export class CheckoutComponent implements OnInit {
     }
 
     this.initializeForms();
+    this.loadPaymentMethods();
+  }
+
+  /**
+   * 載入支付方式列表
+   */
+  private loadPaymentMethods(): void {
+    this.paymentService
+      .getPaymentMethods()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (methods) => {
+          this.paymentMethods.set(methods);
+          // 設定預設支付方式
+          if (methods.length > 0) {
+            this.paymentForm.patchValue({
+              paymentMethodId: methods[0].id,
+            });
+          }
+        },
+        error: (error) => {
+          console.error('[Checkout] Failed to load payment methods:', error);
+          this.notificationService.error('載入支付方式失敗');
+        },
+      });
   }
 
   /**
@@ -182,7 +185,7 @@ export class CheckoutComponent implements OnInit {
   }
 
   /**
-   * 提交訂單
+   * 提交訂單並處理支付
    */
   submitOrder(): void {
     if (this.shippingForm.invalid || this.paymentForm.invalid) {
@@ -191,6 +194,7 @@ export class CheckoutComponent implements OnInit {
     }
 
     this.processing.set(true);
+    this.processingStage.set('order');
 
     const shippingAddress: OrderAddress = {
       recipientName: this.shippingForm.value.recipientName,
@@ -209,23 +213,77 @@ export class CheckoutComponent implements OnInit {
       customerNote: this.paymentForm.value.customerNote,
     };
 
+    // Step 1: 創建訂單
     this.orderService
       .createOrder(orderRequest)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (order) => {
-          this.processing.set(false);
+          console.log('[Checkout] Order created:', order);
           this.notificationService.success('訂單建立成功！');
+
+          // Step 2: 處理支付
+          this.processingStage.set('payment');
+          this.processPayment(order.id, this.totalAmount());
+        },
+        error: (error) => {
+          this.processing.set(false);
+          this.processingStage.set('order');
+          this.notificationService.error('訂單建立失敗: ' + error.message);
+        },
+      });
+  }
+
+  /**
+   * 處理支付
+   */
+  private processPayment(orderId: string, amount: number): void {
+    const paymentRequest: PaymentRequest = {
+      orderId,
+      paymentMethodId: this.paymentForm.value.paymentMethodId,
+      amount,
+      currency: 'TWD',
+      metadata: {
+        customerNote: this.paymentForm.value.customerNote,
+      },
+    };
+
+    this.paymentService
+      .processPayment(paymentRequest)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (result) => {
+          console.log('[Checkout] Payment successful:', result);
+          this.processing.set(false);
+          this.processingStage.set('complete');
+          this.notificationService.success('支付成功！');
 
           // 清空購物車
           this.cartService.clearCart();
 
-          // 導航到訂單確認頁
-          this.router.navigate(['/order-confirmation', order.orderNumber]);
+          // 延遲導航，讓用戶看到成功訊息
+          setTimeout(() => {
+            // 從 OrderService 取得當前訂單號碼
+            const currentOrder = this.orderService.currentOrder();
+            if (currentOrder) {
+              this.router.navigate(['/order-confirmation', currentOrder.orderNumber]);
+            } else {
+              // Fallback: 導航到訂單列表
+              this.router.navigate(['/orders']);
+            }
+          }, 1500);
         },
         error: (error) => {
           this.processing.set(false);
-          this.notificationService.error('訂單建立失敗: ' + error.message);
+          this.processingStage.set('payment');
+          this.notificationService.error('支付失敗: ' + error.message);
+
+          // TODO: 處理支付失敗後的訂單狀態
+          // 可以選擇：
+          // 1. 保留訂單為 "待付款" 狀態
+          // 2. 自動取消訂單
+          // 3. 提供重試支付選項
+          console.error('[Checkout] Payment failed:', error);
         },
       });
   }

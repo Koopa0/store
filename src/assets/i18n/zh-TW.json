@@ -462,5 +462,52 @@
     "phone_format": "請輸入正確的手機號碼格式 (例：0912345678)",
     "postal_code": "請輸入正確的郵遞區號 (3-5位數字)",
     "street_address": "街道地址至少需要5個字元"
+  },
+  "payment": {
+    "title": "支付",
+    "payment_method": "支付方式",
+    "payment_methods": "支付方式",
+    "select_payment_method": "選擇支付方式",
+    "credit_card": "信用卡",
+    "paypal": "PayPal",
+    "bank_transfer": "銀行轉帳",
+    "cash_on_delivery": "貨到付款",
+    "apple_pay": "Apple Pay",
+    "google_pay": "Google Pay",
+    "cryptocurrency": "加密貨幣",
+    "processing": {
+      "order": "正在建立訂單...",
+      "payment": "正在處理支付...",
+      "complete": "完成中..."
+    },
+    "status": {
+      "pending": "待支付",
+      "processing": "處理中",
+      "success": "支付成功",
+      "failed": "支付失敗",
+      "cancelled": "已取消",
+      "refunded": "已退款"
+    },
+    "success": "支付成功",
+    "failed": "支付失敗",
+    "cancelled": "支付已取消",
+    "amount": "支付金額",
+    "transaction_id": "交易編號",
+    "paid_at": "支付時間",
+    "retry": "重試支付",
+    "cancel": "取消支付",
+    "refund": "申請退款",
+    "refund_amount": "退款金額",
+    "refund_reason": "退款原因",
+    "refund_success": "退款成功",
+    "refund_failed": "退款失敗",
+    "error": {
+      "payment_failed": "支付失敗，請重試",
+      "invalid_method": "無效的支付方式",
+      "insufficient_funds": "餘額不足",
+      "card_declined": "卡片被拒絕",
+      "timeout": "支付超時",
+      "network_error": "網路錯誤，請檢查連線"
+    }
   }
 }

@@ -244,7 +244,7 @@
         <form [formGroup]="paymentForm" class="payment-form">
           <!-- 支付方式選擇 -->
           <mat-radio-group formControlName="paymentMethodId" class="payment-methods">
-            @for (method of paymentMethods; track method.id) {
+            @for (method of paymentMethods(); track method.id) {
               <mat-card class="payment-method-card">
                 <mat-radio-button [value]="method.id">
                   <div class="method-content">
@@ -347,7 +347,7 @@
             </mat-card-header>
             <mat-card-content>
               @if (paymentForm.valid) {
-                @for (method of paymentMethods; track method.id) {
+                @for (method of paymentMethods(); track method.id) {
                   @if (method.id === paymentForm.value.paymentMethodId) {
                     <div class="selected-payment">
                       <mat-icon>{{ method.icon }}</mat-icon>
@@ -422,7 +422,13 @@
           >
             @if (processing()) {
               <mat-spinner diameter="20"></mat-spinner>
-              <span>{{ 'checkout.processing' | translate }}</span>
+              @if (processingStage() === 'order') {
+                <span>{{ 'payment.processing.order' | translate }}</span>
+              } @else if (processingStage() === 'payment') {
+                <span>{{ 'payment.processing.payment' | translate }}</span>
+              } @else {
+                <span>{{ 'payment.processing.complete' | translate }}</span>
+              }
             } @else {
               <mat-icon>check_circle</mat-icon>
               <span>{{ 'checkout.submit_order' | translate }}</span>
