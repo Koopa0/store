@@ -33,7 +33,7 @@
               }
             ],
             "styles": [
-              "node_modules/material-icons/iconfont/material-icons.css",
+              "@fontsource/material-icons/index.css",
               "src/styles.scss"
             ]
           },
@@ -92,7 +92,7 @@
               }
             ],
             "styles": [
-              "node_modules/material-icons/iconfont/material-icons.css",
+              "@fontsource/material-icons/index.css",
               "src/styles.scss"
             ]
           }
