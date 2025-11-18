@@ -6,41 +6,218 @@
  * Displays detailed information for a single product
  *
  * 教學重點 / Teaching Points:
- * 1. 路由參數的接收
- * 2. 商品資訊展示
- * 3. 圖片輪播
- * 4. 商品規格選擇
- * 5. 購物車功能整合
+ * 1. 路由參數的接收 (Route parameter handling)
+ * 2. Signal-based 狀態管理 (Signal-based state management)
+ * 3. 圖片輪播 (Image carousel)
+ * 4. 商品數量選擇 (Quantity selection)
+ * 5. 錯誤處理 (Error handling)
  */
 
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ReactiveFormsModule, FormControl, Validators } from '@angular/forms';
+
+// Material Modules
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatBadgeModule } from '@angular/material/badge';
+
+// Services and Models
+import { ProductService } from '../../services/product.service';
+import { ProductListItem } from '@core/models/product.model';
+
+// Pipes
+import { TranslateModule } from '@ngx-translate/core';
+import { CurrencyFormatPipe } from '@shared/pipes/currency-format.pipe';
 
 @Component({
   selector: 'app-product-detail',
   standalone: true,
-  imports: [CommonModule],
-  template: `
-    <div class="product-detail-page">
-      <h1>商品詳情頁面（待開發）</h1>
-      <p>Product ID: {{ productId() }}</p>
-    </div>
-  `,
-  styles: [`
-    .product-detail-page {
-      padding: 2rem;
-    }
-  `],
+  imports: [
+    CommonModule,
+    RouterLink,
+    ReactiveFormsModule,
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    MatChipsModule,
+    MatDividerModule,
+    MatTabsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatProgressSpinnerModule,
+    MatBadgeModule,
+    TranslateModule,
+    CurrencyFormatPipe,
+  ],
+  templateUrl: './product-detail.component.html',
+  styleUrl: './product-detail.component.scss',
 })
 export class ProductDetailComponent implements OnInit {
+  /**
+   * 注入服務
+   * Inject services
+   */
   private readonly route = inject(ActivatedRoute);
-  public readonly productId = signal<string>('');
+  private readonly router = inject(Router);
+  private readonly productService = inject(ProductService);
 
+  /**
+   * 狀態 Signals
+   * State signals
+   */
+  public readonly product = signal<ProductListItem | null>(null);
+  public readonly loading = signal<boolean>(false);
+  public readonly error = signal<string | null>(null);
+  public readonly selectedImageIndex = signal<number>(0);
+
+  /**
+   * 表單控制項
+   * Form controls
+   */
+  public readonly quantityControl = new FormControl(1, [
+    Validators.required,
+    Validators.min(1),
+  ]);
+
+  /**
+   * 計算屬性
+   * Computed properties
+   */
+  public readonly selectedImage = computed(() => {
+    const prod = this.product();
+    if (!prod) return '';
+    return prod.primaryImageUrl;
+  });
+
+  public readonly totalPrice = computed(() => {
+    const prod = this.product();
+    const quantity = this.quantityControl.value || 1;
+    return prod ? prod.price * quantity : 0;
+  });
+
+  public readonly isInStock = computed(() => {
+    const prod = this.product();
+    return prod ? prod.stockQuantity > 0 : false;
+  });
+
+  public readonly hasDiscount = computed(() => {
+    const prod = this.product();
+    return prod && prod.comparePrice ? prod.comparePrice > prod.price : false;
+  });
+
+  public readonly discountPercentage = computed(() => {
+    const prod = this.product();
+    if (!prod || !prod.comparePrice) return 0;
+    return Math.round(
+      ((prod.comparePrice - prod.price) / prod.comparePrice) * 100
+    );
+  });
+
+  /**
+   * 元件初始化
+   * Component initialization
+   */
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
-      this.productId.set(id);
+      this.loadProduct(id);
+    } else {
+      this.error.set('Product ID not found');
     }
+  }
+
+  /**
+   * 載入商品資料
+   * Load product data
+   */
+  private loadProduct(id: string): void {
+    this.loading.set(true);
+    this.error.set(null);
+
+    this.productService.getProduct(id).subscribe({
+      next: (product) => {
+        this.product.set(product);
+        this.loading.set(false);
+      },
+      error: (err) => {
+        console.error('Failed to load product:', err);
+        this.error.set('Failed to load product. Please try again.');
+        this.loading.set(false);
+      },
+    });
+  }
+
+  /**
+   * 增加數量
+   * Increase quantity
+   */
+  increaseQuantity(): void {
+    const current = this.quantityControl.value || 1;
+    const prod = this.product();
+    if (prod && current < prod.stockQuantity) {
+      this.quantityControl.setValue(current + 1);
+    }
+  }
+
+  /**
+   * 減少數量
+   * Decrease quantity
+   */
+  decreaseQuantity(): void {
+    const current = this.quantityControl.value || 1;
+    if (current > 1) {
+      this.quantityControl.setValue(current - 1);
+    }
+  }
+
+  /**
+   * 加入購物車
+   * Add to cart
+   */
+  addToCart(): void {
+    const prod = this.product();
+    const quantity = this.quantityControl.value || 1;
+
+    if (prod) {
+      // TODO: 實作購物車服務
+      console.log('Add to cart:', {
+        product: prod,
+        quantity: quantity,
+      });
+    }
+  }
+
+  /**
+   * 立即購買
+   * Buy now
+   */
+  buyNow(): void {
+    const prod = this.product();
+    const quantity = this.quantityControl.value || 1;
+
+    if (prod) {
+      // TODO: 實作結帳流程
+      console.log('Buy now:', {
+        product: prod,
+        quantity: quantity,
+      });
+    }
+  }
+
+  /**
+   * 返回商品列表
+   * Go back to product list
+   */
+  goBack(): void {
+    this.router.navigate(['/products']);
   }
 }

@@ -1,0 +1,723 @@
+/**
+ * 商品詳情頁面樣式
+ * Product Detail Page Styles
+ *
+ * 教學重點 / Teaching Points:
+ * 1. 響應式佈局 (Responsive layout)
+ * 2. CSS Grid 應用 (CSS Grid usage)
+ * 3. Material Design 整合
+ * 4. 暗色主題支援 (Dark theme support)
+ * 5. 動畫效果 (Animations)
+ */
+
+@use '@angular/material' as mat;
+
+.product-detail-page {
+  min-height: calc(100vh - 200px);
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+
+  /**
+   * 載入動畫容器
+   * Loading spinner container
+   */
+  .loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+    gap: 1rem;
+
+    .loading-text {
+      color: var(--text-secondary);
+      font-size: 1rem;
+    }
+  }
+
+  /**
+   * 錯誤訊息容器
+   * Error message container
+   */
+  .error-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+    gap: 1rem;
+    text-align: center;
+
+    .error-icon {
+      font-size: 4rem;
+      width: 4rem;
+      height: 4rem;
+      color: var(--warn);
+    }
+
+    h2 {
+      margin: 0;
+      color: var(--text-primary);
+    }
+
+    p {
+      color: var(--text-secondary);
+      max-width: 500px;
+    }
+  }
+
+  /**
+   * 商品詳情內容
+   * Product detail content
+   */
+  .product-detail-content {
+    /**
+     * 返回按鈕
+     * Back button
+     */
+    .back-button-container {
+      margin-bottom: 1rem;
+
+      button {
+        color: var(--primary);
+
+        mat-icon {
+          margin-right: 0.5rem;
+        }
+      }
+    }
+
+    /**
+     * 麵包屑導航
+     * Breadcrumbs
+     */
+    .breadcrumbs {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      font-size: 0.875rem;
+
+      a {
+        color: var(--primary);
+        text-decoration: none;
+        transition: opacity 0.2s;
+
+        &:hover {
+          opacity: 0.7;
+        }
+      }
+
+      mat-icon {
+        font-size: 1rem;
+        width: 1rem;
+        height: 1rem;
+        color: var(--text-secondary);
+      }
+
+      span {
+        color: var(--text-secondary);
+
+        &.current {
+          color: var(--text-primary);
+          font-weight: 500;
+        }
+      }
+    }
+
+    mat-divider {
+      margin: 2rem 0;
+    }
+
+    /**
+     * 主要內容區
+     * Main content area
+     */
+    .product-main {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      margin-bottom: 3rem;
+
+      /**
+       * 商品圖片區
+       * Product images section
+       */
+      .product-images {
+        .main-image {
+          position: relative;
+          width: 100%;
+          background: var(--surface);
+          border-radius: 12px;
+          overflow: hidden;
+          aspect-ratio: 1;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          .product-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+          }
+
+          &:hover .product-image {
+            transform: scale(1.05);
+          }
+
+          /**
+           * 折扣標籤
+           * Discount badge
+           */
+          .discount-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--warn);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 1.125rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+          }
+
+          /**
+           * 精選標籤
+           * Featured badge
+           */
+          .featured-chip {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background: var(--accent);
+            color: white;
+            font-weight: 500;
+
+            mat-icon {
+              color: white;
+            }
+          }
+        }
+      }
+
+      /**
+       * 商品資訊區
+       * Product information section
+       */
+      .product-info {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+
+        /**
+         * 商品分類
+         * Product category
+         */
+        .product-category {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          color: var(--primary);
+          font-size: 0.875rem;
+          font-weight: 500;
+
+          mat-icon {
+            font-size: 1.25rem;
+            width: 1.25rem;
+            height: 1.25rem;
+          }
+        }
+
+        /**
+         * 商品名稱
+         * Product name
+         */
+        .product-name {
+          font-size: 2rem;
+          font-weight: 600;
+          margin: 0;
+          color: var(--text-primary);
+          line-height: 1.3;
+        }
+
+        /**
+         * 商品 SKU
+         * Product SKU
+         */
+        .product-sku {
+          display: flex;
+          gap: 0.5rem;
+          font-size: 0.875rem;
+
+          .label {
+            color: var(--text-secondary);
+          }
+
+          .value {
+            color: var(--text-primary);
+            font-family: monospace;
+          }
+        }
+
+        /**
+         * 商品中繼資訊
+         * Product meta information
+         */
+        .product-meta {
+          display: flex;
+          align-items: center;
+          gap: 1.5rem;
+
+          .rating {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+
+            .star-icon {
+              color: #ffc107;
+              font-size: 1.25rem;
+              width: 1.25rem;
+              height: 1.25rem;
+            }
+
+            .rating-value {
+              font-size: 1.125rem;
+              font-weight: 600;
+              color: var(--text-primary);
+            }
+
+            .review-count {
+              color: var(--text-secondary);
+              font-size: 0.875rem;
+            }
+          }
+
+          mat-divider {
+            height: 20px;
+          }
+
+          .sold-count {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+
+            mat-icon {
+              font-size: 1.25rem;
+              width: 1.25rem;
+              height: 1.25rem;
+            }
+          }
+        }
+
+        /**
+         * 商品摘要
+         * Product summary
+         */
+        .product-summary {
+          color: var(--text-secondary);
+          line-height: 1.6;
+          margin: 0;
+        }
+
+        /**
+         * 價格區段
+         * Price section
+         */
+        .price-section {
+          .price-label {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+          }
+
+          .price-container {
+            display: flex;
+            align-items: baseline;
+            gap: 1rem;
+
+            .compare-price {
+              color: var(--text-secondary);
+              text-decoration: line-through;
+              font-size: 1.25rem;
+            }
+
+            .current-price {
+              color: var(--primary);
+              font-size: 2.5rem;
+              font-weight: 700;
+            }
+          }
+        }
+
+        /**
+         * 庫存狀態
+         * Stock status
+         */
+        .stock-status {
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+
+          .label {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+          }
+
+          .in-stock,
+          .out-of-stock {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+
+            mat-icon {
+              font-size: 1.25rem;
+              width: 1.25rem;
+              height: 1.25rem;
+            }
+          }
+
+          .in-stock {
+            color: #4caf50;
+          }
+
+          .out-of-stock {
+            color: var(--warn);
+          }
+        }
+
+        /**
+         * 數量選擇器
+         * Quantity selector
+         */
+        .quantity-section {
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+
+          .label {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            min-width: 60px;
+          }
+
+          .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+
+            .quantity-input {
+              width: 80px;
+
+              input {
+                text-align: center;
+                font-size: 1.125rem;
+                font-weight: 600;
+              }
+            }
+          }
+        }
+
+        /**
+         * 總計價格
+         * Total price
+         */
+        .total-price {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 1rem;
+          background: var(--surface);
+          border-radius: 8px;
+
+          .label {
+            color: var(--text-secondary);
+            font-size: 1rem;
+          }
+
+          .price {
+            color: var(--primary);
+            font-size: 1.75rem;
+            font-weight: 700;
+          }
+        }
+
+        /**
+         * 操作按鈕
+         * Action buttons
+         */
+        .action-buttons {
+          display: flex;
+          gap: 1rem;
+
+          button {
+            flex: 1;
+            height: 56px;
+            font-size: 1rem;
+            font-weight: 600;
+
+            mat-icon {
+              margin-right: 0.5rem;
+            }
+          }
+
+          .add-to-cart-btn {
+            // 使用 accent 顏色
+          }
+
+          .buy-now-btn {
+            // 使用 primary 顏色
+          }
+        }
+      }
+    }
+
+    /**
+     * 商品詳細資訊標籤
+     * Product details tabs
+     */
+    .product-tabs {
+      margin-top: 3rem;
+
+      .tab-content {
+        padding: 2rem;
+
+        h3 {
+          font-size: 1.5rem;
+          font-weight: 600;
+          margin: 0 0 1.5rem 0;
+          color: var(--text-primary);
+        }
+
+        p {
+          color: var(--text-secondary);
+          line-height: 1.6;
+        }
+
+        .placeholder-text {
+          font-style: italic;
+          opacity: 0.7;
+        }
+
+        /**
+         * 規格表格
+         * Specifications table
+         */
+        .specifications-table {
+          width: 100%;
+          border-collapse: separate;
+          border-spacing: 0;
+
+          tr {
+            border-bottom: 1px solid var(--divider);
+
+            &:last-child {
+              border-bottom: none;
+            }
+
+            td {
+              padding: 1rem;
+
+              &.label {
+                color: var(--text-secondary);
+                font-weight: 500;
+                width: 200px;
+              }
+
+              &.value {
+                color: var(--text-primary);
+              }
+            }
+          }
+        }
+
+        /**
+         * 評價摘要
+         * Reviews summary
+         */
+        .reviews-summary {
+          .rating-overview {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            padding: 2rem;
+            background: var(--surface);
+            border-radius: 12px;
+
+            .rating-score {
+              font-size: 3rem;
+              font-weight: 700;
+              color: var(--text-primary);
+            }
+
+            .rating-stars {
+              display: flex;
+              gap: 0.25rem;
+
+              .star-icon {
+                color: #ffc107;
+                font-size: 1.5rem;
+                width: 1.5rem;
+                height: 1.5rem;
+              }
+            }
+
+            .review-count {
+              color: var(--text-secondary);
+              font-size: 0.875rem;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * 響應式設計 - 平板
+   * Responsive design - Tablet
+   */
+  @media (max-width: 960px) {
+    padding: 1.5rem;
+
+    .product-detail-content {
+      .product-main {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+
+        .product-info {
+          .product-name {
+            font-size: 1.75rem;
+          }
+
+          .price-section .price-container .current-price {
+            font-size: 2rem;
+          }
+
+          .action-buttons {
+            flex-direction: column;
+
+            button {
+              width: 100%;
+            }
+          }
+        }
+      }
+
+      .product-tabs .tab-content {
+        padding: 1.5rem;
+      }
+    }
+  }
+
+  /**
+   * 響應式設計 - 手機
+   * Responsive design - Mobile
+   */
+  @media (max-width: 600px) {
+    padding: 1rem;
+
+    .product-detail-content {
+      .breadcrumbs {
+        font-size: 0.75rem;
+
+        mat-icon {
+          font-size: 0.875rem;
+          width: 0.875rem;
+          height: 0.875rem;
+        }
+      }
+
+      .product-main {
+        gap: 1.5rem;
+
+        .product-info {
+          .product-name {
+            font-size: 1.5rem;
+          }
+
+          .product-meta {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+
+            mat-divider {
+              display: none;
+            }
+          }
+
+          .price-section .price-container {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.5rem;
+
+            .current-price {
+              font-size: 1.75rem;
+            }
+          }
+
+          .quantity-section {
+            flex-direction: column;
+            align-items: flex-start;
+          }
+
+          .total-price {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.5rem;
+          }
+        }
+      }
+
+      .product-tabs .tab-content {
+        padding: 1rem;
+
+        .specifications-table tr td {
+          padding: 0.75rem 0.5rem;
+
+          &.label {
+            width: 120px;
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
+ * 暗色主題支援
+ * Dark theme support
+ */
+@media (prefers-color-scheme: dark) {
+  .product-detail-page {
+    .product-detail-content {
+      .product-main {
+        .product-images .main-image {
+          background: rgba(255, 255, 255, 0.05);
+        }
+
+        .product-info {
+          .total-price {
+            background: rgba(255, 255, 255, 0.05);
+          }
+        }
+      }
+
+      .product-tabs .tab-content {
+        .reviews-summary .rating-overview {
+          background: rgba(255, 255, 255, 0.05);
+        }
+
+        .specifications-table tr {
+          border-bottom-color: rgba(255, 255, 255, 0.12);
+        }
+      }
+    }
+  }
+}

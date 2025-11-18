@@ -1,0 +1,290 @@
+<!--
+  商品詳情頁面
+  Product Detail Page
+
+  教學重點 / Teaching Points:
+  1. 響應式佈局設計
+  2. Material Tabs 使用
+  3. 條件渲染（@if）
+  4. 數量選擇器實作
+  5. 錯誤處理 UI
+-->
+
+<div class="product-detail-page">
+  <!-- 載入動畫 Loading Spinner -->
+  @if (loading()) {
+    <div class="loading-container">
+      <mat-spinner diameter="60"></mat-spinner>
+      <p class="loading-text">{{ 'common.loading' | translate }}</p>
+    </div>
+  }
+
+  <!-- 錯誤訊息 Error Message -->
+  @if (error() && !loading()) {
+    <div class="error-container">
+      <mat-icon class="error-icon">error</mat-icon>
+      <h2>{{ 'product.detail.error' | translate }}</h2>
+      <p>{{ error() }}</p>
+      <button mat-raised-button color="primary" (click)="goBack()">
+        {{ 'product.detail.backToList' | translate }}
+      </button>
+    </div>
+  }
+
+  <!-- 商品詳情內容 Product Detail Content -->
+  @if (product() && !loading() && !error()) {
+    <div class="product-detail-content">
+      <!-- 返回按鈕 Back Button -->
+      <div class="back-button-container">
+        <button mat-button (click)="goBack()">
+          <mat-icon>arrow_back</mat-icon>
+          {{ 'product.detail.backToList' | translate }}
+        </button>
+      </div>
+
+      <!-- 麵包屑 Breadcrumbs -->
+      <div class="breadcrumbs">
+        <a routerLink="/home">{{ 'common.home' | translate }}</a>
+        <mat-icon>chevron_right</mat-icon>
+        <a routerLink="/products">{{ 'product.list.title' | translate }}</a>
+        <mat-icon>chevron_right</mat-icon>
+        <span>{{ product()?.categoryName }}</span>
+        <mat-icon>chevron_right</mat-icon>
+        <span class="current">{{ product()?.name }}</span>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <!-- 主要內容區 Main Content Area -->
+      <div class="product-main">
+        <!-- 左側：商品圖片 Left: Product Images -->
+        <div class="product-images">
+          <div class="main-image">
+            <img
+              [src]="selectedImage()"
+              [alt]="product()?.name"
+              class="product-image"
+            />
+
+            <!-- 折扣標籤 Discount Badge -->
+            @if (hasDiscount()) {
+              <div class="discount-badge">
+                -{{ discountPercentage() }}%
+              </div>
+            }
+
+            <!-- 精選標籤 Featured Badge -->
+            @if (product()?.isFeatured) {
+              <mat-chip class="featured-chip">
+                <mat-icon>star</mat-icon>
+                {{ 'product.featured' | translate }}
+              </mat-chip>
+            }
+          </div>
+        </div>
+
+        <!-- 右側：商品資訊 Right: Product Information -->
+        <div class="product-info">
+          <!-- 商品分類 Product Category -->
+          <div class="product-category">
+            <mat-icon>category</mat-icon>
+            {{ product()?.categoryName }}
+          </div>
+
+          <!-- 商品名稱 Product Name -->
+          <h1 class="product-name">{{ product()?.name }}</h1>
+
+          <!-- 商品 SKU -->
+          <div class="product-sku">
+            <span class="label">{{ 'product.detail.sku' | translate }}:</span>
+            <span class="value">{{ product()?.sku }}</span>
+          </div>
+
+          <!-- 評分和銷量 Rating and Sales -->
+          <div class="product-meta">
+            <div class="rating">
+              <mat-icon class="star-icon">star</mat-icon>
+              <span class="rating-value">{{ product()?.ratingAverage }}</span>
+              <span class="review-count">({{ product()?.reviewCount }} {{ 'product.detail.reviews' | translate }})</span>
+            </div>
+            <mat-divider [vertical]="true"></mat-divider>
+            <div class="sold-count">
+              <mat-icon>shopping_bag</mat-icon>
+              <span>{{ product()?.totalSold }} {{ 'product.detail.sold' | translate }}</span>
+            </div>
+          </div>
+
+          <mat-divider></mat-divider>
+
+          <!-- 商品摘要 Product Summary -->
+          <p class="product-summary">{{ product()?.summary }}</p>
+
+          <mat-divider></mat-divider>
+
+          <!-- 價格資訊 Price Information -->
+          <div class="price-section">
+            <div class="price-label">{{ 'product.detail.price' | translate }}</div>
+            <div class="price-container">
+              @if (hasDiscount()) {
+                <span class="compare-price">
+                  {{ product()?.comparePrice | currencyFormat:'TWD':'symbol' }}
+                </span>
+              }
+              <span class="current-price">
+                {{ product()?.price | currencyFormat:'TWD':'symbol' }}
+              </span>
+            </div>
+          </div>
+
+          <mat-divider></mat-divider>
+
+          <!-- 庫存狀態 Stock Status -->
+          <div class="stock-status">
+            <span class="label">{{ 'product.detail.stock' | translate }}:</span>
+            @if (isInStock()) {
+              <span class="in-stock">
+                <mat-icon>check_circle</mat-icon>
+                {{ 'product.detail.inStock' | translate }} ({{ product()?.stockQuantity }})
+              </span>
+            } @else {
+              <span class="out-of-stock">
+                <mat-icon>cancel</mat-icon>
+                {{ 'product.detail.outOfStock' | translate }}
+              </span>
+            }
+          </div>
+
+          <mat-divider></mat-divider>
+
+          <!-- 數量選擇器 Quantity Selector -->
+          <div class="quantity-section">
+            <span class="label">{{ 'product.detail.quantity' | translate }}:</span>
+            <div class="quantity-controls">
+              <button
+                mat-icon-button
+                (click)="decreaseQuantity()"
+                [disabled]="(quantityControl.value || 1) <= 1"
+              >
+                <mat-icon>remove</mat-icon>
+              </button>
+              <mat-form-field class="quantity-input" appearance="outline">
+                <input
+                  matInput
+                  type="number"
+                  [formControl]="quantityControl"
+                  min="1"
+                  [max]="product()?.stockQuantity || 999"
+                />
+              </mat-form-field>
+              <button
+                mat-icon-button
+                (click)="increaseQuantity()"
+                [disabled]="(quantityControl.value || 1) >= (product()?.stockQuantity || 0)"
+              >
+                <mat-icon>add</mat-icon>
+              </button>
+            </div>
+          </div>
+
+          <!-- 總計價格 Total Price -->
+          <div class="total-price">
+            <span class="label">{{ 'product.detail.total' | translate }}:</span>
+            <span class="price">
+              {{ totalPrice() | currencyFormat:'TWD':'symbol' }}
+            </span>
+          </div>
+
+          <mat-divider></mat-divider>
+
+          <!-- 操作按鈕 Action Buttons -->
+          <div class="action-buttons">
+            <button
+              mat-raised-button
+              color="accent"
+              class="add-to-cart-btn"
+              (click)="addToCart()"
+              [disabled]="!isInStock()"
+            >
+              <mat-icon>shopping_cart</mat-icon>
+              {{ 'product.detail.addToCart' | translate }}
+            </button>
+            <button
+              mat-raised-button
+              color="primary"
+              class="buy-now-btn"
+              (click)="buyNow()"
+              [disabled]="!isInStock()"
+            >
+              <mat-icon>flash_on</mat-icon>
+              {{ 'product.detail.buyNow' | translate }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <!-- 商品詳細資訊標籤 Product Details Tabs -->
+      <mat-tab-group class="product-tabs">
+        <!-- 商品描述 Description Tab -->
+        <mat-tab [label]="'product.detail.tabs.description' | translate">
+          <div class="tab-content">
+            <h3>{{ 'product.detail.tabs.description' | translate }}</h3>
+            <p>{{ product()?.summary }}</p>
+            <p class="placeholder-text">
+              {{ 'product.detail.descriptionPlaceholder' | translate }}
+            </p>
+          </div>
+        </mat-tab>
+
+        <!-- 商品規格 Specifications Tab -->
+        <mat-tab [label]="'product.detail.tabs.specifications' | translate">
+          <div class="tab-content">
+            <h3>{{ 'product.detail.tabs.specifications' | translate }}</h3>
+            <table class="specifications-table">
+              <tr>
+                <td class="label">{{ 'product.detail.sku' | translate }}</td>
+                <td class="value">{{ product()?.sku }}</td>
+              </tr>
+              <tr>
+                <td class="label">{{ 'product.detail.category' | translate }}</td>
+                <td class="value">{{ product()?.categoryName }}</td>
+              </tr>
+              <tr>
+                <td class="label">{{ 'product.detail.brand' | translate }}</td>
+                <td class="value">{{ product()?.brandName }}</td>
+              </tr>
+              <tr>
+                <td class="label">{{ 'product.detail.stock' | translate }}</td>
+                <td class="value">{{ product()?.stockQuantity }}</td>
+              </tr>
+            </table>
+          </div>
+        </mat-tab>
+
+        <!-- 評價 Reviews Tab -->
+        <mat-tab [label]="'product.detail.tabs.reviews' | translate">
+          <div class="tab-content">
+            <h3>{{ 'product.detail.tabs.reviews' | translate }}</h3>
+            <div class="reviews-summary">
+              <div class="rating-overview">
+                <div class="rating-score">{{ product()?.ratingAverage }}</div>
+                <div class="rating-stars">
+                  <mat-icon class="star-icon">star</mat-icon>
+                  <mat-icon class="star-icon">star</mat-icon>
+                  <mat-icon class="star-icon">star</mat-icon>
+                  <mat-icon class="star-icon">star</mat-icon>
+                  <mat-icon class="star-icon">star_half</mat-icon>
+                </div>
+                <div class="review-count">{{ product()?.reviewCount }} {{ 'product.detail.reviews' | translate }}</div>
+              </div>
+            </div>
+            <p class="placeholder-text">
+              {{ 'product.detail.reviewsPlaceholder' | translate }}
+            </p>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+  }
+</div>
