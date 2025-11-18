@@ -140,6 +140,11 @@ $warn-color: mat.m2-get-color-from-palette($koopa-warn, 600);
  * This allows using var(--primary-color) in components
  */
 :root {
+  // 簡寫顏色變數 / Short color variables
+  --primary: #1e88e5;
+  --accent: #ffd740;
+  --warn: #f44336;
+
   // 主色 / Primary colors
   --primary-color: #{$primary-color};
   --primary-50: #e3f2fd;
@@ -203,6 +208,7 @@ $warn-color: mat.m2-get-color-from-palette($koopa-warn, 600);
   // 邊框色 / Border colors
   --border-color: #e0e0e0;
   --divider-color: rgba(0, 0, 0, 0.12);
+  --divider: rgba(0, 0, 0, 0.12);
 
   // 陰影 / Shadows
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
@@ -249,6 +255,7 @@ $warn-color: mat.m2-get-color-from-palette($koopa-warn, 600);
   // 邊框色 / Border colors
   --border-color: #616161;
   --divider-color: rgba(255, 255, 255, 0.12);
+  --divider: rgba(255, 255, 255, 0.12);
 
   // 陰影 / Shadows
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
