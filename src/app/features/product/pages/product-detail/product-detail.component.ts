@@ -32,6 +32,7 @@ import { MatBadgeModule } from '@angular/material/badge';
 
 // Services and Models
 import { ProductService } from '../../services/product.service';
+import { CartService } from '@features/cart/services/cart.service';
 import { ProductListItem } from '@core/models/product.model';
 
 // Pipes
@@ -69,6 +70,7 @@ export class ProductDetailComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly productService = inject(ProductService);
+  private readonly cartService = inject(CartService);
 
   /**
    * 狀態 Signals
@@ -188,10 +190,15 @@ export class ProductDetailComponent implements OnInit {
     const quantity = this.quantityControl.value || 1;
 
     if (prod) {
-      // TODO: 實作購物車服務
-      console.log('Add to cart:', {
-        product: prod,
-        quantity: quantity,
+      this.cartService.addToCart(prod, quantity).subscribe({
+        next: () => {
+          console.log('Added to cart successfully');
+          // TODO: 顯示成功訊息
+        },
+        error: (err) => {
+          console.error('Failed to add to cart:', err);
+          // TODO: 顯示錯誤訊息
+        },
       });
     }
   }
@@ -205,10 +212,16 @@ export class ProductDetailComponent implements OnInit {
     const quantity = this.quantityControl.value || 1;
 
     if (prod) {
-      // TODO: 實作結帳流程
-      console.log('Buy now:', {
-        product: prod,
-        quantity: quantity,
+      // 先加入購物車，然後導航到結帳頁面
+      this.cartService.addToCart(prod, quantity).subscribe({
+        next: () => {
+          // TODO: 導航到結帳頁面
+          this.router.navigate(['/cart']);
+        },
+        error: (err) => {
+          console.error('Failed to add to cart:', err);
+          // TODO: 顯示錯誤訊息
+        },
       });
     }
   }

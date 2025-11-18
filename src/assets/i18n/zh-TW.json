@@ -375,5 +375,23 @@
     "originalPrice": "原價",
     "discount": "折扣",
     "tag": "標籤"
+  },
+  "cart": {
+    "title": "購物車",
+    "empty": "購物車是空的",
+    "emptyDescription": "還沒有加入任何商品，快去逛逛吧！",
+    "items": "商品",
+    "clearCart": "清空購物車",
+    "continueShopping": "繼續購物",
+    "checkout": "前往結帳",
+    "outOfStock": "此商品已缺貨",
+    "priceChanged": "商品價格已變更",
+    "summary": {
+      "title": "訂單摘要",
+      "subtotal": "小計",
+      "tax": "稅額",
+      "shipping": "運費",
+      "total": "總計"
+    }
   }
 }

@@ -375,5 +375,23 @@
     "originalPrice": "Original Price",
     "discount": "Discount",
     "tag": "Tag"
+  },
+  "cart": {
+    "title": "Shopping Cart",
+    "empty": "Your cart is empty",
+    "emptyDescription": "You haven't added any products yet. Start shopping now!",
+    "items": "Items",
+    "clearCart": "Clear Cart",
+    "continueShopping": "Continue Shopping",
+    "checkout": "Proceed to Checkout",
+    "outOfStock": "This product is out of stock",
+    "priceChanged": "Product price has changed",
+    "summary": {
+      "title": "Order Summary",
+      "subtotal": "Subtotal",
+      "tax": "Tax",
+      "shipping": "Shipping",
+      "total": "Total"
+    }
   }
 }

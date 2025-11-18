@@ -1,0 +1,127 @@
+<!--
+  購物車頁面
+  Cart Page
+
+  教學重點: Material Table, 響應式設計, Signal 狀態管理
+-->
+
+<div class="cart-page">
+  <h1 class="page-title">{{ 'cart.title' | translate }}</h1>
+
+  @if (cartItems().length === 0) {
+    <!-- 空購物車 Empty Cart -->
+    <div class="empty-cart">
+      <mat-icon class="empty-icon">shopping_cart</mat-icon>
+      <h2>{{ 'cart.empty' | translate }}</h2>
+      <p>{{ 'cart.emptyDescription' | translate }}</p>
+      <button mat-raised-button color="primary" (click)="continueShopping()">
+        <mat-icon>shopping_bag</mat-icon>
+        {{ 'cart.continueShopping' | translate }}
+      </button>
+    </div>
+  } @else {
+    <!-- 購物車內容 Cart Content -->
+    <div class="cart-content">
+      <!-- 購物車項目列表 Cart Items List -->
+      <div class="cart-items">
+        <div class="items-header">
+          <h2>{{ 'cart.items' | translate }} ({{ itemsCount() }})</h2>
+          <button mat-button color="warn" (click)="clearCart()">
+            <mat-icon>delete</mat-icon>
+            {{ 'cart.clearCart' | translate }}
+          </button>
+        </div>
+
+        @for (item of cartItems(); track item.id) {
+          <mat-card class="cart-item">
+            <div class="item-image">
+              <img [src]="item.productImageUrl" [alt]="item.productName" />
+            </div>
+
+            <div class="item-details">
+              <h3 class="item-name" [routerLink]="['/products', item.productId]">
+                {{ item.productName }}
+              </h3>
+              <p class="item-sku">SKU: {{ item.productSku }}</p>
+
+              @if (isOutOfStock(item)) {
+                <p class="warning">{{ 'cart.outOfStock' | translate }}</p>
+              }
+              @if (hasPriceChanged(item)) {
+                <p class="info">{{ 'cart.priceChanged' | translate }}</p>
+              }
+            </div>
+
+            <div class="item-price">
+              <span class="price">{{ item.unitPrice | currencyFormat:'TWD':'symbol' }}</span>
+            </div>
+
+            <div class="item-quantity">
+              <button mat-icon-button (click)="decreaseQuantity(item)" [disabled]="item.quantity <= 1">
+                <mat-icon>remove</mat-icon>
+              </button>
+              <input
+                type="number"
+                class="quantity-input"
+                [value]="item.quantity"
+                (change)="updateQuantity(item, $event)"
+                min="1"
+                [max]="item.stockQuantity"
+              />
+              <button mat-icon-button (click)="increaseQuantity(item)" [disabled]="item.quantity >= item.stockQuantity">
+                <mat-icon>add</mat-icon>
+              </button>
+            </div>
+
+            <div class="item-subtotal">
+              <span class="subtotal">{{ item.subtotal | currencyFormat:'TWD':'symbol' }}</span>
+            </div>
+
+            <div class="item-actions">
+              <button mat-icon-button color="warn" (click)="removeItem(item)" [matTooltip]="'common.delete' | translate">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </mat-card>
+        }
+      </div>
+
+      <!-- 購物車摘要 Cart Summary -->
+      <mat-card class="cart-summary">
+        <h3>{{ 'cart.summary.title' | translate }}</h3>
+        <mat-divider></mat-divider>
+
+        <div class="summary-row">
+          <span>{{ 'cart.summary.subtotal' | translate }}</span>
+          <span>{{ subtotal() | currencyFormat:'TWD':'symbol' }}</span>
+        </div>
+
+        <div class="summary-row">
+          <span>{{ 'cart.summary.tax' | translate }}</span>
+          <span>{{ estimatedTax() | currencyFormat:'TWD':'symbol' }}</span>
+        </div>
+
+        <div class="summary-row">
+          <span>{{ 'cart.summary.shipping' | translate }}</span>
+          <span>{{ estimatedShipping() | currencyFormat:'TWD':'symbol' }}</span>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <div class="summary-row total">
+          <span>{{ 'cart.summary.total' | translate }}</span>
+          <span class="total-price">{{ estimatedTotal() | currencyFormat:'TWD':'symbol' }}</span>
+        </div>
+
+        <div class="summary-actions">
+          <button mat-stroked-button (click)="continueShopping()">
+            {{ 'cart.continueShopping' | translate }}
+          </button>
+          <button mat-raised-button color="primary" (click)="checkout()" [disabled]="itemsCount() === 0">
+            {{ 'cart.checkout' | translate }}
+          </button>
+        </div>
+      </mat-card>
+    </div>
+  }
+</div>

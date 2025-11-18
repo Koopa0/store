@@ -89,6 +89,21 @@ export const routes: Routes = [
   },
 
   /**
+   * 購物車路由
+   * Cart route
+   *
+   * 教學說明：購物車頁面
+   */
+  {
+    path: 'cart',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/cart/pages/cart/cart.component').then(
+        (m) => m.CartComponent
+      ),
+  },
+
+  /**
    * 管理後台路由（需要管理員權限）
    * Admin routes (requires ADMIN role)
    */
