@@ -30,7 +30,9 @@
     "required": "必填",
     "optional": "選填",
     "yes": "是",
-    "no": "否"
+    "no": "否",
+    "back_to_cart": "返回購物車",
+    "quantity": "數量"
   },
   "nav": {
     "products": "商品",
@@ -393,5 +395,54 @@
       "shipping": "運費",
       "total": "總計"
     }
+  },
+  "checkout": {
+    "title": "結帳",
+    "subtitle": "請填寫以下資訊完成訂單",
+    "empty_cart": "購物車是空的",
+    "subtotal": "商品小計",
+    "items_count": "商品數量",
+    "shipping_fee": "運費",
+    "tax": "稅額 (5%)",
+    "total": "訂單總額",
+    "free_shipping": "免運費",
+    "processing": "處理中...",
+    "submit_order": "確認訂單",
+    "step1": {
+      "title": "購物車確認",
+      "review_items": "確認購物車商品"
+    },
+    "step2": {
+      "title": "配送地址",
+      "shipping_address": "配送地址",
+      "recipient_info": "收件人資訊",
+      "recipient_name": "收件人姓名",
+      "recipient_phone": "收件人電話",
+      "address_info": "地址資訊",
+      "postal_code": "郵遞區號",
+      "city": "城市",
+      "district": "區域",
+      "street_address": "街道地址",
+      "building_floor": "大樓/樓層"
+    },
+    "step3": {
+      "title": "付款方式",
+      "payment_method": "選擇付款方式",
+      "customer_note": "訂單備註",
+      "note_placeholder": "請輸入備註（選填）"
+    },
+    "step4": {
+      "title": "訂單確認",
+      "review_order": "確認訂單資訊",
+      "shipping_info": "配送資訊",
+      "payment_info": "付款資訊",
+      "order_totals": "訂單金額"
+    }
+  },
+  "validation": {
+    "required": "此欄位為必填",
+    "phone_format": "請輸入正確的手機號碼格式 (例：0912345678)",
+    "postal_code": "請輸入正確的郵遞區號 (3-5位數字)",
+    "street_address": "街道地址至少需要5個字元"
   }
 }

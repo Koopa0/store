@@ -110,6 +110,9 @@ export class OrderService {
       .post<ApiResponse<OrderDetail>>(`${this.apiUrl}`, request)
       .pipe(
         map((response) => {
+          if (!response.data) {
+            throw new Error('No order data in response');
+          }
           const order = response.data;
           this.currentOrderSignal.set(order);
           this.loadingSignal.set(false);
@@ -152,6 +155,9 @@ export class OrderService {
 
     return this.http.get<ApiResponse<OrderDetail>>(`${this.apiUrl}/${orderId}`).pipe(
       map((response) => {
+        if (!response.data) {
+          throw new Error('No order data in response');
+        }
         const order = response.data;
         this.currentOrderSignal.set(order);
         this.loadingSignal.set(false);
@@ -196,6 +202,9 @@ export class OrderService {
       .get<ApiResponse<OrderDetail>>(`${this.apiUrl}/number/${orderNumber}`)
       .pipe(
         map((response) => {
+          if (!response.data) {
+            throw new Error('No order data in response');
+          }
           const order = response.data;
           this.currentOrderSignal.set(order);
           this.loadingSignal.set(false);
@@ -243,7 +252,10 @@ export class OrderService {
 
     return this.http
       .get<PaginatedResponse<Order>>(`${this.apiUrl}/user/${userId}`, {
-        params: { page: page.toString(), limit: limit.toString() },
+        params: {
+          page: page.toString(),
+          pageSize: limit.toString()
+        },
       })
       .pipe(
         map((response) => {
@@ -289,6 +301,9 @@ export class OrderService {
       .patch<ApiResponse<Order>>(`${this.apiUrl}/${orderId}/status`, { status })
       .pipe(
         map((response) => {
+          if (!response.data) {
+            throw new Error('No order data in response');
+          }
           const order = response.data;
           this.loadingSignal.set(false);
           return order;
@@ -332,6 +347,9 @@ export class OrderService {
       .post<ApiResponse<Order>>(`${this.apiUrl}/${orderId}/cancel`, { reason })
       .pipe(
         map((response) => {
+          if (!response.data) {
+            throw new Error('No order data in response');
+          }
           const order = response.data;
           this.loadingSignal.set(false);
           return order;
@@ -469,12 +487,12 @@ export class OrderService {
 
     return of({
       items,
-      total,
-      page,
-      limit,
+      totalItems: total,
+      currentPage: page,
+      pageSize: limit,
       totalPages: Math.ceil(total / limit),
-      hasNext: page * limit < total,
-      hasPrev: page > 1,
+      hasNextPage: page * limit < total,
+      hasPreviousPage: page > 1,
     });
   }
 
