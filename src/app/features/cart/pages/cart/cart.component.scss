@@ -92,6 +92,32 @@
             margin: 0;
           }
 
+          .variant-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+
+            .variant-item {
+              display: inline-flex;
+              align-items: center;
+              gap: 0.25rem;
+              padding: 0.25rem 0.75rem;
+              background-color: var(--surface-variant, #f5f5f5);
+              border-radius: var(--radius-full, 16px);
+              font-size: 0.875rem;
+
+              .variant-label {
+                color: var(--text-secondary);
+                font-weight: 500;
+              }
+
+              .variant-value {
+                color: var(--text-primary);
+              }
+            }
+          }
+
           .warning {
             color: var(--warn);
             margin: 0.5rem 0 0 0;

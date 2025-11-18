@@ -63,6 +63,16 @@
                   <div class="product-info">
                     <span class="product-name">{{ item.productSnapshot.name }}</span>
                     <span class="product-sku">SKU: {{ item.productSnapshot.sku }}</span>
+                    @if (item.productSnapshot.attributes) {
+                      <div class="variant-info">
+                        @for (attr of getVariantAttributesArray(item.productSnapshot.attributes); track attr.key) {
+                          <span class="variant-item">
+                            <span class="variant-label">{{ attr.key }}:</span>
+                            <span class="variant-value">{{ attr.value }}</span>
+                          </span>
+                        }
+                      </div>
+                    }
                   </div>
                 </div>
               </td>

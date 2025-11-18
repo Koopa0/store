@@ -242,4 +242,12 @@ export class CartComponent implements OnInit {
       ((item.currentPrice - item.unitPrice) / item.currentPrice) * 100
     );
   }
+
+  /**
+   * 將變體屬性物件轉換為陣列
+   * Convert variant attributes object to array
+   */
+  getVariantAttributesArray(attributes: Record<string, any>): { key: string; value: any }[] {
+    return Object.entries(attributes).map(([key, value]) => ({ key, value }));
+  }
 }

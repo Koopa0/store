@@ -274,10 +274,8 @@ export class ProductDetailComponent implements OnInit {
     }
 
     if (prod) {
-      // TODO: 當 CartService 完整支援變體後，傳遞 variantId
-      // this.cartService.addToCart(prod, quantity, variant?.variantId)
       this.cartService
-        .addToCart(prod, quantity)
+        .addToCart(prod, quantity, variant?.variantId, variant?.attributes)
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe({
           next: () => {
@@ -315,9 +313,8 @@ export class ProductDetailComponent implements OnInit {
 
     if (prod) {
       // 先加入購物車，然後導航到結帳頁面
-      // TODO: 當 CartService 完整支援變體後，傳遞 variantId
       this.cartService
-        .addToCart(prod, quantity)
+        .addToCart(prod, quantity, variant?.variantId, variant?.attributes)
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe({
           next: () => {

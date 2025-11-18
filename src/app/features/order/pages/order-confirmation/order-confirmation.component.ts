@@ -154,4 +154,12 @@ export class OrderConfirmationComponent implements OnInit {
     };
     return statusMap[status] || status;
   }
+
+  /**
+   * 將變體屬性物件轉換為陣列
+   * Convert variant attributes object to array
+   */
+  getVariantAttributesArray(attributes: Record<string, any>): { key: string; value: any }[] {
+    return Object.entries(attributes).map(([key, value]) => ({ key, value }));
+  }
 }
