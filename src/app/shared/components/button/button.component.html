@@ -1,0 +1,221 @@
+<!--
+  自訂按鈕模板
+  Custom Button Template
+
+  教學重點 / Teaching Points:
+  1. ngSwitch 結構指令
+  2. 內容投影 ng-content
+  3. 條件渲染 *ngIf
+  4. 動態屬性綁定
+  5. 事件綁定
+-->
+
+<ng-container [ngSwitch]="variant">
+  <!-- 基本按鈕 Basic Button -->
+<button
+  *ngSwitchCase="'basic'"
+  mat-button
+  [type]="type"
+  [color]="color"
+  [disabled]="disabled || loading"
+  [class]="buttonClass"
+  (click)="onButtonClick($event)"
+>
+  <span class="app-button__content">
+    <!-- 載入動畫 Loading Spinner -->
+    <mat-spinner
+      *ngIf="loading"
+      [diameter]="spinnerDiameter"
+      class="app-button__spinner"
+    ></mat-spinner>
+
+    <!-- 左側圖標 Left Icon -->
+    <mat-icon *ngIf="!loading && icon && iconPosition === 'left'" class="app-button__icon app-button__icon--left">
+      {{ icon }}
+    </mat-icon>
+
+    <!-- 按鈕文字 Button Text -->
+    <span *ngIf="!isIconButton" class="app-button__text">
+      <ng-content></ng-content>
+    </span>
+
+    <!-- 右側圖標 Right Icon -->
+    <mat-icon *ngIf="!loading && icon && iconPosition === 'right'" class="app-button__icon app-button__icon--right">
+      {{ icon }}
+    </mat-icon>
+
+    <!-- 圖標按鈕內容 Icon Button Content -->
+    <mat-icon *ngIf="!loading && isIconButton && icon">
+      {{ icon }}
+    </mat-icon>
+  </span>
+</button>
+
+<!-- 凸起按鈕 Raised Button -->
+<button
+  *ngSwitchCase="'raised'"
+  mat-raised-button
+  [type]="type"
+  [color]="color"
+  [disabled]="disabled || loading"
+  [class]="buttonClass"
+  (click)="onButtonClick($event)"
+>
+  <span class="app-button__content">
+    <mat-spinner
+      *ngIf="loading"
+      [diameter]="spinnerDiameter"
+      class="app-button__spinner"
+    ></mat-spinner>
+
+    <mat-icon *ngIf="!loading && icon && iconPosition === 'left'" class="app-button__icon app-button__icon--left">
+      {{ icon }}
+    </mat-icon>
+
+    <span *ngIf="!isIconButton" class="app-button__text">
+      <ng-content></ng-content>
+    </span>
+
+    <mat-icon *ngIf="!loading && icon && iconPosition === 'right'" class="app-button__icon app-button__icon--right">
+      {{ icon }}
+    </mat-icon>
+
+    <mat-icon *ngIf="!loading && isIconButton && icon">
+      {{ icon }}
+    </mat-icon>
+  </span>
+</button>
+
+<!-- 扁平按鈕 Flat Button -->
+<button
+  *ngSwitchCase="'flat'"
+  mat-flat-button
+  [type]="type"
+  [color]="color"
+  [disabled]="disabled || loading"
+  [class]="buttonClass"
+  (click)="onButtonClick($event)"
+>
+  <span class="app-button__content">
+    <mat-spinner
+      *ngIf="loading"
+      [diameter]="spinnerDiameter"
+      class="app-button__spinner"
+    ></mat-spinner>
+
+    <mat-icon *ngIf="!loading && icon && iconPosition === 'left'" class="app-button__icon app-button__icon--left">
+      {{ icon }}
+    </mat-icon>
+
+    <span *ngIf="!isIconButton" class="app-button__text">
+      <ng-content></ng-content>
+    </span>
+
+    <mat-icon *ngIf="!loading && icon && iconPosition === 'right'" class="app-button__icon app-button__icon--right">
+      {{ icon }}
+    </mat-icon>
+
+    <mat-icon *ngIf="!loading && isIconButton && icon">
+      {{ icon }}
+    </mat-icon>
+  </span>
+</button>
+
+<!-- 線框按鈕 Stroked Button -->
+<button
+  *ngSwitchCase="'stroked'"
+  mat-stroked-button
+  [type]="type"
+  [color]="color"
+  [disabled]="disabled || loading"
+  [class]="buttonClass"
+  (click)="onButtonClick($event)"
+>
+  <span class="app-button__content">
+    <mat-spinner
+      *ngIf="loading"
+      [diameter]="spinnerDiameter"
+      class="app-button__spinner"
+    ></mat-spinner>
+
+    <mat-icon *ngIf="!loading && icon && iconPosition === 'left'" class="app-button__icon app-button__icon--left">
+      {{ icon }}
+    </mat-icon>
+
+    <span *ngIf="!isIconButton" class="app-button__text">
+      <ng-content></ng-content>
+    </span>
+
+    <mat-icon *ngIf="!loading && icon && iconPosition === 'right'" class="app-button__icon app-button__icon--right">
+      {{ icon }}
+    </mat-icon>
+
+    <mat-icon *ngIf="!loading && isIconButton && icon">
+      {{ icon }}
+    </mat-icon>
+  </span>
+</button>
+
+<!-- 圖標按鈕 Icon Button -->
+<button
+  *ngSwitchCase="'icon'"
+  mat-icon-button
+  [type]="type"
+  [color]="color"
+  [disabled]="disabled || loading"
+  [class]="buttonClass"
+  (click)="onButtonClick($event)"
+>
+  <mat-spinner
+    *ngIf="loading"
+    [diameter]="spinnerDiameter"
+    class="app-button__spinner"
+  ></mat-spinner>
+
+  <mat-icon *ngIf="!loading && icon">
+    {{ icon }}
+  </mat-icon>
+</button>
+
+<!-- 浮動動作按鈕 FAB -->
+<button
+  *ngSwitchCase="'fab'"
+  mat-fab
+  [type]="type"
+  [color]="color"
+  [disabled]="disabled || loading"
+  [class]="buttonClass"
+  (click)="onButtonClick($event)"
+>
+  <mat-spinner
+    *ngIf="loading"
+    [diameter]="spinnerDiameter"
+    class="app-button__spinner"
+  ></mat-spinner>
+
+  <mat-icon *ngIf="!loading && icon">
+    {{ icon }}
+  </mat-icon>
+</button>
+
+<!-- 小型浮動動作按鈕 Mini FAB -->
+<button
+  *ngSwitchCase="'mini-fab'"
+  mat-mini-fab
+  [type]="type"
+  [color]="color"
+  [disabled]="disabled || loading"
+  [class]="buttonClass"
+  (click)="onButtonClick($event)"
+>
+  <mat-spinner
+    *ngIf="loading"
+    [diameter]="spinnerDiameter"
+    class="app-button__spinner"
+  ></mat-spinner>
+
+  <mat-icon *ngIf="!loading && icon">
+    {{ icon }}
+  </mat-icon>
+</button>
+</ng-container>

@@ -1,0 +1,274 @@
+/**
+ * 按鈕元件樣式
+ * Button Component Styles
+ *
+ * 教學重點 / Teaching Points:
+ * 1. BEM 命名規範
+ * 2. CSS 變數的使用
+ * 3. 響應式設計
+ * 4. 狀態樣式
+ */
+
+@use '@angular/material' as mat;
+
+/**
+ * 按鈕基礎樣式
+ * Button base styles
+ */
+.app-button {
+  position: relative;
+  transition: all 0.3s ease;
+
+  /**
+   * 按鈕內容容器
+   * Button content container
+   *
+   * 教學說明：使用 flexbox 進行佈局
+   */
+  &__content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  /**
+   * 按鈕文字
+   * Button text
+   */
+  &__text {
+    line-height: 1;
+  }
+
+  /**
+   * 按鈕圖標
+   * Button icon
+   */
+  &__icon {
+    display: flex;
+    align-items: center;
+    font-size: 1.25rem;
+    width: 1.25rem;
+    height: 1.25rem;
+
+    &--left {
+      margin-right: 0.25rem;
+    }
+
+    &--right {
+      margin-left: 0.25rem;
+    }
+  }
+
+  /**
+   * 載入動畫
+   * Loading spinner
+   */
+  &__spinner {
+    ::ng-deep {
+      circle {
+        stroke: currentColor;
+      }
+    }
+  }
+
+  /**
+   * 按鈕大小變體
+   * Button size variants
+   *
+   * 教學說明：
+   * 使用 BEM modifier 實現不同尺寸
+   */
+
+  // 小型按鈕
+  &--small {
+    font-size: 0.875rem;
+    padding: 0.25rem 0.75rem;
+    min-height: 32px;
+
+    .app-button__icon {
+      font-size: 1rem;
+      width: 1rem;
+      height: 1rem;
+    }
+  }
+
+  // 中型按鈕（預設）
+  &--medium {
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    min-height: 40px;
+  }
+
+  // 大型按鈕
+  &--large {
+    font-size: 1.125rem;
+    padding: 0.75rem 1.5rem;
+    min-height: 48px;
+
+    .app-button__icon {
+      font-size: 1.5rem;
+      width: 1.5rem;
+      height: 1.5rem;
+    }
+  }
+
+  /**
+   * 全寬按鈕
+   * Full width button
+   */
+  &--full-width {
+    width: 100%;
+  }
+
+  /**
+   * 載入狀態
+   * Loading state
+   *
+   * 教學說明：載入時調整不透明度
+   */
+  &:has(.app-button__spinner) {
+    .app-button__text,
+    .app-button__icon {
+      opacity: 0;
+    }
+  }
+
+  /**
+   * 禁用狀態
+   * Disabled state
+   */
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  /**
+   * Hover 狀態
+   * Hover state
+   */
+  &:not(:disabled):hover {
+    transform: translateY(-1px);
+  }
+
+  /**
+   * Active 狀態
+   * Active state
+   */
+  &:not(:disabled):active {
+    transform: translateY(0);
+  }
+}
+
+/**
+ * 圖標按鈕樣式
+ * Icon button styles
+ */
+button[mat-icon-button],
+button[mat-fab],
+button[mat-mini-fab] {
+  &.app-button {
+    &--small {
+      width: 32px;
+      height: 32px;
+    }
+
+    &--medium {
+      width: 40px;
+      height: 40px;
+    }
+
+    &--large {
+      width: 48px;
+      height: 48px;
+    }
+  }
+}
+
+/**
+ * FAB 按鈕樣式
+ * FAB button styles
+ */
+button[mat-fab] {
+  &.app-button {
+    &--small {
+      width: 40px;
+      height: 40px;
+    }
+
+    &--medium {
+      width: 56px;
+      height: 56px;
+    }
+
+    &--large {
+      width: 64px;
+      height: 64px;
+    }
+  }
+}
+
+/**
+ * Mini FAB 按鈕樣式
+ * Mini FAB button styles
+ */
+button[mat-mini-fab] {
+  &.app-button {
+    &--small {
+      width: 32px;
+      height: 32px;
+    }
+
+    &--medium {
+      width: 40px;
+      height: 40px;
+    }
+
+    &--large {
+      width: 48px;
+      height: 48px;
+    }
+  }
+}
+
+/**
+ * 響應式設計
+ * Responsive design
+ */
+@media (max-width: 600px) {
+  .app-button {
+    // 在小螢幕上，所有按鈕稍微小一點
+    &--large {
+      font-size: 1rem;
+      padding: 0.625rem 1.25rem;
+      min-height: 44px;
+    }
+  }
+}
+
+/**
+ * 深色主題調整
+ * Dark theme adjustments
+ */
+@media (prefers-color-scheme: dark) {
+  .app-button {
+    &:not(:disabled):hover {
+      // 深色模式下 hover 效果更明顯
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+  }
+}
+
+/**
+ * 無障礙增強
+ * Accessibility enhancements
+ *
+ * 教學說明：
+ * 為使用鍵盤導航的用戶提供更明顯的焦點指示
+ */
+.app-button {
+  &:focus-visible {
+    outline: 2px solid var(--primary-color, #1976d2);
+    outline-offset: 2px;
+  }
+}

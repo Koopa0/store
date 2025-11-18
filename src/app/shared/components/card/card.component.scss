@@ -1,0 +1,278 @@
+/**
+ * 卡片元件樣式
+ * Card Component Styles
+ *
+ * 教學重點 / Teaching Points:
+ * 1. Material Card 樣式覆寫
+ * 2. 卡片變體實現
+ * 3. 互動狀態處理
+ * 4. 響應式設計
+ */
+
+@use '@angular/material' as mat;
+
+/**
+ * 卡片基礎樣式
+ * Card base styles
+ */
+.app-card {
+  position: relative;
+  transition: all 0.3s ease;
+
+  /**
+   * 卡片頭部
+   * Card header
+   */
+  &__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+
+    &-content {
+      flex: 1;
+    }
+
+    &-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+  }
+
+  /**
+   * 卡片標題
+   * Card title
+   */
+  &__title {
+    font-size: 1.25rem;
+    font-weight: 500;
+    margin: 0;
+  }
+
+  /**
+   * 卡片副標題
+   * Card subtitle
+   */
+  &__subtitle {
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+    opacity: 0.7;
+  }
+
+  /**
+   * 卡片圖片
+   * Card image
+   */
+  &__image {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
+
+  /**
+   * 卡片內容
+   * Card content
+   */
+  &__content {
+    padding: 1rem;
+  }
+
+  /**
+   * 卡片動作區
+   * Card actions
+   */
+  &__actions {
+    padding: 0.5rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    // 隱藏空的動作區
+    &:empty {
+      display: none;
+    }
+  }
+
+  /**
+   * 卡片頁尾
+   * Card footer
+   */
+  &__footer {
+    padding: 0.5rem 1rem;
+
+    // 隱藏空的頁尾
+    &:empty {
+      display: none;
+    }
+  }
+
+  /**
+   * 卡片變體 - 預設
+   * Card variant - default
+   */
+  &--default {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  /**
+   * 卡片變體 - 線框
+   * Card variant - outlined
+   */
+  &--outlined {
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    box-shadow: none;
+  }
+
+  /**
+   * 卡片變體 - 凸起
+   * Card variant - elevated
+   */
+  &--elevated {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  /**
+   * 可點擊卡片
+   * Clickable card
+   *
+   * 教學說明：
+   * 為可點擊的卡片添加 hover 效果和游標樣式
+   */
+  &--clickable {
+    cursor: pointer;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+
+  /**
+   * 無內邊距卡片
+   * No padding card
+   */
+  &--no-padding {
+    .app-card__content {
+      padding: 0;
+    }
+  }
+}
+
+/**
+ * Material Card 覆寫
+ * Material Card overrides
+ *
+ * 教學說明：
+ * 使用 ::ng-deep 覆寫 Material 元件的預設樣式
+ * 注意：::ng-deep 已被廢棄，但目前仍是覆寫 Material 樣式的標準方式
+ */
+.app-card {
+  ::ng-deep {
+    // 移除預設的 padding
+    mat-card-header {
+      margin-bottom: 0;
+    }
+
+    // 調整內容區域的 padding
+    mat-card-content {
+      margin-bottom: 0;
+    }
+
+    // 調整動作區域的樣式
+    mat-card-actions {
+      margin: 0;
+      padding: 0;
+    }
+
+    // 調整頁尾的樣式
+    mat-card-footer {
+      margin: 0;
+    }
+  }
+}
+
+/**
+ * 響應式設計
+ * Responsive design
+ */
+@media (max-width: 600px) {
+  .app-card {
+    &__content {
+      padding: 0.75rem;
+    }
+
+    &__title {
+      font-size: 1.125rem;
+    }
+
+    &__subtitle {
+      font-size: 0.8125rem;
+    }
+
+    &__actions,
+    &__footer {
+      padding: 0.5rem 0.75rem;
+    }
+  }
+}
+
+/**
+ * 深色主題調整
+ * Dark theme adjustments
+ */
+@media (prefers-color-scheme: dark) {
+  .app-card {
+    &--default {
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    &--outlined {
+      border-color: rgba(255, 255, 255, 0.12);
+    }
+
+    &--elevated {
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    }
+
+    &--clickable:hover {
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+    }
+  }
+}
+
+/**
+ * 無障礙增強
+ * Accessibility enhancements
+ */
+.app-card {
+  &--clickable {
+    &:focus-visible {
+      outline: 2px solid var(--primary-color, #1976d2);
+      outline-offset: 2px;
+    }
+  }
+}
+
+/**
+ * 卡片動畫
+ * Card animations
+ */
+@keyframes cardEnter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.app-card {
+  animation: cardEnter 0.3s ease;
+}

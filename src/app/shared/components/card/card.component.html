@@ -1,0 +1,61 @@
+<!--
+  卡片元件模板
+  Card Component Template
+
+  教學重點 / Teaching Points:
+  1. 多插槽內容投影
+  2. 條件渲染
+  3. 動態 CSS 類別
+  4. Material Card 的使用
+-->
+
+<mat-card [class]="cardClass" (click)="onCardClick($event)">
+  <!-- 卡片圖片 Card Image -->
+  <mat-card-header *ngIf="imageUrl">
+    <img
+      mat-card-image
+      [src]="imageUrl"
+      [alt]="imageAlt"
+      class="app-card__image"
+    />
+  </mat-card-header>
+
+  <!-- 卡片頭部 Card Header -->
+  <mat-card-header *ngIf="showHeader" class="app-card__header">
+    <!-- 自訂頭部內容 Custom Header Content -->
+    <ng-content select="[cardHeader]"></ng-content>
+
+    <!-- 預設頭部內容 Default Header Content -->
+    <div *ngIf="title || subtitle" class="app-card__header-content">
+      <mat-card-title *ngIf="title" class="app-card__title">
+        {{ title }}
+      </mat-card-title>
+      <mat-card-subtitle *ngIf="subtitle" class="app-card__subtitle">
+        {{ subtitle }}
+      </mat-card-subtitle>
+    </div>
+
+    <!-- 頭部動作區 Header Actions -->
+    <div class="app-card__header-actions">
+      <ng-content select="[cardHeaderActions]"></ng-content>
+    </div>
+  </mat-card-header>
+
+  <!-- 分隔線 Divider -->
+  <mat-divider *ngIf="showDivider && showHeader"></mat-divider>
+
+  <!-- 卡片內容 Card Content -->
+  <mat-card-content class="app-card__content">
+    <ng-content></ng-content>
+  </mat-card-content>
+
+  <!-- 卡片動作區 Card Actions -->
+  <mat-card-actions class="app-card__actions">
+    <ng-content select="[cardActions]"></ng-content>
+  </mat-card-actions>
+
+  <!-- 卡片頁尾 Card Footer -->
+  <mat-card-footer class="app-card__footer">
+    <ng-content select="[cardFooter]"></ng-content>
+  </mat-card-footer>
+</mat-card>
