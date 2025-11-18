@@ -140,13 +140,25 @@ export class AuthService {
     /**
      * 監聽用戶變更，自動儲存到 localStorage
      * Watch user changes and auto-save to localStorage
+     *
+     * 使用 allowSignalWrites 避免在 effect 中寫入 signal
      */
     effect(() => {
       const user = this.currentUserSignal();
+
+      // 使用 untracked 讀取當前 storage 狀態，避免不必要的依賴
+      const currentStoredUser = this.storageService.get<User>(STORAGE_KEYS.USER_INFO);
+
       if (user) {
-        this.storageService.set(STORAGE_KEYS.USER_INFO, user);
+        // 只有當用戶資料真的改變時才寫入
+        if (JSON.stringify(currentStoredUser) !== JSON.stringify(user)) {
+          this.storageService.set(STORAGE_KEYS.USER_INFO, user);
+        }
       } else {
-        this.storageService.remove(STORAGE_KEYS.USER_INFO);
+        // 只有當 storage 中有資料時才移除
+        if (currentStoredUser) {
+          this.storageService.remove(STORAGE_KEYS.USER_INFO);
+        }
       }
     });
 
@@ -385,8 +397,16 @@ export class AuthService {
       this.startRefreshTokenTimer();
       console.log('[AuthService] User loaded from storage:', user.email);
     } else {
-      // Token 無效，清除資料
-      this.logout();
+      // Token 無效或不存在，僅清除資料，不導航
+      // 避免在應用初始化時觸發路由跳轉
+      if (user || token) {
+        console.log('[AuthService] Invalid or expired token, clearing data');
+        this.storageService.remove(STORAGE_KEYS.ACCESS_TOKEN);
+        this.storageService.remove(STORAGE_KEYS.REFRESH_TOKEN);
+        this.storageService.remove(STORAGE_KEYS.USER_INFO);
+      }
+      this.currentUserSignal.set(null);
+      this.stopRefreshTokenTimer();
     }
   }
 

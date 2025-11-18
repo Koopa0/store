@@ -129,9 +129,15 @@ export class CartService {
 
     // 當購物車變更時，儲存到 LocalStorage
     // Save to LocalStorage when cart changes
+    // 加入條件檢查避免不必要的寫入
     effect(() => {
       const items = this.cartItemsSignal();
-      this.storage.set('cart_items', items);
+      const currentStored = this.storage.get<CartItemDetail[]>('cart_items') || [];
+
+      // 只有當購物車真的改變時才寫入
+      if (JSON.stringify(currentStored) !== JSON.stringify(items)) {
+        this.storage.set('cart_items', items);
+      }
     });
   }
 
