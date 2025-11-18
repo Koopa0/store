@@ -1,0 +1,119 @@
+<h2 mat-dialog-title>{{ getDialogTitle() }}</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="addressForm" class="address-form">
+    <!-- 地址標籤 -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>地址類型</mat-label>
+      <mat-select formControlName="label">
+        @for (option of labelOptions; track option.value) {
+          <mat-option [value]="option.value">{{ option.label }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <!-- 自定義標籤（當選擇「其他」時顯示） -->
+    @if (addressForm.get('label')?.value === 'other') {
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>自定義標籤</mat-label>
+        <input matInput formControlName="customLabel" placeholder="例如：父母家、朋友家" />
+        @if (hasError('customLabel', 'required')) {
+          <mat-error>{{ getErrorMessage('customLabel') }}</mat-error>
+        }
+      </mat-form-field>
+    }
+
+    <!-- 收件人資訊 -->
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="flex-1">
+        <mat-label>收件人姓名</mat-label>
+        <input matInput formControlName="recipientName" placeholder="請輸入收件人姓名" />
+        <mat-icon matPrefix>person</mat-icon>
+        @if (hasError('recipientName', 'required')) {
+          <mat-error>{{ getErrorMessage('recipientName') }}</mat-error>
+        }
+        @if (hasError('recipientName', 'minlength')) {
+          <mat-error>{{ getErrorMessage('recipientName') }}</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="flex-1">
+        <mat-label>聯絡電話</mat-label>
+        <input matInput formControlName="recipientPhone" placeholder="0912345678" />
+        <mat-icon matPrefix>phone</mat-icon>
+        @if (hasError('recipientPhone', 'required')) {
+          <mat-error>{{ getErrorMessage('recipientPhone') }}</mat-error>
+        }
+        @if (hasError('recipientPhone', 'pattern')) {
+          <mat-error>{{ getErrorMessage('recipientPhone') }}</mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    <!-- 地址資訊 -->
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="flex-1">
+        <mat-label>郵遞區號</mat-label>
+        <input matInput formControlName="postalCode" placeholder="106" />
+        <mat-icon matPrefix>markunread_mailbox</mat-icon>
+        @if (hasError('postalCode', 'required')) {
+          <mat-error>{{ getErrorMessage('postalCode') }}</mat-error>
+        }
+        @if (hasError('postalCode', 'pattern')) {
+          <mat-error>{{ getErrorMessage('postalCode') }}</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="flex-2">
+        <mat-label>城市</mat-label>
+        <mat-select formControlName="city">
+          @for (city of cities; track city) {
+            <mat-option [value]="city">{{ city }}</mat-option>
+          }
+        </mat-select>
+        <mat-icon matPrefix>location_city</mat-icon>
+      </mat-form-field>
+    </div>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>區（選填）</mat-label>
+      <input matInput formControlName="district" placeholder="例如：大安區、信義區" />
+      <mat-icon matPrefix>map</mat-icon>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>街道地址</mat-label>
+      <input matInput formControlName="streetAddress" placeholder="例如：信義路四段1號" />
+      <mat-icon matPrefix>location_on</mat-icon>
+      @if (hasError('streetAddress', 'required')) {
+        <mat-error>{{ getErrorMessage('streetAddress') }}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>大樓/樓層（選填）</mat-label>
+      <input matInput formControlName="buildingFloor" placeholder="例如：10樓、3F-2" />
+      <mat-icon matPrefix>apartment</mat-icon>
+    </mat-form-field>
+
+    <!-- 設為預設地址 -->
+    <div class="checkbox-field">
+      <mat-checkbox formControlName="isDefault">
+        設為預設收貨地址
+      </mat-checkbox>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()" [disabled]="submitting">
+    取消
+  </button>
+  <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="submitting || addressForm.invalid">
+    @if (submitting) {
+      <mat-spinner diameter="20"></mat-spinner>
+    } @else {
+      {{ data.mode === 'add' ? '新增' : '儲存' }}
+    }
+  </button>
+</mat-dialog-actions>

@@ -517,5 +517,59 @@
       "timeout": "支付超時",
       "network_error": "網路錯誤，請檢查連線"
     }
+  },
+  "address": {
+    "title": "收貨地址管理",
+    "add_new": "新增地址",
+    "add_first": "新增第一個地址",
+    "empty": "尚無收貨地址",
+    "empty_description": "請新增您的收貨地址，以便結帳時使用",
+    "default": "預設地址",
+    "set_as_default": "設為預設",
+    "edit_address": "編輯地址",
+    "delete_address": "刪除地址",
+    "confirm_delete": "確定要刪除此地址嗎？",
+    "cannot_delete_default": "無法刪除預設地址",
+    "label": {
+      "home": "住家",
+      "office": "公司",
+      "other": "其他"
+    },
+    "form": {
+      "address_type": "地址類型",
+      "custom_label": "自定義標籤",
+      "recipient_name": "收件人姓名",
+      "recipient_phone": "聯絡電話",
+      "postal_code": "郵遞區號",
+      "city": "城市",
+      "district": "區",
+      "street_address": "街道地址",
+      "building_floor": "大樓/樓層",
+      "set_as_default": "設為預設收貨地址",
+      "placeholder": {
+        "custom_label": "例如：父母家、朋友家",
+        "recipient_name": "請輸入收件人姓名",
+        "recipient_phone": "0912345678",
+        "postal_code": "106",
+        "district": "例如：大安區、信義區",
+        "street_address": "例如：信義路四段1號",
+        "building_floor": "例如：10樓、3F-2"
+      },
+      "error": {
+        "required": "此欄位為必填",
+        "minlength": "至少需要 {length} 個字元",
+        "phone_invalid": "請輸入有效的手機號碼 (09xxxxxxxx)",
+        "postal_code_invalid": "請輸入有效的郵遞區號"
+      }
+    },
+    "notification": {
+      "added": "地址已新增",
+      "updated": "地址已更新",
+      "deleted": "地址已刪除",
+      "set_default": "已設為預設地址",
+      "add_failed": "新增地址失敗",
+      "update_failed": "更新地址失敗",
+      "delete_failed": "刪除地址失敗"
+    }
   }
 }
