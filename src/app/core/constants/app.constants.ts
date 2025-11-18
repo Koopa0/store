@@ -91,6 +91,8 @@ export const STORAGE_KEYS = {
   CART_ID: 'koopa_cart_id',
   /** 會話 ID（訪客用戶）/ Session ID (guest users) */
   SESSION_ID: 'koopa_session_id',
+  /** 重定向 URL（登入後返回）/ Redirect URL (return after login) */
+  REDIRECT_URL: 'koopa_redirect_url',
 } as const;
 
 /**
