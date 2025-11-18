@@ -1,0 +1,315 @@
+/**
+ * Angular Material 自定義主題
+ * Custom Angular Material Theme
+ *
+ * 包含亮色和暗色主題配置，主色為藍色
+ * Includes light and dark theme configurations with blue primary color
+ */
+
+// 導入 Angular Material 主題工具
+// Import Angular Material theming utilities
+@use '@angular/material' as mat;
+
+// 導入預建主題（用於快速開發，生產環境可移除）
+// Import prebuilt theme (for quick development, can be removed in production)
+// @import '@angular/material/prebuilt-themes/indigo-pink.css';
+
+// ============================================================================
+// 包含核心樣式（只需包含一次）
+// Include core styles (only include once)
+// ============================================================================
+@include mat.core();
+
+// ============================================================================
+// 定義調色盤
+// Define color palettes
+// ============================================================================
+
+/**
+ * 主色調色盤（藍色）
+ * Primary color palette (Blue)
+ *
+ * 使用 Material Design 藍色調色盤
+ * Using Material Design Blue palette
+ */
+$koopa-primary: mat.m2-define-palette(mat.$m2-blue-palette, 600, 400, 800);
+
+/**
+ * 輔助色調色盤（琥珀色）
+ * Accent color palette (Amber)
+ *
+ * 用於次要操作和強調元素
+ * For secondary actions and accent elements
+ */
+$koopa-accent: mat.m2-define-palette(mat.$m2-amber-palette, A200, A100, A400);
+
+/**
+ * 警告色調色盤（紅色）
+ * Warn color palette (Red)
+ *
+ * 用於警告和錯誤訊息
+ * For warnings and error messages
+ */
+$koopa-warn: mat.m2-define-palette(mat.$m2-red-palette, 600);
+
+// ============================================================================
+// 定義亮色主題
+// Define light theme
+// ============================================================================
+
+/**
+ * 亮色主題
+ * Light theme
+ */
+$koopa-light-theme: mat.m2-define-light-theme((
+  color: (
+    primary: $koopa-primary,
+    accent: $koopa-accent,
+    warn: $koopa-warn,
+  ),
+  typography: mat.m2-define-typography-config(
+    $font-family: '"Noto Sans TC", "Roboto", "Helvetica Neue", Arial, sans-serif',
+  ),
+  density: 0,
+));
+
+// ============================================================================
+// 定義暗色主題
+// Define dark theme
+// ============================================================================
+
+/**
+ * 暗色主題
+ * Dark theme
+ */
+$koopa-dark-theme: mat.m2-define-dark-theme((
+  color: (
+    primary: $koopa-primary,
+    accent: $koopa-accent,
+    warn: $koopa-warn,
+  ),
+  typography: mat.m2-define-typography-config(
+    $font-family: '"Noto Sans TC", "Roboto", "Helvetica Neue", Arial, sans-serif',
+  ),
+  density: 0,
+));
+
+// ============================================================================
+// 應用主題樣式
+// Apply theme styles
+// ============================================================================
+
+/**
+ * 預設主題（亮色）
+ * Default theme (light)
+ *
+ * 應用於根元素
+ * Applied to root element
+ */
+@include mat.all-component-themes($koopa-light-theme);
+
+/**
+ * 暗色主題
+ * Dark theme
+ *
+ * 當 body 元素有 .dark-theme 類別時應用
+ * Applied when body element has .dark-theme class
+ */
+.dark-theme {
+  @include mat.all-component-colors($koopa-dark-theme);
+}
+
+// ============================================================================
+// 自定義主題變數
+// Custom theme variables
+// ============================================================================
+
+/**
+ * 從主題中提取顏色
+ * Extract colors from theme
+ */
+$primary-color: mat.m2-get-color-from-palette($koopa-primary, 600);
+$accent-color: mat.m2-get-color-from-palette($koopa-accent, A200);
+$warn-color: mat.m2-get-color-from-palette($koopa-warn, 600);
+
+/**
+ * 導出 CSS 自定義屬性（CSS Variables）
+ * Export CSS custom properties (CSS Variables)
+ *
+ * 這樣可以在元件中使用 var(--primary-color)
+ * This allows using var(--primary-color) in components
+ */
+:root {
+  // 主色 / Primary colors
+  --primary-color: #{$primary-color};
+  --primary-50: #e3f2fd;
+  --primary-100: #bbdefb;
+  --primary-200: #90caf9;
+  --primary-300: #64b5f6;
+  --primary-400: #42a5f5;
+  --primary-500: #2196f3;
+  --primary-600: #1e88e5;
+  --primary-700: #1976d2;
+  --primary-800: #1565c0;
+  --primary-900: #0d47a1;
+
+  // 輔助色 / Accent colors
+  --accent-color: #{$accent-color};
+  --accent-100: #ffe57f;
+  --accent-200: #ffd740;
+  --accent-400: #ffc400;
+  --accent-700: #ffab00;
+
+  // 警告色 / Warn colors
+  --warn-color: #{$warn-color};
+  --warn-50: #ffebee;
+  --warn-100: #ffcdd2;
+  --warn-500: #f44336;
+  --warn-700: #d32f2f;
+
+  // 成功色 / Success colors
+  --success-color: #4caf50;
+  --success-light: #81c784;
+  --success-dark: #388e3c;
+
+  // 資訊色 / Info colors
+  --info-color: #2196f3;
+  --info-light: #64b5f6;
+  --info-dark: #1976d2;
+
+  // 灰階 / Grays
+  --gray-50: #fafafa;
+  --gray-100: #f5f5f5;
+  --gray-200: #eeeeee;
+  --gray-300: #e0e0e0;
+  --gray-400: #bdbdbd;
+  --gray-500: #9e9e9e;
+  --gray-600: #757575;
+  --gray-700: #616161;
+  --gray-800: #424242;
+  --gray-900: #212121;
+
+  // 文字顏色 / Text colors
+  --text-primary: rgba(0, 0, 0, 0.87);
+  --text-secondary: rgba(0, 0, 0, 0.60);
+  --text-disabled: rgba(0, 0, 0, 0.38);
+  --text-hint: rgba(0, 0, 0, 0.38);
+
+  // 背景色 / Background colors
+  --background: #fafafa;
+  --surface: #ffffff;
+  --surface-hover: #f5f5f5;
+
+  // 邊框色 / Border colors
+  --border-color: #e0e0e0;
+  --divider-color: rgba(0, 0, 0, 0.12);
+
+  // 陰影 / Shadows
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.12);
+  --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.15);
+
+  // 間距 / Spacing
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-2xl: 48px;
+
+  // 圓角 / Border radius
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 9999px;
+
+  // 動畫時間 / Animation duration
+  --transition-fast: 150ms;
+  --transition-normal: 300ms;
+  --transition-slow: 500ms;
+}
+
+/**
+ * 暗色主題的自定義屬性覆蓋
+ * Dark theme custom properties override
+ */
+.dark-theme {
+  // 文字顏色 / Text colors
+  --text-primary: rgba(255, 255, 255, 0.87);
+  --text-secondary: rgba(255, 255, 255, 0.60);
+  --text-disabled: rgba(255, 255, 255, 0.38);
+  --text-hint: rgba(255, 255, 255, 0.38);
+
+  // 背景色 / Background colors
+  --background: #303030;
+  --surface: #424242;
+  --surface-hover: #505050;
+
+  // 邊框色 / Border colors
+  --border-color: #616161;
+  --divider-color: rgba(255, 255, 255, 0.12);
+
+  // 陰影 / Shadows
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.4);
+}
+
+// ============================================================================
+// 主題混合器（Mixins）
+// Theme mixins
+// ============================================================================
+
+/**
+ * 為元件應用主題顏色
+ * Apply theme colors to component
+ *
+ * 使用方式 / Usage:
+ * @include apply-theme-colors;
+ */
+@mixin apply-theme-colors {
+  color: var(--text-primary);
+  background-color: var(--background);
+}
+
+/**
+ * 卡片樣式
+ * Card style
+ */
+@mixin card-style {
+  background-color: var(--surface);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  padding: var(--spacing-md);
+
+  &:hover {
+    box-shadow: var(--shadow-md);
+  }
+}
+
+/**
+ * 按鈕樣式
+ * Button style
+ */
+@mixin button-style($color: primary) {
+  border-radius: var(--radius-md);
+  padding: var(--spacing-sm) var(--spacing-md);
+  transition: all var(--transition-fast) ease-in-out;
+
+  @if $color == primary {
+    background-color: var(--primary-color);
+    color: white;
+
+    &:hover {
+      background-color: var(--primary-700);
+    }
+  } @else if $color == accent {
+    background-color: var(--accent-color);
+    color: rgba(0, 0, 0, 0.87);
+
+    &:hover {
+      background-color: var(--accent-400);
+    }
+  }
+}

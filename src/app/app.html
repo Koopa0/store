@@ -1,0 +1,217 @@
+<!--
+  根元件模板
+  Root Component Template
+
+  教學重點 / Teaching Points:
+  1. 使用 translate 管道進行文字翻譯
+  2. 使用 Signal 語法顯示響應式資料
+  3. Angular 事件綁定和資料綁定
+  4. 條件渲染和樣式綁定
+-->
+
+<div class="app-container">
+  <!--
+    頂部工具列
+    Top toolbar
+
+    教學說明：展示語言和主題切換功能
+  -->
+  <header class="app-header">
+    <div class="container flex justify-between items-center py-md">
+      <!-- Logo 和標題 -->
+      <div class="flex items-center gap-md">
+        <h1 class="text-2xl font-bold text-brand-primary">
+          <!-- 使用 translate 管道進行翻譯 -->
+          {{ 'common.app_name' | translate }}
+        </h1>
+      </div>
+
+      <!-- 工具按鈕組 -->
+      <div class="flex items-center gap-sm">
+        <!--
+          語言切換按鈕
+          Language toggle button
+
+          教學說明：
+          - (click) 是事件綁定語法
+          - 呼叫 toggleLanguage() 方法切換語言
+          - currentLanguage() 是 Signal，需要加括號執行
+        -->
+        <button
+          class="btn-icon"
+          (click)="toggleLanguage()"
+          [title]="'language.switch_language' | translate"
+        >
+          <span class="text-lg">🌐</span>
+          <span class="text-sm">{{ currentLanguage() === 'zh-TW' ? '中文' : 'EN' }}</span>
+        </button>
+
+        <!--
+          主題切換按鈕
+          Theme toggle button
+
+          教學說明：
+          - isDark() 是計算 Signal，會自動追蹤主題變更
+          - 條件渲染不同的圖示
+        -->
+        <button
+          class="btn-icon"
+          (click)="toggleTheme()"
+          [title]="'theme.switch_theme' | translate"
+        >
+          @if (isDark()) {
+            <!-- 暗色主題時顯示太陽圖示 -->
+            <span class="text-lg">☀️</span>
+          } @else {
+            <!-- 亮色主題時顯示月亮圖示 -->
+            <span class="text-lg">🌙</span>
+          }
+          <span class="text-sm">
+            {{ isDark() ? ('theme.light' | translate) : ('theme.dark' | translate) }}
+          </span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!--
+    主要內容區域
+    Main content area
+
+    教學說明：
+    - <router-outlet> 是路由出口
+    - Angular Router 會在這裡載入對應的路由元件
+  -->
+  <main class="app-main">
+    <div class="container py-xl">
+      <!-- 歡迎訊息 -->
+      <div class="welcome-section text-center mb-2xl">
+        <h2 class="text-4xl font-bold mb-md">
+          {{ 'common.welcome' | translate }} 👋
+        </h2>
+        <p class="text-lg text-secondary mb-lg">
+          這是一個使用 Angular v20、Angular Material 和 i18n 建立的教學專案
+        </p>
+        <p class="text-lg text-secondary">
+          This is a tutorial project built with Angular v20, Angular Material, and i18n
+        </p>
+
+        <!-- 狀態顯示 -->
+        <div class="status-cards grid grid-cols-2 gap-md mt-xl">
+          <!-- 當前語言卡片 -->
+          <div class="card p-lg text-center">
+            <div class="text-sm text-secondary mb-sm">
+              {{ 'language.switch_language' | translate }}
+            </div>
+            <div class="text-2xl font-semibold text-brand-primary">
+              {{ currentLanguage() === 'zh-TW' ? '繁體中文 (台灣)' : 'English' }}
+            </div>
+          </div>
+
+          <!-- 當前主題卡片 -->
+          <div class="card p-lg text-center">
+            <div class="text-sm text-secondary mb-sm">
+              {{ 'theme.switch_theme' | translate }}
+            </div>
+            <div class="text-2xl font-semibold text-brand-primary">
+              {{ isDark() ? '🌙 ' + ('theme.dark' | translate) : '☀️ ' + ('theme.light' | translate) }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 功能說明 -->
+      <div class="features-section">
+        <h3 class="text-2xl font-semibold mb-lg text-center">
+          {{ currentLanguage() === 'zh-TW' ? '已實現功能' : 'Implemented Features' }}
+        </h3>
+
+        <div class="grid grid-cols-3 gap-md">
+          <!-- Angular v20 -->
+          <div class="card p-md">
+            <div class="text-xl mb-sm">⚡</div>
+            <h4 class="font-semibold mb-sm">Angular v20</h4>
+            <p class="text-sm text-secondary">
+              {{ currentLanguage() === 'zh-TW'
+                ? '使用最新的 Angular 版本和 Standalone Components'
+                : 'Using latest Angular version with Standalone Components'
+              }}
+            </p>
+          </div>
+
+          <!-- Angular Material -->
+          <div class="card p-md">
+            <div class="text-xl mb-sm">🎨</div>
+            <h4 class="font-semibold mb-sm">Angular Material</h4>
+            <p class="text-sm text-secondary">
+              {{ currentLanguage() === 'zh-TW'
+                ? 'Material Design 設計系統，支援深淺模式'
+                : 'Material Design system with light/dark theme support'
+              }}
+            </p>
+          </div>
+
+          <!-- i18n -->
+          <div class="card p-md">
+            <div class="text-xl mb-sm">🌐</div>
+            <h4 class="font-semibold mb-sm">{{ 'language.switch_language' | translate }}</h4>
+            <p class="text-sm text-secondary">
+              {{ currentLanguage() === 'zh-TW'
+                ? '完整的多國語系支援（繁體中文、英文）'
+                : 'Full i18n support (Traditional Chinese, English)'
+              }}
+            </p>
+          </div>
+
+          <!-- TypeScript Models -->
+          <div class="card p-md">
+            <div class="text-xl mb-sm">📦</div>
+            <h4 class="font-semibold mb-sm">TypeScript Models</h4>
+            <p class="text-sm text-secondary">
+              {{ currentLanguage() === 'zh-TW'
+                ? '基於資料庫架構的完整型別定義'
+                : 'Complete type definitions based on database schema'
+              }}
+            </p>
+          </div>
+
+          <!-- Signal-based State -->
+          <div class="card p-md">
+            <div class="text-xl mb-sm">🔄</div>
+            <h4 class="font-semibold mb-sm">Signal API</h4>
+            <p class="text-sm text-secondary">
+              {{ currentLanguage() === 'zh-TW'
+                ? '使用 Angular Signals 進行響應式狀態管理'
+                : 'Reactive state management using Angular Signals'
+              }}
+            </p>
+          </div>
+
+          <!-- Best Practices -->
+          <div class="card p-md">
+            <div class="text-xl mb-sm">✅</div>
+            <h4 class="font-semibold mb-sm">Best Practices</h4>
+            <p class="text-sm text-secondary">
+              {{ currentLanguage() === 'zh-TW'
+                ? '遵循 Angular 最佳實踐和編碼規範'
+                : 'Following Angular best practices and coding standards'
+              }}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 路由出口（未來的頁面會顯示在這裡） -->
+      <div class="mt-xl">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </main>
+
+  <!-- 頁尾 -->
+  <footer class="app-footer text-center py-lg text-sm text-secondary">
+    <div class="container">
+      {{ 'footer.copyright' | translate: {year: 2025} }}
+    </div>
+  </footer>
+</div>

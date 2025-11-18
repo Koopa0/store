@@ -1,0 +1,617 @@
+/**
+ * 實用工具類別
+ * Utility classes
+ *
+ * 提供常用的 CSS 工具類別
+ * Provides common CSS utility classes
+ */
+
+// ============================================================================
+// 間距工具類別
+// Spacing utility classes
+// ============================================================================
+
+/**
+ * Margin 工具類別
+ * Margin utility classes
+ *
+ * 使用方式 / Usage: .m-{size}, .mt-{size}, .mr-{size}, .mb-{size}, .ml-{size}
+ * 範例 / Example: .m-md, .mt-lg, .mr-sm
+ */
+$spacing-sizes: (
+  'xs': var(--spacing-xs),
+  'sm': var(--spacing-sm),
+  'md': var(--spacing-md),
+  'lg': var(--spacing-lg),
+  'xl': var(--spacing-xl),
+  '2xl': var(--spacing-2xl),
+  'auto': auto,
+  '0': 0,
+);
+
+@each $size-name, $size-value in $spacing-sizes {
+  // Margin - 所有方向 / All directions
+  .m-#{$size-name} {
+    margin: $size-value !important;
+  }
+
+  // Margin - 上 / Top
+  .mt-#{$size-name} {
+    margin-top: $size-value !important;
+  }
+
+  // Margin - 右 / Right
+  .mr-#{$size-name} {
+    margin-right: $size-value !important;
+  }
+
+  // Margin - 下 / Bottom
+  .mb-#{$size-name} {
+    margin-bottom: $size-value !important;
+  }
+
+  // Margin - 左 / Left
+  .ml-#{$size-name} {
+    margin-left: $size-value !important;
+  }
+
+  // Margin - 左右 / Left & Right
+  .mx-#{$size-name} {
+    margin-left: $size-value !important;
+    margin-right: $size-value !important;
+  }
+
+  // Margin - 上下 / Top & Bottom
+  .my-#{$size-name} {
+    margin-top: $size-value !important;
+    margin-bottom: $size-value !important;
+  }
+}
+
+/**
+ * Padding 工具類別
+ * Padding utility classes
+ *
+ * 使用方式 / Usage: .p-{size}, .pt-{size}, .pr-{size}, .pb-{size}, .pl-{size}
+ */
+@each $size-name, $size-value in $spacing-sizes {
+  @if $size-name != 'auto' {
+    // Padding - 所有方向 / All directions
+    .p-#{$size-name} {
+      padding: $size-value !important;
+    }
+
+    // Padding - 上 / Top
+    .pt-#{$size-name} {
+      padding-top: $size-value !important;
+    }
+
+    // Padding - 右 / Right
+    .pr-#{$size-name} {
+      padding-right: $size-value !important;
+    }
+
+    // Padding - 下 / Bottom
+    .pb-#{$size-name} {
+      padding-bottom: $size-value !important;
+    }
+
+    // Padding - 左 / Left
+    .pl-#{$size-name} {
+      padding-left: $size-value !important;
+    }
+
+    // Padding - 左右 / Left & Right
+    .px-#{$size-name} {
+      padding-left: $size-value !important;
+      padding-right: $size-value !important;
+    }
+
+    // Padding - 上下 / Top & Bottom
+    .py-#{$size-name} {
+      padding-top: $size-value !important;
+      padding-bottom: $size-value !important;
+    }
+  }
+}
+
+// ============================================================================
+// 文字工具類別
+// Text utility classes
+// ============================================================================
+
+/**
+ * 文字對齊 / Text alignment
+ */
+.text-left {
+  text-align: left !important;
+}
+
+.text-center {
+  text-align: center !important;
+}
+
+.text-right {
+  text-align: right !important;
+}
+
+.text-justify {
+  text-align: justify !important;
+}
+
+/**
+ * 文字顏色 / Text colors
+ */
+.text-primary {
+  color: var(--text-primary) !important;
+}
+
+.text-secondary {
+  color: var(--text-secondary) !important;
+}
+
+.text-disabled {
+  color: var(--text-disabled) !important;
+}
+
+.text-hint {
+  color: var(--text-hint) !important;
+}
+
+.text-brand-primary {
+  color: var(--primary-color) !important;
+}
+
+.text-brand-accent {
+  color: var(--accent-color) !important;
+}
+
+.text-warn {
+  color: var(--warn-color) !important;
+}
+
+.text-success {
+  color: var(--success-color) !important;
+}
+
+.text-info {
+  color: var(--info-color) !important;
+}
+
+/**
+ * 文字大小 / Text sizes
+ */
+.text-xs {
+  font-size: 0.75rem !important; // 12px
+}
+
+.text-sm {
+  font-size: 0.875rem !important; // 14px
+}
+
+.text-base {
+  font-size: 1rem !important; // 16px
+}
+
+.text-lg {
+  font-size: 1.125rem !important; // 18px
+}
+
+.text-xl {
+  font-size: 1.25rem !important; // 20px
+}
+
+.text-2xl {
+  font-size: 1.5rem !important; // 24px
+}
+
+.text-3xl {
+  font-size: 1.875rem !important; // 30px
+}
+
+.text-4xl {
+  font-size: 2.25rem !important; // 36px
+}
+
+/**
+ * 文字粗細 / Font weight
+ */
+.font-light {
+  font-weight: 300 !important;
+}
+
+.font-normal {
+  font-weight: 400 !important;
+}
+
+.font-medium {
+  font-weight: 500 !important;
+}
+
+.font-semibold {
+  font-weight: 600 !important;
+}
+
+.font-bold {
+  font-weight: 700 !important;
+}
+
+/**
+ * 文字轉換 / Text transform
+ */
+.uppercase {
+  text-transform: uppercase !important;
+}
+
+.lowercase {
+  text-transform: lowercase !important;
+}
+
+.capitalize {
+  text-transform: capitalize !important;
+}
+
+/**
+ * 文字截斷 / Text truncation
+ */
+.truncate {
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+.line-clamp-2 {
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+}
+
+.line-clamp-3 {
+  display: -webkit-box !important;
+  -webkit-line-clamp: 3 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+}
+
+// ============================================================================
+// Flexbox 工具類別
+// Flexbox utility classes
+// ============================================================================
+
+.flex {
+  display: flex !important;
+}
+
+.inline-flex {
+  display: inline-flex !important;
+}
+
+.flex-row {
+  flex-direction: row !important;
+}
+
+.flex-column {
+  flex-direction: column !important;
+}
+
+.flex-wrap {
+  flex-wrap: wrap !important;
+}
+
+.flex-nowrap {
+  flex-wrap: nowrap !important;
+}
+
+.justify-start {
+  justify-content: flex-start !important;
+}
+
+.justify-center {
+  justify-content: center !important;
+}
+
+.justify-end {
+  justify-content: flex-end !important;
+}
+
+.justify-between {
+  justify-content: space-between !important;
+}
+
+.justify-around {
+  justify-content: space-around !important;
+}
+
+.items-start {
+  align-items: flex-start !important;
+}
+
+.items-center {
+  align-items: center !important;
+}
+
+.items-end {
+  align-items: flex-end !important;
+}
+
+.items-baseline {
+  align-items: baseline !important;
+}
+
+.items-stretch {
+  align-items: stretch !important;
+}
+
+.flex-1 {
+  flex: 1 1 0% !important;
+}
+
+.flex-auto {
+  flex: 1 1 auto !important;
+}
+
+.flex-none {
+  flex: none !important;
+}
+
+.gap-xs {
+  gap: var(--spacing-xs) !important;
+}
+
+.gap-sm {
+  gap: var(--spacing-sm) !important;
+}
+
+.gap-md {
+  gap: var(--spacing-md) !important;
+}
+
+.gap-lg {
+  gap: var(--spacing-lg) !important;
+}
+
+.gap-xl {
+  gap: var(--spacing-xl) !important;
+}
+
+// ============================================================================
+// Grid 工具類別
+// Grid utility classes
+// ============================================================================
+
+.grid {
+  display: grid !important;
+}
+
+.grid-cols-1 {
+  grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
+}
+
+.grid-cols-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+}
+
+.grid-cols-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+}
+
+.grid-cols-4 {
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+}
+
+.grid-cols-6 {
+  grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
+}
+
+.grid-cols-12 {
+  grid-template-columns: repeat(12, minmax(0, 1fr)) !important;
+}
+
+// ============================================================================
+// 顯示工具類別
+// Display utility classes
+// ============================================================================
+
+.block {
+  display: block !important;
+}
+
+.inline-block {
+  display: inline-block !important;
+}
+
+.inline {
+  display: inline !important;
+}
+
+.hidden {
+  display: none !important;
+}
+
+// ============================================================================
+// 位置工具類別
+// Position utility classes
+// ============================================================================
+
+.relative {
+  position: relative !important;
+}
+
+.absolute {
+  position: absolute !important;
+}
+
+.fixed {
+  position: fixed !important;
+}
+
+.sticky {
+  position: sticky !important;
+}
+
+// ============================================================================
+// 寬高工具類別
+// Width/Height utility classes
+// ============================================================================
+
+.w-full {
+  width: 100% !important;
+}
+
+.w-auto {
+  width: auto !important;
+}
+
+.h-full {
+  height: 100% !important;
+}
+
+.h-auto {
+  height: auto !important;
+}
+
+.min-h-screen {
+  min-height: 100vh !important;
+}
+
+// ============================================================================
+// 圓角工具類別
+// Border radius utility classes
+// ============================================================================
+
+.rounded-none {
+  border-radius: 0 !important;
+}
+
+.rounded-sm {
+  border-radius: var(--radius-sm) !important;
+}
+
+.rounded-md {
+  border-radius: var(--radius-md) !important;
+}
+
+.rounded-lg {
+  border-radius: var(--radius-lg) !important;
+}
+
+.rounded-xl {
+  border-radius: var(--radius-xl) !important;
+}
+
+.rounded-full {
+  border-radius: var(--radius-full) !important;
+}
+
+// ============================================================================
+// 陰影工具類別
+// Shadow utility classes
+// ============================================================================
+
+.shadow-none {
+  box-shadow: none !important;
+}
+
+.shadow-sm {
+  box-shadow: var(--shadow-sm) !important;
+}
+
+.shadow-md {
+  box-shadow: var(--shadow-md) !important;
+}
+
+.shadow-lg {
+  box-shadow: var(--shadow-lg) !important;
+}
+
+// ============================================================================
+// 游標工具類別
+// Cursor utility classes
+// ============================================================================
+
+.cursor-pointer {
+  cursor: pointer !important;
+}
+
+.cursor-not-allowed {
+  cursor: not-allowed !important;
+}
+
+.cursor-default {
+  cursor: default !important;
+}
+
+// ============================================================================
+// 溢出工具類別
+// Overflow utility classes
+// ============================================================================
+
+.overflow-auto {
+  overflow: auto !important;
+}
+
+.overflow-hidden {
+  overflow: hidden !important;
+}
+
+.overflow-visible {
+  overflow: visible !important;
+}
+
+.overflow-scroll {
+  overflow: scroll !important;
+}
+
+// ============================================================================
+// 響應式工具類別
+// Responsive utility classes
+// ============================================================================
+
+// 隱藏在小螢幕 / Hide on small screens
+@media (max-width: 599px) {
+  .hide-xs {
+    display: none !important;
+  }
+}
+
+// 隱藏在中等螢幕 / Hide on medium screens
+@media (min-width: 600px) and (max-width: 959px) {
+  .hide-sm {
+    display: none !important;
+  }
+}
+
+// 隱藏在大螢幕 / Hide on large screens
+@media (min-width: 960px) {
+  .hide-md {
+    display: none !important;
+  }
+}
+
+// 只在小螢幕顯示 / Show only on small screens
+.show-xs {
+  display: none !important;
+
+  @media (max-width: 599px) {
+    display: block !important;
+  }
+}
+
+// 只在中等螢幕顯示 / Show only on medium screens
+.show-sm {
+  display: none !important;
+
+  @media (min-width: 600px) and (max-width: 959px) {
+    display: block !important;
+  }
+}
+
+// 只在大螢幕顯示 / Show only on large screens
+.show-md {
+  display: none !important;
+
+  @media (min-width: 960px) {
+    display: block !important;
+  }
+}

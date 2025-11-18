@@ -1,0 +1,391 @@
+/**
+ * 全域樣式檔案
+ * Global Styles File
+ *
+ * 這個檔案包含應用程式的全域樣式
+ * This file contains global styles for the application
+ */
+
+// ============================================================================
+// 導入 Angular Material 主題
+// Import Angular Material theme
+// ============================================================================
+@use './styles/theme';
+
+// ============================================================================
+// 導入工具類別
+// Import utility classes
+// ============================================================================
+@use './styles/utilities';
+
+// ============================================================================
+// 全域樣式
+// Global styles
+// ============================================================================
+
+/**
+ * 重置預設樣式
+ * Reset default styles
+ */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/**
+ * HTML 和 Body 基礎樣式
+ * HTML and Body base styles
+ */
+html,
+body {
+  height: 100%;
+  font-family: 'Noto Sans TC', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text-primary);
+  background-color: var(--background);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/**
+ * 標題樣式
+ * Heading styles
+ */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--text-primary);
+}
+
+h1 {
+  font-size: 2.5rem; // 40px
+}
+
+h2 {
+  font-size: 2rem; // 32px
+}
+
+h3 {
+  font-size: 1.75rem; // 28px
+}
+
+h4 {
+  font-size: 1.5rem; // 24px
+}
+
+h5 {
+  font-size: 1.25rem; // 20px
+}
+
+h6 {
+  font-size: 1rem; // 16px
+}
+
+/**
+ * 段落樣式
+ * Paragraph styles
+ */
+p {
+  margin: 0 0 1rem 0;
+}
+
+/**
+ * 連結樣式
+ * Link styles
+ */
+a {
+  color: var(--primary-color);
+  text-decoration: none;
+  transition: color var(--transition-fast) ease-in-out;
+
+  &:hover {
+    color: var(--primary-700);
+    text-decoration: underline;
+  }
+
+  &:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+  }
+}
+
+/**
+ * 按鈕基礎樣式
+ * Button base styles
+ */
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+
+  &:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+}
+
+/**
+ * 圖片樣式
+ * Image styles
+ */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/**
+ * 列表樣式
+ * List styles
+ */
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/**
+ * 表單元素樣式
+ * Form element styles
+ */
+input,
+textarea,
+select {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+/**
+ * 程式碼樣式
+ * Code styles
+ */
+code,
+pre {
+  font-family: 'Courier New', Courier, monospace;
+  background-color: var(--gray-100);
+  padding: 0.125rem 0.25rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+}
+
+pre {
+  padding: 1rem;
+  overflow-x: auto;
+  display: block;
+}
+
+.dark-theme {
+  code,
+  pre {
+    background-color: var(--gray-800);
+  }
+}
+
+/**
+ * 分隔線樣式
+ * Divider styles
+ */
+hr {
+  border: none;
+  border-top: 1px solid var(--divider-color);
+  margin: 1rem 0;
+}
+
+/**
+ * 表格樣式
+ * Table styles
+ */
+table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th,
+  td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid var(--divider-color);
+  }
+
+  th {
+    font-weight: 600;
+    color: var(--text-primary);
+    background-color: var(--gray-50);
+  }
+}
+
+.dark-theme table th {
+  background-color: var(--gray-800);
+}
+
+/**
+ * 滾動條樣式
+ * Scrollbar styles
+ */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--gray-100);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--gray-400);
+  border-radius: var(--radius-full);
+
+  &:hover {
+    background: var(--gray-500);
+  }
+}
+
+.dark-theme {
+  ::-webkit-scrollbar-track {
+    background: var(--gray-800);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--gray-600);
+
+    &:hover {
+      background: var(--gray-500);
+    }
+  }
+}
+
+/**
+ * 焦點可見性
+ * Focus visibility
+ */
+:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+/**
+ * 選取文字樣式
+ * Text selection styles
+ */
+::selection {
+  background-color: var(--primary-200);
+  color: var(--text-primary);
+}
+
+.dark-theme ::selection {
+  background-color: var(--primary-700);
+  color: var(--text-primary);
+}
+
+/**
+ * 容器樣式
+ * Container styles
+ */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-md);
+}
+
+.container-fluid {
+  width: 100%;
+  padding: 0 var(--spacing-md);
+}
+
+/**
+ * 載入動畫
+ * Loading animation
+ */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.spinner {
+  border: 3px solid var(--gray-200);
+  border-top-color: var(--primary-color);
+  border-radius: var(--radius-full);
+  width: 40px;
+  height: 40px;
+  animation: spin 0.8s linear infinite;
+}
+
+/**
+ * 淡入動畫
+ * Fade in animation
+ */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.fade-in {
+  animation: fadeIn var(--transition-normal) ease-in;
+}
+
+/**
+ * 滑入動畫
+ * Slide in animation
+ */
+@keyframes slideInUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.slide-in-up {
+  animation: slideInUp var(--transition-normal) ease-out;
+}
+
+/**
+ * 平滑過渡
+ * Smooth transition
+ */
+.transition-all {
+  transition: all var(--transition-normal) ease-in-out;
+}
+
+/**
+ * 無障礙輔助
+ * Accessibility helpers
+ */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

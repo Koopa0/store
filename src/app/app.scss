@@ -1,0 +1,244 @@
+/**
+ * 9Cö#
+ * Root Component Styles
+ *
+ * YxÍÞ / Teaching Points:
+ * 1. ( CSS êš©l'Šx	
+ * 2. BEM }Äåw^%	
+ * 3. ÿÉ-
+ * 4. ;L/ô
+ */
+
+// ============================================================================
+// É(¹h
+// Application container
+// ============================================================================
+
+.app-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+// ============================================================================
+// – / Header
+// ============================================================================
+
+.app-header {
+  background-color: var(--surface);
+  border-bottom: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  transition: all var(--transition-normal) ease;
+
+  h1 {
+    margin: 0;
+    cursor: pointer;
+    transition: transform var(--transition-fast) ease;
+
+    &:hover {
+      transform: scale(1.02);
+    }
+  }
+}
+
+// ============================================================================
+// ;g¹@ß / Main content
+// ============================================================================
+
+.app-main {
+  flex: 1;
+  background-color: var(--background);
+}
+
+// ============================================================================
+// > / Footer
+// ============================================================================
+
+.app-footer {
+  background-color: var(--surface);
+  border-top: 1px solid var(--border-color);
+  margin-top: auto;
+}
+
+// ============================================================================
+// 	# / Button styles
+// ============================================================================
+
+.btn-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background-color: var(--surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast) ease;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-primary);
+
+  &:hover {
+    background-color: var(--surface-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+    border-color: var(--primary-color);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  span {
+    line-height: 1;
+  }
+}
+
+// ============================================================================
+// aG# / Card styles
+// ============================================================================
+
+.card {
+  background-color: var(--surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-normal) ease;
+
+  &:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+    border-color: var(--primary-color);
+  }
+}
+
+// ============================================================================
+// aÎ@J / Welcome section
+// ============================================================================
+
+.welcome-section {
+  h2 {
+    background: linear-gradient(
+      135deg,
+      var(--primary-600),
+      var(--primary-400)
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+}
+
+// ============================================================================
+// ÀKaG / Status cards
+// ============================================================================
+
+.status-cards {
+  .card {
+    background: linear-gradient(
+      135deg,
+      var(--surface) 0%,
+      var(--surface-hover) 100%
+    );
+  }
+}
+
+// ============================================================================
+// Ÿý@J / Features section
+// ============================================================================
+
+.features-section {
+  .card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    h4 {
+      color: var(--text-primary);
+    }
+
+    p {
+      flex: 1;
+      line-height: 1.5;
+    }
+  }
+}
+
+// ============================================================================
+// ÿÉ- / Responsive design
+// ============================================================================
+
+// sTablet	
+@media (max-width: 959px) {
+  .features-section {
+    .grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+  }
+}
+
+// K_Mobile	
+@media (max-width: 599px) {
+  .app-header {
+    h1 {
+      font-size: 1.25rem;
+    }
+  }
+
+  .btn-icon {
+    padding: var(--spacing-xs) var(--spacing-sm);
+
+    .text-sm {
+      display: none;
+    }
+  }
+
+  .status-cards {
+    grid-template-columns: 1fr !important;
+  }
+
+  .features-section {
+    .grid {
+      grid-template-columns: 1fr !important;
+    }
+  }
+
+  .welcome-section {
+    h2 {
+      font-size: 2rem;
+    }
+  }
+}
+
+// ============================================================================
+// Õk / Animations
+// ============================================================================
+
+// áeÕk
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.welcome-section,
+.status-cards,
+.features-section {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.status-cards {
+  animation-delay: 0.1s;
+}
+
+.features-section {
+  animation-delay: 0.2s;
+}
