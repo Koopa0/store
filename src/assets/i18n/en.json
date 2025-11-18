@@ -56,14 +56,21 @@
   "auth": {
     "login": {
       "title": "Sign In",
+      "welcome": "Welcome back! Please sign in to your account",
       "subtitle": "Welcome back! Please sign in to your account",
+      "email": "Email",
       "email_or_username": "Email or Username",
       "password": "Password",
+      "rememberMe": "Remember Me",
       "remember_me": "Remember Me",
+      "forgotPassword": "Forgot Password?",
       "forgot_password": "Forgot Password?",
+      "noAccount": "Don't have an account?",
       "no_account": "Don't have an account?",
+      "signUp": "Sign Up",
       "sign_up": "Sign Up",
       "submit": "Sign In",
+      "loggingIn": "Signing in...",
       "success": "Signed in successfully!",
       "error": "Sign in failed, please check your credentials"
     },

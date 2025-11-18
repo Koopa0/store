@@ -1,0 +1,116 @@
+<!--
+  登入頁面
+  Login Page
+-->
+
+<div class="login-container">
+  <mat-card class="login-card">
+    <!-- Logo 和標題 -->
+    <mat-card-header>
+      <div class="login-header">
+        <h1 class="login-title">Koopa Store</h1>
+        <p class="login-subtitle">{{ 'auth.login.welcome' | translate }}</p>
+      </div>
+    </mat-card-header>
+
+    <mat-card-content>
+      <!-- 錯誤訊息 -->
+      @if (errorMessage()) {
+        <div class="error-message">
+          <mat-icon>error</mat-icon>
+          <span>{{ errorMessage() }}</span>
+        </div>
+      }
+
+      <!-- 登入表單 -->
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <!-- Email 欄位 -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>{{ 'auth.login.email' | translate }}</mat-label>
+          <input
+            matInput
+            type="email"
+            formControlName="email"
+            placeholder="user@koopa.com"
+            autocomplete="email"
+          />
+          <mat-icon matPrefix>email</mat-icon>
+          @if (getFieldError('email')) {
+            <mat-error>{{ getFieldError('email') }}</mat-error>
+          }
+        </mat-form-field>
+
+        <!-- 密碼欄位 -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>{{ 'auth.login.password' | translate }}</mat-label>
+          <input
+            matInput
+            [type]="hidePassword() ? 'password' : 'text'"
+            formControlName="password"
+            placeholder="••••••"
+            autocomplete="current-password"
+          />
+          <mat-icon matPrefix>lock</mat-icon>
+          <button
+            mat-icon-button
+            matSuffix
+            type="button"
+            (click)="togglePasswordVisibility()"
+            [attr.aria-label]="'Hide password'"
+          >
+            <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          @if (getFieldError('password')) {
+            <mat-error>{{ getFieldError('password') }}</mat-error>
+          }
+        </mat-form-field>
+
+        <!-- 記住我 -->
+        <div class="form-options">
+          <mat-checkbox formControlName="rememberMe">
+            {{ 'auth.login.rememberMe' | translate }}
+          </mat-checkbox>
+          <a href="#" class="forgot-password">
+            {{ 'auth.login.forgotPassword' | translate }}
+          </a>
+        </div>
+
+        <!-- 登入按鈕 -->
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          class="full-width login-button"
+          [disabled]="loginForm.invalid || isLoading()"
+        >
+          @if (isLoading()) {
+            <mat-spinner diameter="20"></mat-spinner>
+            <span>{{ 'auth.login.loggingIn' | translate }}</span>
+          } @else {
+            <span>{{ 'auth.login.submit' | translate }}</span>
+          }
+        </button>
+      </form>
+
+      <!-- 測試帳號提示 -->
+      <div class="test-accounts">
+        <p class="test-accounts-title">測試帳號 / Test Accounts:</p>
+        <div class="test-account">
+          <strong>管理員:</strong> admin@koopa.com / admin123
+        </div>
+        <div class="test-account">
+          <strong>一般用戶:</strong> user@koopa.com / user123
+        </div>
+        <div class="test-account">
+          <strong>測試用戶:</strong> test@koopa.com / test123
+        </div>
+      </div>
+
+      <!-- 註冊連結 -->
+      <div class="register-link">
+        <span>{{ 'auth.login.noAccount' | translate }}</span>
+        <a routerLink="/auth/register">{{ 'auth.login.signUp' | translate }}</a>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

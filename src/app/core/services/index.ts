@@ -11,3 +11,4 @@ export * from './storage.service';
 export * from './translation.service';
 export * from './theme.service';
 export * from './loading.service';
+export * from './auth.service';

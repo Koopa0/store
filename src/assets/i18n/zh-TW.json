@@ -56,14 +56,21 @@
   "auth": {
     "login": {
       "title": "登入帳號",
+      "welcome": "歡迎回來！請登入您的帳號",
       "subtitle": "歡迎回來！請登入您的帳號",
+      "email": "Email",
       "email_or_username": "Email 或用戶名稱",
       "password": "密碼",
+      "rememberMe": "記住我",
       "remember_me": "記住我",
+      "forgotPassword": "忘記密碼？",
       "forgot_password": "忘記密碼？",
+      "noAccount": "還沒有帳號？",
       "no_account": "還沒有帳號？",
+      "signUp": "立即註冊",
       "sign_up": "立即註冊",
       "submit": "登入",
+      "loggingIn": "登入中...",
       "success": "登入成功！",
       "error": "登入失敗，請檢查您的帳號密碼"
     },
