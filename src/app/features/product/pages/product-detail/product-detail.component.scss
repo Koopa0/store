@@ -11,7 +11,7 @@
  */
 
 @use '@angular/material' as mat;
-@use '../../../../../../styles/theme' as theme;
+@use 'styles/theme' as theme;
 
 .product-detail-page {
   min-height: calc(100vh - 200px);
