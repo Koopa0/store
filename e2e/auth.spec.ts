@@ -1,34 +1,87 @@
 import { test, expect } from '@playwright/test';
+import { LoginPage, HeaderPage } from './page-objects';
 
 test.describe('Authentication', () => {
   test('should login successfully', async ({ page }) => {
+    const loginPage = new LoginPage(page);
+    const headerPage = new HeaderPage(page);
+
+    // Navigate to home and click login button
     await page.goto('/');
-    
-    // Navigate to login
-    await page.click('text=登入');
-    
-    // Fill login form
-    await page.fill('input[name="emailOrUsername"]', 'admin@koopa.com');
-    await page.fill('input[name="password"]', 'admin123');
-    
-    // Submit
-    await page.click('button[type="submit"]');
-    
-    // Verify logged in
+    await headerPage.clickLogin();
+
+    // Verify we're on the login page
+    await expect(page).toHaveURL('/auth/login');
+
+    // Login with valid credentials
+    await loginPage.login('admin@koopa.com', 'admin123');
+
+    // Verify logged in - should redirect to home and show user menu
     await expect(page).toHaveURL('/');
+    await expect(await headerPage.isLoggedIn()).toBe(true);
   });
 
   test('should logout successfully', async ({ page }) => {
+    const loginPage = new LoginPage(page);
+    const headerPage = new HeaderPage(page);
+
     // Login first
-    await page.goto('/auth/login');
-    await page.fill('input[name="emailOrUsername"]', 'admin@koopa.com');
-    await page.fill('input[name="password"]', 'admin123');
-    await page.click('button[type="submit"]');
-    
+    await loginPage.goto();
+    await loginPage.login('admin@koopa.com', 'admin123');
+
+    // Wait for redirect to home
+    await expect(page).toHaveURL('/');
+
     // Logout
-    await page.click('text=登出');
-    
-    // Verify logged out
-    await expect(page).toHaveURL('/auth/login');
+    await headerPage.logout();
+
+    // Verify logged out - should show login button
+    await expect(await headerPage.isLoginButtonVisible()).toBe(true);
+  });
+
+  test('should show error on invalid credentials', async ({ page }) => {
+    const loginPage = new LoginPage(page);
+
+    await loginPage.goto();
+
+    // Login with invalid credentials
+    await loginPage.login('invalid@example.com', 'wrongpassword');
+
+    // Verify error message is shown
+    await expect(await loginPage.isErrorVisible()).toBe(true);
+  });
+
+  test('should toggle password visibility', async ({ page }) => {
+    const loginPage = new LoginPage(page);
+
+    await loginPage.goto();
+
+    // Password should be hidden by default
+    let passwordType = await loginPage.getPasswordInputType();
+    expect(passwordType).toBe('password');
+
+    // Toggle to show password
+    await loginPage.togglePassword();
+    passwordType = await loginPage.getPasswordInputType();
+    expect(passwordType).toBe('text');
+
+    // Toggle to hide password again
+    await loginPage.togglePassword();
+    passwordType = await loginPage.getPasswordInputType();
+    expect(passwordType).toBe('password');
+  });
+
+  test('should login with remember me option', async ({ page }) => {
+    const loginPage = new LoginPage(page);
+    const headerPage = new HeaderPage(page);
+
+    await loginPage.goto();
+
+    // Login with remember me checked
+    await loginPage.login('user@koopa.com', 'user123', true);
+
+    // Verify logged in
+    await expect(page).toHaveURL('/');
+    await expect(await headerPage.isLoggedIn()).toBe(true);
   });
 });

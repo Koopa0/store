@@ -10,11 +10,11 @@
 
   @if (cartItems().length === 0) {
     <!-- 空購物車 Empty Cart -->
-    <div class="empty-cart">
+    <div class="empty-cart" data-testid="cart-empty">
       <mat-icon class="empty-icon">shopping_cart</mat-icon>
       <h2>{{ 'cart.empty' | translate }}</h2>
       <p>{{ 'cart.emptyDescription' | translate }}</p>
-      <button mat-raised-button color="primary" (click)="continueShopping()">
+      <button mat-raised-button color="primary" (click)="continueShopping()" data-testid="cart-empty-continue-shopping">
         <mat-icon>shopping_bag</mat-icon>
         {{ 'cart.continueShopping' | translate }}
       </button>
@@ -23,17 +23,17 @@
     <!-- 購物車內容 Cart Content -->
     <div class="cart-content">
       <!-- 購物車項目列表 Cart Items List -->
-      <div class="cart-items">
+      <div class="cart-items" data-testid="cart-items">
         <div class="items-header">
           <h2>{{ 'cart.items' | translate }} ({{ itemsCount() }})</h2>
-          <button mat-button color="warn" (click)="clearCart()" [attr.aria-label]="'cart.clearCart' | translate">
+          <button mat-button color="warn" (click)="clearCart()" [attr.aria-label]="'cart.clearCart' | translate" data-testid="cart-clear-button">
             <mat-icon>delete</mat-icon>
             {{ 'cart.clearCart' | translate }}
           </button>
         </div>
 
         @for (item of cartItems(); track item.id) {
-          <mat-card class="cart-item">
+          <mat-card class="cart-item" [attr.data-testid]="'cart-item-' + item.id">
             <div class="item-image">
               <img [src]="item.productImageUrl" [alt]="item.productName" />
             </div>
@@ -68,7 +68,7 @@
             </div>
 
             <div class="item-quantity">
-              <button mat-icon-button (click)="decreaseQuantity(item)" [disabled]="item.quantity <= 1" [attr.aria-label]="'common.decrease_quantity' | translate">
+              <button mat-icon-button (click)="decreaseQuantity(item)" [disabled]="item.quantity <= 1" [attr.aria-label]="'common.decrease_quantity' | translate" [attr.data-testid]="'cart-item-decrease-' + item.id">
                 <mat-icon>remove</mat-icon>
               </button>
               <input
@@ -79,8 +79,9 @@
                 min="1"
                 [max]="item.stockQuantity"
                 [attr.aria-label]="'common.quantity' | translate"
+                [attr.data-testid]="'cart-item-quantity-' + item.id"
               />
-              <button mat-icon-button (click)="increaseQuantity(item)" [disabled]="item.quantity >= item.stockQuantity" [attr.aria-label]="'common.increase_quantity' | translate">
+              <button mat-icon-button (click)="increaseQuantity(item)" [disabled]="item.quantity >= item.stockQuantity" [attr.aria-label]="'common.increase_quantity' | translate" [attr.data-testid]="'cart-item-increase-' + item.id">
                 <mat-icon>add</mat-icon>
               </button>
             </div>
@@ -90,7 +91,7 @@
             </div>
 
             <div class="item-actions">
-              <button mat-icon-button color="warn" (click)="removeItem(item)" [matTooltip]="'common.delete' | translate" [attr.aria-label]="'common.remove' | translate">
+              <button mat-icon-button color="warn" (click)="removeItem(item)" [matTooltip]="'common.delete' | translate" [attr.aria-label]="'common.remove' | translate" [attr.data-testid]="'cart-item-remove-' + item.id">
                 <mat-icon>delete</mat-icon>
               </button>
             </div>
@@ -99,37 +100,37 @@
       </div>
 
       <!-- 購物車摘要 Cart Summary -->
-      <mat-card class="cart-summary">
+      <mat-card class="cart-summary" data-testid="cart-summary">
         <h3>{{ 'cart.summary.title' | translate }}</h3>
         <mat-divider></mat-divider>
 
-        <div class="summary-row">
+        <div class="summary-row" data-testid="cart-summary-subtotal">
           <span>{{ 'cart.summary.subtotal' | translate }}</span>
           <span>{{ subtotal() | currencyFormat:'TWD':'symbol' }}</span>
         </div>
 
-        <div class="summary-row">
+        <div class="summary-row" data-testid="cart-summary-tax">
           <span>{{ 'cart.summary.tax' | translate }}</span>
           <span>{{ estimatedTax() | currencyFormat:'TWD':'symbol' }}</span>
         </div>
 
-        <div class="summary-row">
+        <div class="summary-row" data-testid="cart-summary-shipping">
           <span>{{ 'cart.summary.shipping' | translate }}</span>
           <span>{{ estimatedShipping() | currencyFormat:'TWD':'symbol' }}</span>
         </div>
 
         <mat-divider></mat-divider>
 
-        <div class="summary-row total">
+        <div class="summary-row total" data-testid="cart-summary-total">
           <span>{{ 'cart.summary.total' | translate }}</span>
           <span class="total-price">{{ estimatedTotal() | currencyFormat:'TWD':'symbol' }}</span>
         </div>
 
         <div class="summary-actions">
-          <button mat-stroked-button (click)="continueShopping()">
+          <button mat-stroked-button (click)="continueShopping()" data-testid="cart-continue-shopping">
             {{ 'cart.continueShopping' | translate }}
           </button>
-          <button mat-raised-button color="primary" (click)="checkout()" [disabled]="itemsCount() === 0">
+          <button mat-raised-button color="primary" (click)="checkout()" [disabled]="itemsCount() === 0" data-testid="cart-checkout-button">
             {{ 'cart.checkout' | translate }}
           </button>
         </div>

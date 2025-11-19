@@ -16,7 +16,7 @@
     <mat-card-content>
       <!-- 錯誤訊息 -->
       @if (errorMessage()) {
-        <div class="error-message">
+        <div class="error-message" data-testid="login-error-message">
           <mat-icon>error</mat-icon>
           <span>{{ errorMessage() }}</span>
         </div>
@@ -33,6 +33,7 @@
             formControlName="email"
             placeholder="user@koopa.com"
             autocomplete="email"
+            data-testid="login-email-input"
           />
           <mat-icon matPrefix>email</mat-icon>
           @if (getFieldError('email')) {
@@ -49,6 +50,7 @@
             formControlName="password"
             placeholder="••••••"
             autocomplete="current-password"
+            data-testid="login-password-input"
           />
           <mat-icon matPrefix>lock</mat-icon>
           <button
@@ -57,6 +59,7 @@
             type="button"
             (click)="togglePasswordVisibility()"
             [attr.aria-label]="'Hide password'"
+            data-testid="login-password-toggle"
           >
             <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
           </button>
@@ -67,10 +70,10 @@
 
         <!-- 記住我 -->
         <div class="form-options">
-          <mat-checkbox formControlName="rememberMe">
+          <mat-checkbox formControlName="rememberMe" data-testid="login-remember-me">
             {{ 'auth.login.rememberMe' | translate }}
           </mat-checkbox>
-          <a href="#" class="forgot-password">
+          <a href="#" class="forgot-password" data-testid="login-forgot-password">
             {{ 'auth.login.forgotPassword' | translate }}
           </a>
         </div>
@@ -82,6 +85,7 @@
           type="submit"
           class="full-width login-button"
           [disabled]="loginForm.invalid || isLoading()"
+          data-testid="login-submit-button"
         >
           @if (isLoading()) {
             <mat-spinner diameter="20"></mat-spinner>
@@ -109,7 +113,7 @@
       <!-- 註冊連結 -->
       <div class="register-link">
         <span>{{ 'auth.login.noAccount' | translate }}</span>
-        <a routerLink="/auth/register">{{ 'auth.login.signUp' | translate }}</a>
+        <a routerLink="/auth/register" data-testid="login-register-link">{{ 'auth.login.signUp' | translate }}</a>
       </div>
     </mat-card-content>
   </mat-card>

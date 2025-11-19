@@ -7,14 +7,14 @@
   <div class="header-container">
     <!-- Logo 和應用程式名稱 -->
     <div class="header-brand">
-      <a routerLink="/" class="brand-link">
+      <a routerLink="/" class="brand-link" data-testid="header-brand-link">
         <mat-icon class="brand-icon">store</mat-icon>
         <span class="brand-text">{{ 'common.app_name' | translate }}</span>
       </a>
     </div>
 
     <!-- 桌面版導航選單 -->
-    <nav class="header-nav desktop-nav">
+    <nav class="header-nav desktop-nav" data-testid="header-nav">
       @for (item of navItems; track item.path) {
         @if (shouldShowNavItem(item)) {
           <a
@@ -22,6 +22,7 @@
             routerLinkActive="active"
             class="nav-link"
             [matTooltip]="item.label | translate"
+            [attr.data-testid]="'header-nav-' + item.path.replace('/', '')"
           >
             @if (item.badge) {
               <mat-icon [matBadge]="item.badge" matBadgeColor="warn">
@@ -45,6 +46,7 @@
         [matTooltip]="'theme.switch_theme' | translate"
         [attr.aria-label]="'theme.switch_theme' | translate"
         class="action-button"
+        data-testid="header-theme-toggle"
       >
         @if (currentTheme() === 'dark') {
           <mat-icon>light_mode</mat-icon>
@@ -60,6 +62,7 @@
         [matTooltip]="'language.switch_language' | translate"
         [attr.aria-label]="'language.switch_language' | translate"
         class="action-button"
+        data-testid="header-language-toggle"
       >
         <mat-icon>language</mat-icon>
       </button>
@@ -76,6 +79,7 @@
           color="accent"
           routerLink="/auth/login"
           class="login-button"
+          data-testid="header-login-button"
         >
           <mat-icon>login</mat-icon>
           {{ 'common.login' | translate }}
@@ -89,6 +93,7 @@
           mat-button
           [matMenuTriggerFor]="userMenu"
           class="user-button"
+          data-testid="header-user-menu-button"
         >
           <img
             [src]="currentUser()?.avatarUrl || 'https://i.pravatar.cc/40'"
@@ -117,19 +122,19 @@
           <mat-divider></mat-divider>
 
           <!-- 選單項目 -->
-          <button mat-menu-item (click)="goToProfile()">
+          <button mat-menu-item (click)="goToProfile()" data-testid="header-profile-button">
             <mat-icon>person</mat-icon>
             <span>{{ 'nav.profile' | translate }}</span>
           </button>
 
-          <button mat-menu-item (click)="goToSettings()">
+          <button mat-menu-item (click)="goToSettings()" data-testid="header-settings-button">
             <mat-icon>settings</mat-icon>
             <span>{{ 'nav.settings' | translate }}</span>
           </button>
 
           @if (isAdmin()) {
             <mat-divider></mat-divider>
-            <button mat-menu-item (click)="goToAdmin()">
+            <button mat-menu-item (click)="goToAdmin()" data-testid="header-admin-button">
               <mat-icon>admin_panel_settings</mat-icon>
               <span>{{ 'nav.admin' | translate }}</span>
             </button>
@@ -137,7 +142,7 @@
 
           <mat-divider></mat-divider>
 
-          <button mat-menu-item (click)="logout()">
+          <button mat-menu-item (click)="logout()" data-testid="header-logout-button">
             <mat-icon color="warn">logout</mat-icon>
             <span>{{ 'common.logout' | translate }}</span>
           </button>
@@ -150,6 +155,7 @@
         (click)="toggleMobileMenu()"
         [attr.aria-label]="'common.menu' | translate"
         class="mobile-menu-button"
+        data-testid="header-mobile-menu-button"
       >
         <mat-icon>menu</mat-icon>
       </button>
