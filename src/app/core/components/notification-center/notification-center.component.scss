@@ -1,0 +1,299 @@
+/**
+ * 通知中心組件樣式
+ * Notification Center Component Styles
+ */
+
+// 通知按鈕 / Notification Button
+.notification-button {
+  position: relative;
+
+  mat-icon {
+    color: #5f6368;
+  }
+
+  &:hover mat-icon {
+    color: #1a73e8;
+  }
+}
+
+// 通知選單容器 / Notification Menu Container
+::ng-deep .notification-menu {
+  .mat-mdc-menu-content {
+    padding: 0;
+  }
+
+  // 設定選單寬度 / Set menu width
+  .mat-mdc-menu-panel {
+    max-width: 400px;
+    min-width: 360px;
+  }
+}
+
+// 通知標題列 / Notification Header
+.notification-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  background-color: #f8f9fa;
+
+  .notification-title {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 500;
+    color: #202124;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    .unread-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 20px;
+      height: 20px;
+      padding: 0 6px;
+      background-color: #ea4335;
+      color: white;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+  }
+
+  .mark-all-button {
+    font-size: 12px;
+    min-width: auto;
+    padding: 0 12px;
+    height: 32px;
+    line-height: 32px;
+  }
+}
+
+// 載入中狀態 / Loading State
+.notification-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 16px;
+  gap: 16px;
+
+  p {
+    margin: 0;
+    color: #5f6368;
+    font-size: 14px;
+  }
+}
+
+// 通知列表 / Notification List
+.notification-list {
+  max-height: 400px;
+  overflow-y: auto;
+
+  // 滾動條樣式 / Scrollbar styles
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+
+    &:hover {
+      background: #a8a8a8;
+    }
+  }
+}
+
+// 通知項目 / Notification Item
+.notification-item {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 16px;
+  width: 100%;
+  height: auto !important;
+  text-align: left;
+  border: none;
+  background-color: white;
+  transition: background-color 0.2s;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #f8f9fa;
+  }
+
+  &.unread {
+    background-color: #e8f0fe;
+
+    &:hover {
+      background-color: #d2e3fc;
+    }
+  }
+
+  .notification-icon {
+    flex-shrink: 0;
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+    margin-top: 2px;
+
+    &.text-gray-400 {
+      color: #9aa0a6;
+    }
+  }
+
+  .notification-content {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    .notification-header-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+
+      span {
+        flex: 1;
+        font-size: 14px;
+        line-height: 20px;
+        word-wrap: break-word;
+
+        &.text-gray-900 {
+          color: #202124;
+        }
+
+        &.font-medium {
+          font-weight: 500;
+        }
+
+        &.text-gray-600 {
+          color: #5f6368;
+        }
+      }
+
+      .delete-button {
+        flex-shrink: 0;
+        width: 20px;
+        height: 20px;
+        padding: 0;
+        opacity: 0;
+        transition: opacity 0.2s;
+
+        .delete-icon {
+          font-size: 16px;
+          width: 16px;
+          height: 16px;
+          color: #5f6368;
+        }
+
+        &:hover .delete-icon {
+          color: #ea4335;
+        }
+      }
+    }
+
+    p {
+      margin: 0;
+      font-size: 13px;
+      line-height: 18px;
+      color: #5f6368;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      &.text-gray-400 {
+        color: #9aa0a6;
+      }
+
+      &.text-gray-600 {
+        color: #5f6368;
+      }
+    }
+
+    .notification-time {
+      font-size: 12px;
+      color: #9aa0a6;
+    }
+  }
+
+  .unread-indicator {
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    transform: translateY(-50%);
+    width: 8px;
+    height: 8px;
+    background-color: #1a73e8;
+    border-radius: 50%;
+  }
+
+  // Hover 時顯示刪除按鈕 / Show delete button on hover
+  &:hover .delete-button {
+    opacity: 1;
+  }
+}
+
+// 空狀態 / Empty State
+.notification-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 16px;
+  gap: 12px;
+
+  .empty-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+    color: #c1c1c1;
+  }
+
+  p {
+    margin: 0;
+    color: #5f6368;
+    font-size: 14px;
+  }
+}
+
+// 通知底部 / Notification Footer
+.notification-footer {
+  padding: 8px 16px;
+  text-align: center;
+  background-color: #f8f9fa;
+
+  .view-all-button {
+    width: 100%;
+    font-size: 14px;
+    font-weight: 500;
+  }
+}
+
+// 優先級顏色 / Priority Colors
+.text-blue-500 {
+  color: #1a73e8;
+}
+
+.text-green-500 {
+  color: #34a853;
+}
+
+.text-yellow-500 {
+  color: #fbbc04;
+}
+
+.text-red-500 {
+  color: #ea4335;
+}

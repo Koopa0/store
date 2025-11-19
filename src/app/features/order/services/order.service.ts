@@ -28,6 +28,12 @@ import {
 import { PaginatedResponse, ApiResponse } from '@core/models/common.model';
 import { InventoryService } from '@core/services/inventory.service';
 import { CreateInventoryTransactionRequest } from '@core/models/inventory.model';
+import { UserNotificationService } from '@core/services/user-notification.service';
+import {
+  CreateNotificationRequest,
+  NotificationType,
+  NotificationHelper,
+} from '@core/models/notification.model';
 
 /**
  * Mock 訂單資料
@@ -41,6 +47,7 @@ const MOCK_ORDERS: OrderDetail[] = [];
 export class OrderService {
   private readonly http = inject(HttpClient);
   private readonly inventoryService = inject(InventoryService);
+  private readonly notificationService = inject(UserNotificationService);
   private readonly apiUrl = `${environment.apiUrl}/orders`;
   private readonly useMock = true; // TODO: 後端完成後改為 false
 
@@ -449,7 +456,10 @@ export class OrderService {
     // 儲存到 Mock 資料庫
     MOCK_ORDERS.push(order);
 
-    return of(order);
+    // 創建訂單建立通知
+    return this.createNotificationForOrderStatus(order, OrderStatus.PENDING).pipe(
+      map(() => order)
+    );
   }
 
   /**
@@ -542,11 +552,15 @@ export class OrderService {
     // 創建庫存交易記錄（僅當訂單付款時）
     if (status === OrderStatus.PAID) {
       return this.createInventoryTransactionsForOrder(order, 'sale').pipe(
+        switchMap(() => this.createNotificationForOrderStatus(order, status)),
         map(() => order)
       );
     }
 
-    return of(order);
+    // 創建狀態變更通知
+    return this.createNotificationForOrderStatus(order, status).pipe(
+      map(() => order)
+    );
   }
 
   /**
@@ -566,11 +580,15 @@ export class OrderService {
     // 如果訂單已付款，需要創建退貨交易恢復庫存
     if (order.paidAt) {
       return this.createInventoryTransactionsForOrder(order, 'return').pipe(
+        switchMap(() => this.createNotificationForOrderStatus(order, OrderStatus.CANCELLED)),
         map(() => order)
       );
     }
 
-    return of(order);
+    // 創建取消通知
+    return this.createNotificationForOrderStatus(order, OrderStatus.CANCELLED).pipe(
+      map(() => order)
+    );
   }
 
   /**
@@ -613,6 +631,75 @@ export class OrderService {
       map(() => {
         console.log(
           `[OrderService] Created ${transactionRequests.length} inventory transactions for order ${order.orderNumber} (${type})`
+        );
+      })
+    );
+  }
+
+  /**
+   * 為訂單狀態變更創建通知
+   * Create notification for order status change
+   *
+   * @param order 訂單詳情
+   * @param status 新的訂單狀態
+   * @returns Observable<void>
+   */
+  private createNotificationForOrderStatus(
+    order: OrderDetail,
+    status: OrderStatus
+  ): Observable<void> {
+    // 將訂單狀態映射到通知類型
+    const statusToNotificationType: Partial<Record<OrderStatus, NotificationType>> = {
+      [OrderStatus.PENDING]: 'order_created',
+      [OrderStatus.PAID]: 'order_paid',
+      [OrderStatus.CONFIRMED]: 'order_confirmed',
+      [OrderStatus.SHIPPED]: 'order_shipped',
+      [OrderStatus.DELIVERED]: 'order_delivered',
+      [OrderStatus.COMPLETED]: 'order_completed',
+      [OrderStatus.CANCELLED]: 'order_cancelled',
+      [OrderStatus.REFUNDED]: 'order_refunded',
+    };
+
+    const notificationType = statusToNotificationType[status];
+    if (!notificationType) {
+      // 某些狀態不需要通知
+      return of(void 0);
+    }
+
+    // 使用 NotificationHelper 創建通知內容
+    const notificationContent = NotificationHelper.createOrderNotification(
+      notificationType,
+      order.orderNumber
+    );
+
+    // 根據狀態設定優先級
+    let priority: 'low' | 'normal' | 'high' | 'urgent' = 'normal';
+    if (status === OrderStatus.PAID || status === OrderStatus.DELIVERED) {
+      priority = 'high';
+    } else if (status === OrderStatus.CANCELLED || status === OrderStatus.REFUNDED) {
+      priority = 'normal';
+    }
+
+    const request: CreateNotificationRequest = {
+      userIds: order.userId, // 可以是單個 userId 或 userId 陣列
+      type: notificationType,
+      priority: priority,
+      title: notificationContent.title,
+      message: notificationContent.message,
+      data: {
+        orderId: order.id,
+        orderNumber: order.orderNumber,
+        orderStatus: status,
+      },
+      actionUrl: `/orders/${order.id}`,
+      actionText: '查看訂單',
+      icon: NotificationHelper.getTypeIcon(notificationType),
+    };
+
+    return this.notificationService.createNotification(request).pipe(
+      map(() => {
+        console.log(
+          `[OrderService] Created notification for order ${order.orderNumber} - ${status}`
         );
       })
     );

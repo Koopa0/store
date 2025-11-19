@@ -673,5 +673,31 @@
       "all": "全部",
       "reset": "重置"
     }
+  },
+  "notification": {
+    "title": "通知",
+    "mark_all_read": "全部標記為已讀",
+    "view_all": "查看全部通知",
+    "empty": "目前沒有通知",
+    "loading": "載入中...",
+    "type": {
+      "order_created": "訂單已建立",
+      "order_paid": "付款成功",
+      "order_confirmed": "訂單已確認",
+      "order_shipped": "訂單已發貨",
+      "order_delivered": "訂單已送達",
+      "order_completed": "訂單已完成",
+      "order_cancelled": "訂單已取消",
+      "order_refunded": "訂單已退款",
+      "promotion": "促銷活動",
+      "system": "系統通知",
+      "review_replied": "評價已回覆"
+    },
+    "priority": {
+      "low": "低",
+      "normal": "一般",
+      "high": "高",
+      "urgent": "緊急"
+    }
   }
 }

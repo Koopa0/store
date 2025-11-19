@@ -37,6 +37,9 @@ import {
   NotificationService,
 } from '@core/services';
 
+// 組件
+import { NotificationCenterComponent } from '@core/components';
+
 @Component({
   selector: 'app-header',
   standalone: true,
@@ -52,6 +55,7 @@ import {
     MatBadgeModule,
     MatTooltipModule,
     MatDividerModule,
+    NotificationCenterComponent,
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',

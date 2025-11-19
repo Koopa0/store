@@ -62,6 +62,11 @@
         <mat-icon>language</mat-icon>
       </button>
 
+      <!-- 通知中心 (僅登入用戶顯示) -->
+      @if (isAuthenticated()) {
+        <app-notification-center></app-notification-center>
+      }
+
       <!-- 未登入狀態 -->
       @if (!isAuthenticated()) {
         <button
