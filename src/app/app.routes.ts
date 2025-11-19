@@ -104,6 +104,63 @@ export const routes: Routes = [
   },
 
   /**
+   * 結帳路由
+   * Checkout route
+   *
+   * 教學說明：結帳頁面
+   */
+  {
+    path: 'checkout',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/checkout/pages/checkout/checkout.component').then(
+        (m) => m.CheckoutComponent
+      ),
+  },
+
+  /**
+   * 訂單路由
+   * Order routes
+   *
+   * 教學說明：訂單相關頁面
+   */
+  {
+    path: 'orders',
+    canActivate: [authGuard],
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import('./features/order/pages/order-list/order-list.component').then(
+            (m) => m.OrderListComponent
+          ),
+      },
+      {
+        path: ':id',
+        loadComponent: () =>
+          import('./features/order/pages/order-detail/order-detail.component').then(
+            (m) => m.OrderDetailComponent
+          ),
+      },
+    ],
+  },
+
+  /**
+   * 訂單確認路由
+   * Order confirmation route
+   *
+   * 教學說明：訂單確認頁面（完成結帳後顯示）
+   */
+  {
+    path: 'order-confirmation/:orderNumber',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/order/pages/order-confirmation/order-confirmation.component').then(
+        (m) => m.OrderConfirmationComponent
+      ),
+  },
+
+  /**
    * 管理後台路由（需要管理員權限）
    * Admin routes (requires ADMIN role)
    */

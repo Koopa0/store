@@ -30,7 +30,14 @@
     "required": "Required",
     "optional": "Optional",
     "yes": "Yes",
-    "no": "No"
+    "no": "No",
+    "back_to_cart": "Back to Cart",
+    "quantity": "Quantity",
+    "retry": "Retry",
+    "increase_quantity": "Increase Quantity",
+    "decrease_quantity": "Decrease Quantity",
+    "remove": "Remove",
+    "menu": "Menu"
   },
   "nav": {
     "products": "Products",
@@ -392,6 +399,35 @@
       "tax": "Tax",
       "shipping": "Shipping",
       "total": "Total"
+    }
+  },
+  "notification": {
+    "title": "Notifications",
+    "mark_all_read": "Mark All as Read",
+    "view_all": "View All Notifications",
+    "empty": "No notifications",
+    "loading": "Loading...",
+    "unread_count": "Unread Notifications",
+    "delete_notification": "Delete Notification",
+    "open_notification": "Open Notification",
+    "type": {
+      "order_created": "Order Created",
+      "order_paid": "Payment Successful",
+      "order_confirmed": "Order Confirmed",
+      "order_shipped": "Order Shipped",
+      "order_delivered": "Order Delivered",
+      "order_completed": "Order Completed",
+      "order_cancelled": "Order Cancelled",
+      "order_refunded": "Order Refunded",
+      "promotion": "Promotion",
+      "system": "System Notification",
+      "review_replied": "Review Replied"
+    },
+    "priority": {
+      "low": "Low",
+      "normal": "Normal",
+      "high": "High",
+      "urgent": "Urgent"
     }
   }
 }

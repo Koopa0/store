@@ -1,0 +1,164 @@
+<!--
+  評價表單對話框模板
+  Review Form Dialog Template
+
+  提供新增或編輯評價的表單
+  Provides form for adding or editing reviews
+-->
+
+<div class="review-form-dialog">
+  <!-- 對話框標題 / Dialog Title -->
+  <h2 mat-dialog-title>{{ getDialogTitle() | translate }}</h2>
+
+  <!-- 對話框內容 / Dialog Content -->
+  <mat-dialog-content>
+    <form [formGroup]="reviewForm" class="review-form">
+      <!-- 星級評分 / Star Rating -->
+      <div class="form-field">
+        <label class="field-label">
+          {{ 'review.form.rating' | translate }}
+          <span class="required">*</span>
+        </label>
+        <div
+          class="star-rating-input"
+          (mouseleave)="setHoveredRating(null)"
+        >
+          @for (rating of ratingOptions; track rating) {
+            <button
+              type="button"
+              class="star-button"
+              (click)="setRating(rating)"
+              (mouseenter)="setHoveredRating(rating)"
+            >
+              <mat-icon [class.filled]="isStarFilled(rating)">
+                {{ isStarFilled(rating) ? 'star' : 'star_border' }}
+              </mat-icon>
+            </button>
+          }
+        </div>
+        @if (hasError('rating', 'required')) {
+          <div class="error-message">
+            {{ 'review.form.error.rating_required' | translate }}
+          </div>
+        }
+      </div>
+
+      <!-- 評價標題 / Review Title -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>{{ 'review.form.title' | translate }}</mat-label>
+        <input
+          matInput
+          formControlName="title"
+          [placeholder]="'review.form.title_placeholder' | translate"
+          maxlength="100"
+        />
+        <mat-hint align="end">
+          {{ getRemainingChars('title', 100) }} {{ 'review.form.chars_remaining' | translate }}
+        </mat-hint>
+        @if (hasError('title', 'required')) {
+          <mat-error>{{ 'review.form.error.title_required' | translate }}</mat-error>
+        }
+        @if (hasError('title', 'minlength')) {
+          <mat-error>{{ 'review.form.error.title_too_short' | translate }}</mat-error>
+        }
+      </mat-form-field>
+
+      <!-- 評價內容 / Review Content -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>{{ 'review.form.content' | translate }}</mat-label>
+        <textarea
+          matInput
+          formControlName="content"
+          [placeholder]="'review.form.content_placeholder' | translate"
+          rows="5"
+          maxlength="1000"
+        ></textarea>
+        <mat-hint align="end">
+          {{ getRemainingChars('content', 1000) }} {{ 'review.form.chars_remaining' | translate }}
+        </mat-hint>
+        @if (hasError('content', 'required')) {
+          <mat-error>{{ 'review.form.error.content_required' | translate }}</mat-error>
+        }
+        @if (hasError('content', 'minlength')) {
+          <mat-error>{{ 'review.form.error.content_too_short' | translate }}</mat-error>
+        }
+      </mat-form-field>
+
+      <!-- 評價圖片 / Review Images -->
+      <div class="form-field">
+        <label class="field-label">
+          {{ 'review.form.images' | translate }}
+          <span class="optional">({{ 'common.optional' | translate }})</span>
+        </label>
+
+        <!-- 圖片預覽 / Image Preview -->
+        @if (uploadedImages.length > 0) {
+          <div class="image-preview-grid">
+            @for (image of uploadedImages; track $index) {
+              <div class="image-preview-item">
+                <img [src]="image" [alt]="'Review image ' + ($index + 1)" />
+                <button
+                  type="button"
+                  class="remove-image-button"
+                  (click)="removeImage($index)"
+                >
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+            }
+          </div>
+        }
+
+        <!-- 上傳按鈕 / Upload Button -->
+        @if (uploadedImages.length < 5) {
+          <button
+            type="button"
+            mat-stroked-button
+            class="upload-button"
+            (click)="triggerFileInput()"
+          >
+            <mat-icon>add_photo_alternate</mat-icon>
+            {{ 'review.form.add_images' | translate }} ({{ uploadedImages.length }}/5)
+          </button>
+        }
+
+        <!-- 隱藏的檔案輸入 / Hidden file input -->
+        <input
+          type="file"
+          id="review-image-input"
+          accept="image/*"
+          multiple
+          (change)="onImageSelect($event)"
+          style="display: none"
+        />
+
+        <div class="field-hint">
+          {{ 'review.form.images_hint' | translate }}
+        </div>
+      </div>
+    </form>
+  </mat-dialog-content>
+
+  <!-- 對話框操作 / Dialog Actions -->
+  <mat-dialog-actions align="end">
+    <button
+      mat-button
+      (click)="onCancel()"
+      [disabled]="submitting"
+    >
+      {{ 'common.cancel' | translate }}
+    </button>
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="onSubmit()"
+      [disabled]="reviewForm.invalid || submitting"
+    >
+      @if (submitting) {
+        <mat-spinner diameter="20"></mat-spinner>
+      } @else {
+        {{ (data.mode === 'add' ? 'review.form.submit' : 'common.save') | translate }}
+      }
+    </button>
+  </mat-dialog-actions>
+</div>

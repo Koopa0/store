@@ -43,6 +43,7 @@
         mat-icon-button
         (click)="toggleTheme()"
         [matTooltip]="'theme.switch_theme' | translate"
+        [attr.aria-label]="'theme.switch_theme' | translate"
         class="action-button"
       >
         @if (currentTheme() === 'dark') {
@@ -57,10 +58,16 @@
         mat-icon-button
         (click)="toggleLanguage()"
         [matTooltip]="'language.switch_language' | translate"
+        [attr.aria-label]="'language.switch_language' | translate"
         class="action-button"
       >
         <mat-icon>language</mat-icon>
       </button>
+
+      <!-- 通知中心 (僅登入用戶顯示) -->
+      @if (isAuthenticated()) {
+        <app-notification-center></app-notification-center>
+      }
 
       <!-- 未登入狀態 -->
       @if (!isAuthenticated()) {
@@ -141,6 +148,7 @@
       <button
         mat-icon-button
         (click)="toggleMobileMenu()"
+        [attr.aria-label]="'common.menu' | translate"
         class="mobile-menu-button"
       >
         <mat-icon>menu</mat-icon>

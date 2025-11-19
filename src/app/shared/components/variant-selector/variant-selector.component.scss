@@ -1,0 +1,261 @@
+/**
+ * 變體選擇器樣式
+ * Variant Selector Styles
+ *
+ * 使用 Gemini 設計風格（Google Blue）
+ * Using Gemini design style (Google Blue)
+ */
+
+.variant-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.variant-option {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  .option-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 16px;
+    font-weight: 500;
+
+    .option-name {
+      color: #202124;
+    }
+
+    .selected-value {
+      color: #1a73e8;
+      font-weight: 400;
+      font-size: 14px;
+    }
+  }
+}
+
+// ========== 顏色選項樣式 ==========
+.color-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+
+  .color-option {
+    position: relative;
+    width: 48px;
+    height: 48px;
+    border: 2px solid transparent;
+    border-radius: 50%;
+    background: #fff;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 4px;
+
+    &:hover:not(:disabled) {
+      transform: scale(1.05);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    &.selected {
+      border-color: #1a73e8;
+      box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
+    }
+
+    &.unavailable {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+    }
+
+    .color-circle {
+      display: block;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .check-icon {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: #fff;
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+      text-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+    }
+  }
+}
+
+// ========== 尺寸/容量選項樣式 ==========
+.size-options {
+  mat-chip-option {
+    font-size: 14px;
+    min-height: 40px;
+    padding: 8px 16px;
+
+    &[aria-selected="true"] {
+      background-color: #1a73e8;
+      color: #fff;
+
+      &:hover {
+        background-color: #1765cc;
+      }
+    }
+
+    &[disabled] {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .price-adjustment {
+      margin-left: 4px;
+      font-size: 12px;
+      opacity: 0.8;
+    }
+  }
+}
+
+// ========== 材質/風格選項樣式 ==========
+.material-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+
+  .material-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    min-width: 100px;
+    border: 2px solid #dadce0;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+
+    &:hover:not(:disabled) {
+      border-color: #1a73e8;
+      background-color: rgba(26, 115, 232, 0.04);
+    }
+
+    &.selected {
+      border-color: #1a73e8;
+      background-color: rgba(26, 115, 232, 0.08);
+      font-weight: 500;
+    }
+
+    &:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .option-image {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 4px;
+    }
+
+    .option-text {
+      font-size: 14px;
+      text-align: center;
+    }
+
+    .price-adjustment {
+      font-size: 12px;
+      color: #5f6368;
+    }
+  }
+}
+
+// ========== 選擇結果摘要 ==========
+.selection-summary {
+  background-color: #f8f9fa;
+  border: 1px solid #dadce0;
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  .summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .label {
+      font-size: 14px;
+      color: #5f6368;
+    }
+
+    .value {
+      font-size: 14px;
+      font-weight: 500;
+      color: #202124;
+
+      &.price {
+        font-size: 18px;
+        color: #1a73e8;
+      }
+
+      &.stock {
+        &.low-stock {
+          color: #ea8600;
+        }
+      }
+
+      &.sku {
+        font-family: 'Roboto Mono', monospace;
+        font-size: 12px;
+        color: #5f6368;
+      }
+
+      .out-of-stock {
+        color: #d93025;
+      }
+    }
+  }
+}
+
+// ========== 選擇提示 ==========
+.selection-hint {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  background-color: #e8f0fe;
+  border-radius: 8px;
+  color: #1967d2;
+  font-size: 14px;
+
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+}
+
+// ========== 響應式設計 ==========
+@media (max-width: 600px) {
+  .color-options .color-option {
+    width: 40px;
+    height: 40px;
+  }
+
+  .material-options .material-option {
+    min-width: 80px;
+    padding: 8px 12px;
+
+    .option-image {
+      width: 50px;
+      height: 50px;
+    }
+  }
+}

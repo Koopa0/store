@@ -1,0 +1,189 @@
+<!--
+  評價列表組件模板
+  Review List Component Template
+
+  顯示商品評價列表、統計和篩選功能
+  Displays product review list, statistics, and filtering features
+-->
+
+<div class="review-list-container">
+  <!-- 評價統計區 / Review Statistics Section -->
+  @if (statistics(); as stats) {
+    <mat-card class="statistics-card">
+      <mat-card-content>
+        <div class="statistics-header">
+          <div class="overall-rating">
+            <div class="rating-number">{{ stats.averageRating.toFixed(1) }}</div>
+            <div class="rating-stars">
+              @for (filled of ReviewHelper.getStarArray(Math.round(stats.averageRating)); track $index) {
+                <mat-icon [class.filled]="filled">
+                  {{ filled ? 'star' : 'star_border' }}
+                </mat-icon>
+              }
+            </div>
+            <div class="total-reviews">{{ stats.totalReviews }} {{ 'review.total_reviews' | translate }}</div>
+          </div>
+
+          <!-- 星級分布 / Rating Distribution -->
+          <div class="rating-distribution">
+            @for (rating of [5, 4, 3, 2, 1]; track rating) {
+              <div class="rating-row" (click)="filterByRating(selectedRating === rating ? null : rating)">
+                <div class="rating-label">
+                  <mat-icon class="star-icon">star</mat-icon>
+                  <span>{{ rating }}</span>
+                </div>
+                <mat-progress-bar
+                  mode="determinate"
+                  [value]="getRatingPercentage(rating)"
+                  [class.selected]="selectedRating === rating"
+                ></mat-progress-bar>
+                <div class="rating-count">{{ getRatingCount(rating) }}</div>
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- 篩選標籤 / Filter Chips -->
+        <div class="filter-chips">
+          <mat-chip-set>
+            <mat-chip
+              [highlighted]="verifiedOnly"
+              (click)="toggleVerifiedOnly()"
+            >
+              <mat-icon matChipAvatar>verified</mat-icon>
+              {{ 'review.verified_only' | translate }} ({{ stats.verifiedPurchasesCount }})
+            </mat-chip>
+            <mat-chip
+              [highlighted]="withImagesOnly"
+              (click)="toggleWithImagesOnly()"
+            >
+              <mat-icon matChipAvatar>image</mat-icon>
+              {{ 'review.with_images_only' | translate }} ({{ stats.reviewsWithImagesCount }})
+            </mat-chip>
+          </mat-chip-set>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  }
+
+  <!-- 排序和篩選工具列 / Sort and Filter Toolbar -->
+  <div class="toolbar">
+    <mat-form-field appearance="outline">
+      <mat-label>{{ 'review.sort_by' | translate }}</mat-label>
+      <mat-select [(ngModel)]="sortBy" (selectionChange)="onSortChange()">
+        <mat-option value="newest">{{ 'review.sort.newest' | translate }}</mat-option>
+        <mat-option value="highest">{{ 'review.sort.highest' | translate }}</mat-option>
+        <mat-option value="lowest">{{ 'review.sort.lowest' | translate }}</mat-option>
+        <mat-option value="helpful">{{ 'review.sort.helpful' | translate }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <!-- 評價列表 / Review List -->
+  <div class="reviews-list">
+    @if (loading()) {
+      <div class="loading-container">
+        <mat-progress-spinner mode="indeterminate" diameter="50"></mat-progress-spinner>
+        <p>{{ 'common.loading' | translate }}</p>
+      </div>
+    } @else if (reviews().length === 0) {
+      <div class="empty-state">
+        <mat-icon>rate_review</mat-icon>
+        <p>{{ 'review.no_reviews' | translate }}</p>
+      </div>
+    } @else {
+      @for (review of reviews(); track review.id) {
+        <mat-card class="review-card">
+          <mat-card-content>
+            <!-- 評價標題 / Review Header -->
+            <div class="review-header">
+              <div class="user-info">
+                <div class="user-avatar">
+                  @if (review.userAvatar) {
+                    <img [src]="review.userAvatar" [alt]="review.userName" />
+                  } @else {
+                    <mat-icon>account_circle</mat-icon>
+                  }
+                </div>
+                <div class="user-details">
+                  <div class="user-name">{{ review.userName }}</div>
+                  <div class="review-meta">
+                    <span class="review-date">{{ ReviewHelper.getRelativeTime(review.createdAt) }}</span>
+                    @if (review.isVerifiedPurchase) {
+                      <mat-icon class="verified-badge" [matTooltip]="'review.verified_purchase' | translate">
+                        verified
+                      </mat-icon>
+                    }
+                  </div>
+                </div>
+              </div>
+
+              <!-- 星級評分 / Star Rating -->
+              <div class="rating-stars">
+                @for (filled of ReviewHelper.getStarArray(review.rating); track $index) {
+                  <mat-icon [class.filled]="filled">
+                    {{ filled ? 'star' : 'star_border' }}
+                  </mat-icon>
+                }
+              </div>
+            </div>
+
+            <!-- 變體資訊 / Variant Information -->
+            @if (review.variantAttributes && Object.keys(review.variantAttributes).length > 0) {
+              <div class="variant-info">
+                @for (attr of Object.entries(review.variantAttributes); track attr[0]) {
+                  <span class="variant-chip">{{ attr[0] }}: {{ attr[1] }}</span>
+                }
+              </div>
+            }
+
+            <!-- 評價標題 / Review Title -->
+            <div class="review-title">{{ review.title }}</div>
+
+            <!-- 評價內容 / Review Content -->
+            <div class="review-content">{{ review.content }}</div>
+
+            <!-- 評價圖片 / Review Images -->
+            @if (review.images && review.images.length > 0) {
+              <div class="review-images">
+                @for (image of review.images; track $index) {
+                  <img [src]="image" [alt]="'Review image ' + ($index + 1)" />
+                }
+              </div>
+            }
+
+            <mat-divider></mat-divider>
+
+            <!-- 評價操作 / Review Actions -->
+            <div class="review-actions">
+              <button
+                mat-button
+                class="helpful-button"
+                (click)="markAsHelpful(review.id)"
+              >
+                <mat-icon>thumb_up</mat-icon>
+                {{ 'review.helpful' | translate }} ({{ review.helpfulCount }})
+              </button>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      }
+    }
+  </div>
+
+  <!-- 載入更多按鈕 / Load More Button -->
+  @if (hasMore() && !loading()) {
+    <div class="load-more-container">
+      <button mat-raised-button color="primary" (click)="loadMore()">
+        {{ 'review.load_more' | translate }}
+      </button>
+    </div>
+  }
+
+  <!-- 載入中指示器 / Loading Indicator -->
+  @if (loading() && reviews().length > 0) {
+    <div class="loading-more">
+      <mat-progress-spinner mode="indeterminate" diameter="30"></mat-progress-spinner>
+    </div>
+  }
+</div>

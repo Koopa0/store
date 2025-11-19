@@ -13,7 +13,8 @@
  * 5. 錯誤處理 (Error handling)
  */
 
-import { Component, OnInit, inject, signal, computed } from '@angular/core';
+import { Component, OnInit, inject, signal, computed, DestroyRef, ChangeDetectionStrategy } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ReactiveFormsModule, FormControl, Validators } from '@angular/forms';
@@ -33,7 +34,19 @@ import { MatBadgeModule } from '@angular/material/badge';
 // Services and Models
 import { ProductService } from '../../services/product.service';
 import { CartService } from '@features/cart/services/cart.service';
-import { ProductListItem } from '@core/models/product.model';
+import { LoggerService } from '@core/services';
+import {
+  ProductListItem,
+  ProductVariantConfig,
+  SelectedVariant,
+} from '@core/models/product.model';
+
+// Shared Components
+import {
+  VariantSelectorComponent,
+  ImageCarouselComponent,
+  ReviewListComponent,
+} from '@shared/components';
 
 // Pipes
 import { TranslateModule } from '@ngx-translate/core';
@@ -42,6 +55,7 @@ import { CurrencyFormatPipe } from '@shared/pipes/currency-format.pipe';
 @Component({
   selector: 'app-product-detail',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
     RouterLink,
@@ -58,6 +72,9 @@ import { CurrencyFormatPipe } from '@shared/pipes/currency-format.pipe';
     MatBadgeModule,
     TranslateModule,
     CurrencyFormatPipe,
+    VariantSelectorComponent,
+    ImageCarouselComponent,
+    ReviewListComponent,
   ],
   templateUrl: './product-detail.component.html',
   styleUrl: './product-detail.component.scss',
@@ -71,6 +88,8 @@ export class ProductDetailComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly productService = inject(ProductService);
   private readonly cartService = inject(CartService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly logger = inject(LoggerService);
 
   /**
    * 狀態 Signals
@@ -80,6 +99,13 @@ export class ProductDetailComponent implements OnInit {
   public readonly loading = signal<boolean>(false);
   public readonly error = signal<string | null>(null);
   public readonly selectedImageIndex = signal<number>(0);
+
+  /**
+   * 變體相關 Signals
+   * Variant-related signals
+   */
+  public readonly variantConfig = signal<ProductVariantConfig | null>(null);
+  public readonly selectedVariant = signal<SelectedVariant | null>(null);
 
   /**
    * 表單控制項
@@ -103,10 +129,24 @@ export class ProductDetailComponent implements OnInit {
   public readonly totalPrice = computed(() => {
     const prod = this.product();
     const quantity = this.quantityControl.value || 1;
+    const variant = this.selectedVariant();
+
+    // 如果有選擇變體，使用變體價格
+    if (variant) {
+      return variant.price * quantity;
+    }
+
     return prod ? prod.price * quantity : 0;
   });
 
   public readonly isInStock = computed(() => {
+    const variant = this.selectedVariant();
+
+    // 如果有選擇變體，使用變體庫存
+    if (variant) {
+      return variant.availableStock > 0;
+    }
+
     const prod = this.product();
     return prod ? prod.stockQuantity > 0 : false;
   });
@@ -122,6 +162,15 @@ export class ProductDetailComponent implements OnInit {
     return Math.round(
       ((prod.comparePrice - prod.price) / prod.comparePrice) * 100
     );
+  });
+
+  public readonly productImages = computed(() => {
+    const prod = this.product();
+    if (!prod) return [];
+    // 如果有多張圖片，可以在這裡擴展
+    // For now, just return the primary image
+    // Filter out undefined values to ensure type safety
+    return [prod.primaryImageUrl].filter((img): img is string => !!img);
   });
 
   /**
@@ -145,17 +194,61 @@ export class ProductDetailComponent implements OnInit {
     this.loading.set(true);
     this.error.set(null);
 
-    this.productService.getProduct(id).subscribe({
-      next: (product) => {
-        this.product.set(product);
-        this.loading.set(false);
-      },
-      error: (err) => {
-        console.error('Failed to load product:', err);
-        this.error.set('Failed to load product. Please try again.');
-        this.loading.set(false);
-      },
-    });
+    this.productService
+      .getProduct(id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (product) => {
+          this.product.set(product);
+          this.loading.set(false);
+
+          // 載入變體配置
+          this.loadVariantConfig(id);
+        },
+        error: (err) => {
+          this.logger.error('Failed to load product:', err);
+          this.error.set('Failed to load product. Please try again.');
+          this.loading.set(false);
+        },
+      });
+  }
+
+  /**
+   * 載入變體配置
+   * Load variant configuration
+   */
+  private loadVariantConfig(productId: string): void {
+    this.productService
+      .getProductVariantConfig(productId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (config) => {
+          this.variantConfig.set(config);
+
+          // 如果有預設變體，設置為選中
+          if (config.defaultVariant) {
+            this.selectedVariant.set({
+              variantId: config.defaultVariant.id,
+              attributes: config.defaultVariant.attributes,
+              price: config.defaultVariant.priceOverride || this.product()!.price,
+              availableStock: config.defaultVariant.stockQuantity,
+              sku: config.defaultVariant.variantSku,
+            });
+          }
+        },
+        error: (err) => {
+          this.logger.error('Failed to load variant config:', err);
+          // 變體載入失敗不影響主要功能
+        },
+      });
+  }
+
+  /**
+   * 處理變體選擇變更
+   * Handle variant selection change
+   */
+  onVariantChange(variant: SelectedVariant | null): void {
+    this.selectedVariant.set(variant);
   }
 
   /**
@@ -188,18 +281,34 @@ export class ProductDetailComponent implements OnInit {
   addToCart(): void {
     const prod = this.product();
     const quantity = this.quantityControl.value || 1;
+    const variant = this.selectedVariant();
+    const config = this.variantConfig();
+
+    // 如果商品有變體但用戶尚未選擇，提示用戶選擇
+    if (config?.hasVariants && !variant) {
+      this.logger.warn('[ProductDetail] Please select variant options first');
+      // TODO: 顯示提示訊息「請先選擇規格」
+      return;
+    }
 
     if (prod) {
-      this.cartService.addToCart(prod, quantity).subscribe({
-        next: () => {
-          console.log('Added to cart successfully');
-          // TODO: 顯示成功訊息
-        },
-        error: (err) => {
-          console.error('Failed to add to cart:', err);
-          // TODO: 顯示錯誤訊息
-        },
-      });
+      this.cartService
+        .addToCart(prod, quantity, variant?.variantId, variant?.attributes)
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe({
+          next: () => {
+            this.logger.info('[ProductDetail] Added to cart successfully', {
+              product: prod.name,
+              variant: variant?.attributes,
+              quantity,
+            });
+            // TODO: 顯示成功訊息
+          },
+          error: (err) => {
+            this.logger.error('Failed to add to cart:', err);
+            // TODO: 顯示錯誤訊息
+          },
+        });
     }
   }
 
@@ -210,19 +319,36 @@ export class ProductDetailComponent implements OnInit {
   buyNow(): void {
     const prod = this.product();
     const quantity = this.quantityControl.value || 1;
+    const variant = this.selectedVariant();
+    const config = this.variantConfig();
+
+    // 如果商品有變體但用戶尚未選擇，提示用戶選擇
+    if (config?.hasVariants && !variant) {
+      this.logger.warn('[ProductDetail] Please select variant options first');
+      // TODO: 顯示提示訊息「請先選擇規格」
+      return;
+    }
 
     if (prod) {
       // 先加入購物車，然後導航到結帳頁面
-      this.cartService.addToCart(prod, quantity).subscribe({
-        next: () => {
-          // TODO: 導航到結帳頁面
-          this.router.navigate(['/cart']);
-        },
-        error: (err) => {
-          console.error('Failed to add to cart:', err);
-          // TODO: 顯示錯誤訊息
-        },
-      });
+      this.cartService
+        .addToCart(prod, quantity, variant?.variantId, variant?.attributes)
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe({
+          next: () => {
+            this.logger.info('[ProductDetail] Buy now -', {
+              product: prod.name,
+              variant: variant?.attributes,
+              quantity,
+            });
+            // TODO: 導向結帳頁面
+            this.router.navigate(['/cart']);
+          },
+          error: (err) => {
+            this.logger.error('Failed to add to cart:', err);
+            // TODO: 顯示錯誤訊息
+          },
+        });
     }
   }
 

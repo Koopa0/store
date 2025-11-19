@@ -3,7 +3,7 @@
  * Angular Material 自定義主題 - 採用 Gemini Web 設計風格
  *
  * 設計特點：
- * - 柔和的藍紫色漸層配色
+ * - Google Blue 藍色漸層配色 (#4285f4, #1a73e8)
  * - 大圓角設計 (16-24px)
  * - 極簡現代的介面
  * - 流暢的過渡動畫
@@ -22,10 +22,10 @@
 // ============================================================================
 
 /**
- * 主色：藍紫色漸層
- * Gemini 的標誌性藍色，帶有紫色調
+ * 主色：Google Blue (Gemini 藍)
+ * Gemini 的標誌性藍色 (#1a73e8)
  */
-$gemini-primary: mat.m2-define-palette(mat.$m2-indigo-palette, 500, 300, 700);
+$gemini-primary: mat.m2-define-palette(mat.$m2-blue-palette, 700, 500, 900);
 
 /**
  * 輔助色：青色
@@ -85,22 +85,22 @@ $gemini-dark-theme: mat.m2-define-dark-theme((
 // ============================================================================
 
 :root {
-  // ===== 主色系 (Gemini Blue-Purple) =====
-  --primary: #5f6368;
-  --primary-50: #e8eaed;
-  --primary-100: #c5cae9;
-  --primary-200: #9fa8da;
-  --primary-300: #7986cb;
-  --primary-400: #5c6bc0;
-  --primary-500: #3f51b5;
-  --primary-600: #3949ab;
-  --primary-700: #303f9f;
-  --primary-800: #283593;
-  --primary-900: #1a237e;
+  // ===== 主色系 (Gemini Blue - Google Blue) =====
+  --primary: #1a73e8;
+  --primary-50: #e8f0fe;
+  --primary-100: #d2e3fc;
+  --primary-200: #aecbfa;
+  --primary-300: #8ab4f8;
+  --primary-400: #669df6;
+  --primary-500: #4285f4;
+  --primary-600: #1a73e8;
+  --primary-700: #1967d2;
+  --primary-800: #185abc;
+  --primary-900: #174ea6;
 
-  // Gemini 特色漸層色
-  --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  --primary-gradient-hover: linear-gradient(135deg, #5568d3 0%, #5f3d8a 100%);
+  // Gemini 特色漸層色 (藍色系)
+  --primary-gradient: linear-gradient(135deg, #4285f4 0%, #1a73e8 100%);
+  --primary-gradient-hover: linear-gradient(135deg, #5a95f5 0%, #3484ed 100%);
 
   // ===== 輔助色 (Cyan) =====
   --accent: #26c6da;

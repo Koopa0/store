@@ -1,0 +1,441 @@
+<!--
+  結帳頁面模板
+  Checkout Page Template
+
+  使用 Material Stepper 實現多步驟結帳流程
+  Using Material Stepper for multi-step checkout process
+-->
+
+<div class="checkout-container">
+  <!-- 頁面標題 -->
+  <header class="page-header">
+    <h1>{{ 'checkout.title' | translate }}</h1>
+    <p class="subtitle">{{ 'checkout.subtitle' | translate }}</p>
+  </header>
+
+  <!-- 結帳步驟 -->
+  <mat-stepper
+    linear
+    #stepper
+    class="checkout-stepper"
+    labelPosition="bottom"
+  >
+    <!-- Step 1: 購物車確認 -->
+    <mat-step [editable]="true">
+      <ng-template matStepLabel>{{ 'checkout.step1.title' | translate }}</ng-template>
+
+      <div class="step-content">
+        <h2>{{ 'checkout.step1.review_items' | translate }}</h2>
+
+        <!-- 購物車項目列表 -->
+        <div class="cart-items-review">
+          @if (cartItems().length === 0) {
+            <div class="empty-cart">
+              <mat-icon>shopping_cart</mat-icon>
+              <p>{{ 'checkout.empty_cart' | translate }}</p>
+            </div>
+          } @else {
+            @for (item of cartItems(); track item.id) {
+              <div class="cart-item-card">
+                <img
+                  [src]="item.productImageUrl || '/assets/images/placeholder.jpg'"
+                  [alt]="item.productName"
+                  class="item-image"
+                />
+                <div class="item-details">
+                  <h3>{{ item.productName }}</h3>
+                  <p class="item-price">{{ item.unitPrice | currencyFormat }}</p>
+                  <p class="item-quantity">{{ 'common.quantity' | translate }}: {{ item.quantity }}</p>
+                </div>
+                <div class="item-subtotal">
+                  <span>{{ item.subtotal | currencyFormat }}</span>
+                </div>
+              </div>
+            }
+          }
+        </div>
+
+        <!-- 購物車摘要 -->
+        <div class="cart-summary-preview">
+          <div class="summary-row">
+            <span>{{ 'checkout.subtotal' | translate }}</span>
+            <span class="amount">{{ subtotal() | currencyFormat }}</span>
+          </div>
+          <div class="summary-row">
+            <span>{{ 'checkout.items_count' | translate }}</span>
+            <span>{{ itemsCount() }}</span>
+          </div>
+        </div>
+
+        <div class="step-actions">
+          <button
+            mat-stroked-button
+            routerLink="/cart"
+            class="back-btn"
+          >
+            <mat-icon>arrow_back</mat-icon>
+            {{ 'common.back_to_cart' | translate }}
+          </button>
+          <button
+            mat-flat-button
+            color="primary"
+            matStepperNext
+            [disabled]="itemsCount() === 0"
+            class="next-btn"
+          >
+            {{ 'common.next' | translate }}
+            <mat-icon>arrow_forward</mat-icon>
+          </button>
+        </div>
+      </div>
+    </mat-step>
+
+    <!-- Step 2: 配送地址 -->
+    <mat-step [stepControl]="shippingForm" [editable]="true">
+      <ng-template matStepLabel>{{ 'checkout.step2.title' | translate }}</ng-template>
+
+      <div class="step-content">
+        <h2>{{ 'checkout.step2.shipping_address' | translate }}</h2>
+
+        <form [formGroup]="shippingForm" class="shipping-form">
+          <!-- 收件人資訊 -->
+          <div class="form-section">
+            <h3>{{ 'checkout.step2.recipient_info' | translate }}</h3>
+
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>{{ 'checkout.step2.recipient_name' | translate }}</mat-label>
+                <input
+                  matInput
+                  formControlName="recipientName"
+                  placeholder="王小明"
+                />
+                <mat-icon matPrefix>person</mat-icon>
+                @if (shippingForm.get('recipientName')?.invalid && shippingForm.get('recipientName')?.touched) {
+                  <mat-error>{{ 'validation.required' | translate }}</mat-error>
+                }
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>{{ 'checkout.step2.recipient_phone' | translate }}</mat-label>
+                <input
+                  matInput
+                  formControlName="recipientPhone"
+                  placeholder="0912345678"
+                />
+                <mat-icon matPrefix>phone</mat-icon>
+                @if (shippingForm.get('recipientPhone')?.invalid && shippingForm.get('recipientPhone')?.touched) {
+                  <mat-error>{{ 'validation.phone_format' | translate }}</mat-error>
+                }
+              </mat-form-field>
+            </div>
+          </div>
+
+          <mat-divider></mat-divider>
+
+          <!-- 地址資訊 -->
+          <div class="form-section">
+            <h3>{{ 'checkout.step2.address_info' | translate }}</h3>
+
+            <div class="form-row two-columns">
+              <mat-form-field appearance="outline">
+                <mat-label>{{ 'checkout.step2.postal_code' | translate }}</mat-label>
+                <input
+                  matInput
+                  formControlName="postalCode"
+                  placeholder="106"
+                />
+                <mat-icon matPrefix>markunread_mailbox</mat-icon>
+                @if (shippingForm.get('postalCode')?.invalid && shippingForm.get('postalCode')?.touched) {
+                  <mat-error>{{ 'validation.postal_code' | translate }}</mat-error>
+                }
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>{{ 'checkout.step2.city' | translate }}</mat-label>
+                <input
+                  matInput
+                  formControlName="city"
+                  placeholder="台北市"
+                />
+                <mat-icon matPrefix>location_city</mat-icon>
+                @if (shippingForm.get('city')?.invalid && shippingForm.get('city')?.touched) {
+                  <mat-error>{{ 'validation.required' | translate }}</mat-error>
+                }
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>{{ 'checkout.step2.district' | translate }}</mat-label>
+                <input
+                  matInput
+                  formControlName="district"
+                  placeholder="大安區"
+                />
+                <mat-icon matPrefix>place</mat-icon>
+                @if (shippingForm.get('district')?.invalid && shippingForm.get('district')?.touched) {
+                  <mat-error>{{ 'validation.required' | translate }}</mat-error>
+                }
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>{{ 'checkout.step2.street_address' | translate }}</mat-label>
+                <input
+                  matInput
+                  formControlName="streetAddress"
+                  placeholder="忠孝東路四段123號"
+                />
+                <mat-icon matPrefix>home</mat-icon>
+                @if (shippingForm.get('streetAddress')?.invalid && shippingForm.get('streetAddress')?.touched) {
+                  <mat-error>{{ 'validation.street_address' | translate }}</mat-error>
+                }
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>{{ 'checkout.step2.building_floor' | translate }}</mat-label>
+                <input
+                  matInput
+                  formControlName="buildingFloor"
+                  placeholder="10樓之3（選填）"
+                />
+                <mat-icon matPrefix>apartment</mat-icon>
+              </mat-form-field>
+            </div>
+          </div>
+        </form>
+
+        <div class="step-actions">
+          <button
+            mat-stroked-button
+            matStepperPrevious
+            class="back-btn"
+          >
+            <mat-icon>arrow_back</mat-icon>
+            {{ 'common.previous' | translate }}
+          </button>
+          <button
+            mat-flat-button
+            color="primary"
+            matStepperNext
+            [disabled]="shippingForm.invalid"
+            class="next-btn"
+          >
+            {{ 'common.next' | translate }}
+            <mat-icon>arrow_forward</mat-icon>
+          </button>
+        </div>
+      </div>
+    </mat-step>
+
+    <!-- Step 3: 支付方式 -->
+    <mat-step [stepControl]="paymentForm" [editable]="true">
+      <ng-template matStepLabel>{{ 'checkout.step3.title' | translate }}</ng-template>
+
+      <div class="step-content">
+        <h2>{{ 'checkout.step3.payment_method' | translate }}</h2>
+
+        <form [formGroup]="paymentForm" class="payment-form">
+          <!-- 支付方式選擇 -->
+          <mat-radio-group formControlName="paymentMethodId" class="payment-methods">
+            @for (method of paymentMethods(); track method.id) {
+              <mat-card class="payment-method-card">
+                <mat-radio-button [value]="method.id">
+                  <div class="method-content">
+                    <div class="method-icon">
+                      <mat-icon>{{ method.icon }}</mat-icon>
+                    </div>
+                    <div class="method-info">
+                      <h4>{{ method.name }}</h4>
+                      <p>{{ method.description }}</p>
+                    </div>
+                  </div>
+                </mat-radio-button>
+              </mat-card>
+            }
+          </mat-radio-group>
+
+          <mat-divider></mat-divider>
+
+          <!-- 客戶備註 -->
+          <div class="form-section">
+            <h3>{{ 'checkout.step3.customer_note' | translate }}</h3>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>{{ 'checkout.step3.note_placeholder' | translate }}</mat-label>
+              <textarea
+                matInput
+                formControlName="customerNote"
+                rows="4"
+                placeholder="請輸入任何特殊需求或備註..."
+              ></textarea>
+              <mat-icon matPrefix>note</mat-icon>
+            </mat-form-field>
+          </div>
+        </form>
+
+        <div class="step-actions">
+          <button
+            mat-stroked-button
+            matStepperPrevious
+            class="back-btn"
+          >
+            <mat-icon>arrow_back</mat-icon>
+            {{ 'common.previous' | translate }}
+          </button>
+          <button
+            mat-flat-button
+            color="primary"
+            matStepperNext
+            [disabled]="paymentForm.invalid"
+            class="next-btn"
+          >
+            {{ 'common.next' | translate }}
+            <mat-icon>arrow_forward</mat-icon>
+          </button>
+        </div>
+      </div>
+    </mat-step>
+
+    <!-- Step 4: 訂單確認 -->
+    <mat-step>
+      <ng-template matStepLabel>{{ 'checkout.step4.title' | translate }}</ng-template>
+
+      <div class="step-content">
+        <h2>{{ 'checkout.step4.review_order' | translate }}</h2>
+
+        <!-- 訂單摘要 -->
+        <div class="order-summary-section">
+          <!-- 配送地址預覽 -->
+          <mat-card class="summary-card">
+            <mat-card-header>
+              <mat-icon mat-card-avatar>local_shipping</mat-icon>
+              <mat-card-title>{{ 'checkout.step4.shipping_info' | translate }}</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              @if (shippingForm.valid) {
+                <p><strong>{{ shippingForm.value.recipientName }}</strong></p>
+                <p>{{ shippingForm.value.recipientPhone }}</p>
+                <p>
+                  {{ shippingForm.value.postalCode }}
+                  {{ shippingForm.value.city }}{{ shippingForm.value.district }}
+                  {{ shippingForm.value.streetAddress }}
+                  @if (shippingForm.value.buildingFloor) {
+                    <span>{{ shippingForm.value.buildingFloor }}</span>
+                  }
+                </p>
+              }
+            </mat-card-content>
+            <mat-card-actions>
+              <button mat-button (click)="stepper.selectedIndex = 1">
+                <mat-icon>edit</mat-icon>
+                {{ 'common.edit' | translate }}
+              </button>
+            </mat-card-actions>
+          </mat-card>
+
+          <!-- 支付方式預覽 -->
+          <mat-card class="summary-card">
+            <mat-card-header>
+              <mat-icon mat-card-avatar>payment</mat-icon>
+              <mat-card-title>{{ 'checkout.step4.payment_info' | translate }}</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              @if (paymentForm.valid) {
+                @for (method of paymentMethods(); track method.id) {
+                  @if (method.id === paymentForm.value.paymentMethodId) {
+                    <div class="selected-payment">
+                      <mat-icon>{{ method.icon }}</mat-icon>
+                      <div>
+                        <p><strong>{{ method.name }}</strong></p>
+                        <p class="description">{{ method.description }}</p>
+                      </div>
+                    </div>
+                  }
+                }
+              }
+            </mat-card-content>
+            <mat-card-actions>
+              <button mat-button (click)="stepper.selectedIndex = 2">
+                <mat-icon>edit</mat-icon>
+                {{ 'common.edit' | translate }}
+              </button>
+            </mat-card-actions>
+          </mat-card>
+
+          <!-- 訂單金額明細 -->
+          <mat-card class="summary-card order-totals">
+            <mat-card-header>
+              <mat-icon mat-card-avatar>receipt</mat-icon>
+              <mat-card-title>{{ 'checkout.step4.order_totals' | translate }}</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="totals-list">
+                <div class="total-row">
+                  <span>{{ 'checkout.subtotal' | translate }}</span>
+                  <span class="amount">{{ subtotal() | currencyFormat }}</span>
+                </div>
+                <div class="total-row">
+                  <span>{{ 'checkout.shipping_fee' | translate }}</span>
+                  <span class="amount">
+                    @if (shippingFee() === 0) {
+                      <span class="free-shipping">{{ 'checkout.free_shipping' | translate }}</span>
+                    } @else {
+                      {{ shippingFee() | currencyFormat }}
+                    }
+                  </span>
+                </div>
+                <div class="total-row">
+                  <span>{{ 'checkout.tax' | translate }} (5%)</span>
+                  <span class="amount">{{ taxAmount() | currencyFormat }}</span>
+                </div>
+                <mat-divider></mat-divider>
+                <div class="total-row total">
+                  <span>{{ 'checkout.total' | translate }}</span>
+                  <span class="amount total-amount">{{ totalAmount() | currencyFormat }}</span>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+
+        <div class="step-actions">
+          <button
+            mat-stroked-button
+            matStepperPrevious
+            class="back-btn"
+          >
+            <mat-icon>arrow_back</mat-icon>
+            {{ 'common.previous' | translate }}
+          </button>
+          <button
+            mat-flat-button
+            color="primary"
+            (click)="submitOrder()"
+            [disabled]="processing() || shippingForm.invalid || paymentForm.invalid"
+            class="submit-btn"
+          >
+            @if (processing()) {
+              <mat-spinner diameter="20"></mat-spinner>
+              @if (processingStage() === 'order') {
+                <span>{{ 'payment.processing.order' | translate }}</span>
+              } @else if (processingStage() === 'payment') {
+                <span>{{ 'payment.processing.payment' | translate }}</span>
+              } @else {
+                <span>{{ 'payment.processing.complete' | translate }}</span>
+              }
+            } @else {
+              <mat-icon>check_circle</mat-icon>
+              <span>{{ 'checkout.submit_order' | translate }}</span>
+            }
+          </button>
+        </div>
+      </div>
+    </mat-step>
+  </mat-stepper>
+</div>

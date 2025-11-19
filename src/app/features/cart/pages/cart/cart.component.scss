@@ -1,7 +1,9 @@
 /**
- * 購物車頁面樣式
- * Cart Page Styles
+ * 購物車頁面樣式 - Gemini 風格
+ * Cart Page Styles - Gemini Design
  */
+
+@use 'styles/theme' as theme;
 
 .cart-page {
   max-width: 1200px;
@@ -55,18 +57,24 @@
       }
 
       .cart-item {
+        @include theme.gemini-card;
         display: grid;
         grid-template-columns: 100px 1fr auto auto auto auto;
         gap: 1rem;
         align-items: center;
-        padding: 1rem;
+        padding: 1.5rem;
         margin-bottom: 1rem;
 
         .item-image img {
           width: 100%;
           height: 100px;
           object-fit: cover;
-          border-radius: 8px;
+          border-radius: var(--radius-md);
+          transition: transform var(--transition-fast);
+
+          &:hover {
+            transform: scale(1.05);
+          }
         }
 
         .item-details {
@@ -82,6 +90,32 @@
             color: var(--text-secondary);
             font-size: 0.875rem;
             margin: 0;
+          }
+
+          .variant-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+
+            .variant-item {
+              display: inline-flex;
+              align-items: center;
+              gap: 0.25rem;
+              padding: 0.25rem 0.75rem;
+              background-color: var(--surface-variant, #f5f5f5);
+              border-radius: var(--radius-full, 16px);
+              font-size: 0.875rem;
+
+              .variant-label {
+                color: var(--text-secondary);
+                font-weight: 500;
+              }
+
+              .variant-value {
+                color: var(--text-primary);
+              }
+            }
           }
 
           .warning {
@@ -127,13 +161,16 @@
     }
 
     .cart-summary {
+      @include theme.gemini-card;
       height: fit-content;
-      padding: 1.5rem;
+      padding: 2rem;
       position: sticky;
       top: 2rem;
 
       h3 {
-        margin: 0 0 1rem 0;
+        margin: 0 0 1.5rem 0;
+        font-weight: 600;
+        font-size: 1.25rem;
       }
 
       .summary-row {
@@ -156,10 +193,45 @@
         display: flex;
         flex-direction: column;
         gap: 1rem;
-        margin-top: 1.5rem;
+        margin-top: 2rem;
 
         button {
           width: 100%;
+          height: 48px;
+          border-radius: var(--radius-full);
+          font-weight: 500;
+          transition: all var(--transition-fast);
+
+          &:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+          }
+
+          &:active:not(:disabled) {
+            transform: translateY(0);
+          }
+
+          // Checkout 按鈕使用 Gemini 漸層
+          &[color="primary"]:not(:disabled) {
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+
+            &:hover {
+              background: var(--primary-gradient-hover);
+            }
+          }
+
+          // Continue shopping 按鈕使用 outlined 樣式
+          &[mat-stroked-button] {
+            border-color: var(--border);
+            color: var(--text-primary);
+
+            &:hover {
+              background: var(--surface-hover);
+              border-color: var(--border-strong);
+            }
+          }
         }
       }
     }

@@ -1,0 +1,111 @@
+<div class="variant-selector">
+  <!-- 遍歷所有變體選項 -->
+  @for (option of options; track option.name) {
+    <div class="variant-option">
+      <div class="option-label">
+        <span class="option-name">{{ option.name }}</span>
+        @if (selectedAttributes()[option.name]) {
+          <span class="selected-value">{{ getSelectedDisplayName(option) }}</span>
+        }
+      </div>
+
+      <!-- 顏色選項（圓形色塊） -->
+      @if (option.type === 'color') {
+        <div class="color-options">
+          @for (value of option.values; track value.value) {
+            <button
+              type="button"
+              class="color-option"
+              [class.selected]="isSelected(option.name, value.value)"
+              [class.unavailable]="!isAvailable(option.name, value.value)"
+              [disabled]="!value.isAvailable || !isAvailable(option.name, value.value)"
+              [matTooltip]="value.displayName"
+              (click)="selectOption(option.name, value.value)"
+            >
+              <span
+                class="color-circle"
+                [style.background-color]="value.colorCode"
+              ></span>
+              @if (isSelected(option.name, value.value)) {
+                <mat-icon class="check-icon">check</mat-icon>
+              }
+            </button>
+          }
+        </div>
+      }
+
+      <!-- 尺寸/容量選項（按鈕組） -->
+      @if (option.type === 'size' || option.type === 'custom') {
+        <mat-chip-listbox class="size-options" aria-label="選擇 {{ option.name }}">
+          @for (value of option.values; track value.value) {
+            <mat-chip-option
+              [selected]="isSelected(option.name, value.value)"
+              [disabled]="!value.isAvailable || !isAvailable(option.name, value.value)"
+              (click)="selectOption(option.name, value.value)"
+            >
+              {{ value.displayName }}
+              @if (value.priceAdjustment && value.priceAdjustment > 0) {
+                <span class="price-adjustment">+{{ value.priceAdjustment | currencyFormat }}</span>
+              }
+            </mat-chip-option>
+          }
+        </mat-chip-listbox>
+      }
+
+      <!-- 材質/風格選項（卡片式） -->
+      @if (option.type === 'material' || option.type === 'style') {
+        <div class="material-options">
+          @for (value of option.values; track value.value) {
+            <button
+              type="button"
+              mat-stroked-button
+              class="material-option"
+              [class.selected]="isSelected(option.name, value.value)"
+              [disabled]="!value.isAvailable || !isAvailable(option.name, value.value)"
+              (click)="selectOption(option.name, value.value)"
+            >
+              @if (value.imageUrl) {
+                <img [src]="value.imageUrl" [alt]="value.displayName" class="option-image" />
+              }
+              <span class="option-text">{{ value.displayName }}</span>
+              @if (value.priceAdjustment && value.priceAdjustment > 0) {
+                <span class="price-adjustment">+{{ value.priceAdjustment | currencyFormat }}</span>
+              }
+            </button>
+          }
+        </div>
+      }
+    </div>
+  }
+
+  <!-- 選擇結果顯示 -->
+  @if (isCompleteSelection()) {
+    <div class="selection-summary">
+      <div class="summary-row">
+        <span class="label">{{ 'product.variant.price' | translate }}:</span>
+        <span class="value price">{{ finalPrice() | currencyFormat }}</span>
+      </div>
+      <div class="summary-row">
+        <span class="label">{{ 'product.variant.stock' | translate }}:</span>
+        <span class="value stock" [class.low-stock]="availableStock() < 10">
+          @if (availableStock() > 0) {
+            {{ availableStock() }} {{ 'product.variant.in_stock' | translate }}
+          } @else {
+            <span class="out-of-stock">{{ 'product.variant.out_of_stock' | translate }}</span>
+          }
+        </span>
+      </div>
+      @if (matchedVariant()?.variantSku) {
+        <div class="summary-row">
+          <span class="label">SKU:</span>
+          <span class="value sku">{{ matchedVariant()!.variantSku }}</span>
+        </div>
+      }
+    </div>
+  } @else {
+    <div class="selection-hint">
+      <mat-icon>info</mat-icon>
+      <span>{{ 'product.variant.please_select_all' | translate }}</span>
+    </div>
+  }
+</div>

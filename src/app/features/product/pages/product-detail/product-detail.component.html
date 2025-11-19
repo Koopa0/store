@@ -59,12 +59,13 @@
       <div class="product-main">
         <!-- 左側：商品圖片 Left: Product Images -->
         <div class="product-images">
-          <div class="main-image">
-            <img
-              [src]="selectedImage()"
-              [alt]="product()?.name"
-              class="product-image"
-            />
+          <div class="image-carousel-wrapper">
+            <!-- 圖片輪播 Image Carousel -->
+            <app-image-carousel
+              [images]="productImages()"
+              [showThumbnails]="true"
+              [height]="'500px'"
+            ></app-image-carousel>
 
             <!-- 折扣標籤 Discount Badge -->
             @if (hasDiscount()) {
@@ -156,6 +157,21 @@
 
           <mat-divider></mat-divider>
 
+          <!-- 變體選擇器 Variant Selector -->
+          @if (variantConfig() && variantConfig()!.hasVariants) {
+            <div class="variant-section">
+              <app-variant-selector
+                [options]="variantConfig()!.options"
+                [variants]="variantConfig()!.variants"
+                [basePrice]="product()!.price"
+                [defaultVariant]="variantConfig()!.defaultVariant"
+                (variantChange)="onVariantChange($event)"
+              ></app-variant-selector>
+            </div>
+
+            <mat-divider></mat-divider>
+          }
+
           <!-- 數量選擇器 Quantity Selector -->
           <div class="quantity-section">
             <span class="label">{{ 'product.detail.quantity' | translate }}:</span>
@@ -164,6 +180,7 @@
                 mat-icon-button
                 (click)="decreaseQuantity()"
                 [disabled]="(quantityControl.value || 1) <= 1"
+                [attr.aria-label]="'common.decrease_quantity' | translate"
               >
                 <mat-icon>remove</mat-icon>
               </button>
@@ -174,12 +191,14 @@
                   [formControl]="quantityControl"
                   min="1"
                   [max]="product()?.stockQuantity || 999"
+                  [attr.aria-label]="'common.quantity' | translate"
                 />
               </mat-form-field>
               <button
                 mat-icon-button
                 (click)="increaseQuantity()"
                 [disabled]="(quantityControl.value || 1) >= (product()?.stockQuantity || 0)"
+                [attr.aria-label]="'common.increase_quantity' | translate"
               >
                 <mat-icon>add</mat-icon>
               </button>
@@ -204,6 +223,7 @@
               class="add-to-cart-btn"
               (click)="addToCart()"
               [disabled]="!isInStock()"
+              [attr.aria-label]="'product.detail.addToCart' | translate"
             >
               <mat-icon>shopping_cart</mat-icon>
               {{ 'product.detail.addToCart' | translate }}
@@ -214,6 +234,7 @@
               class="buy-now-btn"
               (click)="buyNow()"
               [disabled]="!isInStock()"
+              [attr.aria-label]="'product.detail.buyNow' | translate"
             >
               <mat-icon>flash_on</mat-icon>
               {{ 'product.detail.buyNow' | translate }}
@@ -265,23 +286,8 @@
         <!-- 評價 Reviews Tab -->
         <mat-tab [label]="'product.detail.tabs.reviews' | translate">
           <div class="tab-content">
-            <h3>{{ 'product.detail.tabs.reviews' | translate }}</h3>
-            <div class="reviews-summary">
-              <div class="rating-overview">
-                <div class="rating-score">{{ product()?.ratingAverage }}</div>
-                <div class="rating-stars">
-                  <mat-icon class="star-icon">star</mat-icon>
-                  <mat-icon class="star-icon">star</mat-icon>
-                  <mat-icon class="star-icon">star</mat-icon>
-                  <mat-icon class="star-icon">star</mat-icon>
-                  <mat-icon class="star-icon">star_half</mat-icon>
-                </div>
-                <div class="review-count">{{ product()?.reviewCount }} {{ 'product.detail.reviews' | translate }}</div>
-              </div>
-            </div>
-            <p class="placeholder-text">
-              {{ 'product.detail.reviewsPlaceholder' | translate }}
-            </p>
+            <!-- 評價列表組件 Review List Component -->
+            <app-review-list [productId]="product()!.id"></app-review-list>
           </div>
         </mat-tab>
       </mat-tab-group>

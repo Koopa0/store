@@ -1,0 +1,205 @@
+<!--
+  訂單詳情頁面模板
+  Order Detail Page Template
+-->
+
+<div class="order-detail-container">
+  <!-- Loading State -->
+  @if (loading()) {
+    <div class="loading-state">
+      <mat-spinner diameter="60"></mat-spinner>
+      <p>{{ 'common.loading' | translate }}</p>
+    </div>
+  }
+
+  <!-- Error State -->
+  @else if (error()) {
+    <div class="error-state">
+      <mat-icon>error_outline</mat-icon>
+      <h2>{{ 'order.error_loading' | translate }}</h2>
+      <p>{{ error() }}</p>
+      <button mat-flat-button color="primary" routerLink="/orders">
+        <mat-icon>list_alt</mat-icon>
+        {{ 'order.my_orders' | translate }}
+      </button>
+    </div>
+  }
+
+  <!-- Order Detail Content -->
+  @else if (orderLoaded()) {
+    <div class="detail-content">
+      <!-- Header -->
+      <div class="detail-header">
+        <button mat-icon-button (click)="goBackToList()" class="back-btn">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+        <div class="header-info">
+          <h1>{{ currentOrder()?.orderNumber }}</h1>
+          <p class="order-date">
+            {{ 'order.order_date' | translate }}: {{ currentOrder()?.createdAt | date: 'yyyy/MM/dd HH:mm' }}
+          </p>
+        </div>
+        <mat-chip class="status-chip" [class]="'status-' + currentOrder()?.status">
+          <mat-icon>{{ getStatusIcon(currentOrder()?.status || '') }}</mat-icon>
+          {{ getStatusText(currentOrder()?.status || '') | translate }}
+        </mat-chip>
+      </div>
+
+      <!-- Order Items -->
+      <mat-card class="items-card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar>shopping_cart</mat-icon>
+          <mat-card-title>{{ 'order.items' | translate }} ({{ itemsCount() }})</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <table mat-table [dataSource]="currentOrder()?.items || []" class="items-table">
+            <!-- Product Column -->
+            <ng-container matColumnDef="product">
+              <th mat-header-cell *matHeaderCellDef>{{ 'product.title' | translate }}</th>
+              <td mat-cell *matCellDef="let item">
+                <div class="product-cell">
+                  <img [src]="item.productSnapshot.imageUrl || '/assets/images/placeholder.jpg'"
+                       [alt]="item.productSnapshot.name" />
+                  <div class="product-info">
+                    <span class="product-name">{{ item.productSnapshot.name }}</span>
+                    <span class="product-sku">SKU: {{ item.productSnapshot.sku }}</span>
+                    @if (item.productSnapshot.attributes) {
+                      <div class="variant-info">
+                        @for (attr of getVariantAttributesArray(item.productSnapshot.attributes); track attr.key) {
+                          <span class="variant-item">
+                            <span class="variant-label">{{ attr.key }}:</span>
+                            <span class="variant-value">{{ attr.value }}</span>
+                          </span>
+                        }
+                      </div>
+                    }
+                  </div>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Quantity Column -->
+            <ng-container matColumnDef="quantity">
+              <th mat-header-cell *matHeaderCellDef>{{ 'common.quantity' | translate }}</th>
+              <td mat-cell *matCellDef="let item">{{ item.quantity }}</td>
+            </ng-container>
+
+            <!-- Unit Price Column -->
+            <ng-container matColumnDef="unitPrice">
+              <th mat-header-cell *matHeaderCellDef>{{ 'product.price' | translate }}</th>
+              <td mat-cell *matCellDef="let item">{{ item.unitPrice | currencyFormat }}</td>
+            </ng-container>
+
+            <!-- Subtotal Column -->
+            <ng-container matColumnDef="subtotal">
+              <th mat-header-cell *matHeaderCellDef>{{ 'cart.subtotal' | translate }}</th>
+              <td mat-cell *matCellDef="let item">{{ item.subtotal | currencyFormat }}</td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+
+          <!-- Price Summary -->
+          <div class="price-summary">
+            <div class="price-row">
+              <span>{{ 'checkout.subtotal' | translate }}</span>
+              <span>{{ currentOrder()?.subtotal | currencyFormat }}</span>
+            </div>
+            <div class="price-row">
+              <span>{{ 'checkout.shipping_fee' | translate }}</span>
+              <span>
+                @if (currentOrder()?.shippingFee === 0) {
+                  <span class="free-shipping">{{ 'checkout.free_shipping' | translate }}</span>
+                } @else {
+                  {{ currentOrder()?.shippingFee | currencyFormat }}
+                }
+              </span>
+            </div>
+            <div class="price-row">
+              <span>{{ 'checkout.tax' | translate }}</span>
+              <span>{{ currentOrder()?.taxAmount | currencyFormat }}</span>
+            </div>
+            @if (currentOrder()?.discountAmount && currentOrder()!.discountAmount > 0) {
+              <div class="price-row discount">
+                <span>{{ 'cart.discount' | translate }}</span>
+                <span>-{{ currentOrder()?.discountAmount | currencyFormat }}</span>
+              </div>
+            }
+            <mat-divider></mat-divider>
+            <div class="price-row total">
+              <span>{{ 'checkout.total' | translate }}</span>
+              <span class="total-amount">{{ currentOrder()?.totalAmount | currencyFormat }}</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Info Cards -->
+      <div class="info-cards-row">
+        <!-- Shipping Address -->
+        <mat-card class="info-card">
+          <mat-card-header>
+            <mat-icon mat-card-avatar>local_shipping</mat-icon>
+            <mat-card-title>{{ 'order.shipping_address' | translate }}</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            @if (currentOrder()?.shippingAddress) {
+              <p><strong>{{ currentOrder()?.shippingAddress?.recipientName }}</strong></p>
+              <p>{{ currentOrder()?.shippingAddress?.recipientPhone }}</p>
+              <p>
+                {{ currentOrder()?.shippingAddress?.postalCode }}
+                {{ currentOrder()?.shippingAddress?.city }}{{ currentOrder()?.shippingAddress?.district }}
+                {{ currentOrder()?.shippingAddress?.streetAddress }}
+                @if (currentOrder()?.shippingAddress?.buildingFloor) {
+                  <span>{{ currentOrder()?.shippingAddress?.buildingFloor }}</span>
+                }
+              </p>
+            }
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Customer Note -->
+        @if (currentOrder()?.customerNote) {
+          <mat-card class="info-card">
+            <mat-card-header>
+              <mat-icon mat-card-avatar>note</mat-icon>
+              <mat-card-title>{{ 'checkout.step3.customer_note' | translate }}</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <p>{{ currentOrder()?.customerNote }}</p>
+            </mat-card-content>
+          </mat-card>
+        }
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="action-buttons">
+        @if (canCancelOrder()) {
+          <button mat-stroked-button color="warn" (click)="cancelOrder()">
+            <mat-icon>cancel</mat-icon>
+            {{ 'order.cancel_order' | translate }}
+          </button>
+        }
+        @if (currentOrder()?.status === 'shipped' || currentOrder()?.status === 'processing') {
+          <button mat-stroked-button (click)="trackOrder()">
+            <mat-icon>track_changes</mat-icon>
+            {{ 'order.track_order' | translate }}
+          </button>
+        }
+        @if (currentOrder()?.status === 'delivered') {
+          <button mat-stroked-button (click)="requestReturn()">
+            <mat-icon>undo</mat-icon>
+            {{ 'order.return_order' | translate }}
+          </button>
+        }
+        @if (currentOrder()?.status === 'completed' || currentOrder()?.status === 'delivered') {
+          <button mat-flat-button color="primary" (click)="reorder()">
+            <mat-icon>replay</mat-icon>
+            {{ 'order.reorder' | translate }}
+          </button>
+        }
+      </div>
+    </div>
+  }
+</div>

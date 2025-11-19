@@ -21,6 +21,10 @@ import {
   ProductListItem,
   ProductListParams,
   ProductStatus,
+  ProductVariant,
+  ProductVariantConfig,
+  VariantOption,
+  VariantOptionValue,
 } from '@core/models/product.model';
 import { PaginatedResponse, ApiResponse } from '@core/models/common.model';
 
@@ -301,5 +305,218 @@ export class ProductService {
     this.selectedProductSignal.set(product);
 
     return of(product).pipe(delay(300));
+  }
+
+  /**
+   * 獲取商品變體配置
+   * Get product variant configuration
+   *
+   * @param productId 商品 ID
+   * @returns Observable<ProductVariantConfig>
+   */
+  getProductVariantConfig(productId: string): Observable<ProductVariantConfig> {
+    // Mock: 只有特定商品有變體
+    const variantConfigs = this.getMockVariantConfigs();
+    const config = variantConfigs[productId];
+
+    if (!config) {
+      // 無變體的商品
+      return of({
+        hasVariants: false,
+        options: [],
+        variants: [],
+      }).pipe(delay(200));
+    }
+
+    return of(config).pipe(delay(200));
+  }
+
+  /**
+   * 根據選擇的屬性查找變體
+   * Find variant by selected attributes
+   *
+   * @param productId 商品 ID
+   * @param attributes 選擇的屬性
+   * @returns Observable<ProductVariant | null>
+   */
+  findVariantByAttributes(
+    productId: string,
+    attributes: Record<string, string>
+  ): Observable<ProductVariant | null> {
+    const config = this.getMockVariantConfigs()[productId];
+
+    if (!config) {
+      return of(null).pipe(delay(100));
+    }
+
+    const variant = config.variants.find((v) => {
+      return Object.entries(attributes).every(
+        ([key, value]) => v.attributes[key] === value
+      );
+    });
+
+    return of(variant || null).pipe(delay(100));
+  }
+
+  /**
+   * Mock 變體配置資料
+   * Mock variant configuration data
+   */
+  private getMockVariantConfigs(): Record<string, ProductVariantConfig> {
+    return {
+      // iPhone 15 Pro Max 的變體配置（顏色 x 容量）
+      '1': {
+        hasVariants: true,
+        options: [
+          {
+            name: '顏色',
+            type: 'color',
+            values: [
+              {
+                value: 'natural-titanium',
+                displayName: '原色鈦金屬',
+                colorCode: '#E8E3DC',
+                isAvailable: true,
+              },
+              {
+                value: 'blue-titanium',
+                displayName: '藍色鈦金屬',
+                colorCode: '#5F6A7D',
+                isAvailable: true,
+              },
+              {
+                value: 'white-titanium',
+                displayName: '白色鈦金屬',
+                colorCode: '#E8E8E8',
+                isAvailable: true,
+              },
+              {
+                value: 'black-titanium',
+                displayName: '黑色鈦金屬',
+                colorCode: '#3D3D3D',
+                isAvailable: true,
+              },
+            ],
+          },
+          {
+            name: '容量',
+            type: 'size',
+            values: [
+              {
+                value: '256GB',
+                displayName: '256GB',
+                isAvailable: true,
+                priceAdjustment: 0,
+              },
+              {
+                value: '512GB',
+                displayName: '512GB',
+                isAvailable: true,
+                priceAdjustment: 4000,
+              },
+              {
+                value: '1TB',
+                displayName: '1TB',
+                isAvailable: true,
+                priceAdjustment: 8000,
+              },
+            ],
+          },
+        ],
+        variants: [
+          // 原色鈦金屬 variants
+          {
+            id: '1-v1',
+            productId: '1',
+            variantSku: 'IPH15PM-256-NTT',
+            attributes: { 顏色: 'natural-titanium', 容量: '256GB' },
+            variantName: '原色鈦金屬 256GB',
+            stockQuantity: 15,
+            isActive: true,
+            version: 1,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          },
+          {
+            id: '1-v2',
+            productId: '1',
+            variantSku: 'IPH15PM-512-NTT',
+            attributes: { 顏色: 'natural-titanium', 容量: '512GB' },
+            variantName: '原色鈦金屬 512GB',
+            priceOverride: 40900,
+            stockQuantity: 12,
+            isActive: true,
+            version: 1,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          },
+          {
+            id: '1-v3',
+            productId: '1',
+            variantSku: 'IPH15PM-1TB-NTT',
+            attributes: { 顏色: 'natural-titanium', 容量: '1TB' },
+            variantName: '原色鈦金屬 1TB',
+            priceOverride: 44900,
+            stockQuantity: 8,
+            isActive: true,
+            version: 1,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          },
+          // 藍色鈦金屬 variants
+          {
+            id: '1-v4',
+            productId: '1',
+            variantSku: 'IPH15PM-256-BTT',
+            attributes: { 顏色: 'blue-titanium', 容量: '256GB' },
+            variantName: '藍色鈦金屬 256GB',
+            stockQuantity: 10,
+            isActive: true,
+            version: 1,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          },
+          {
+            id: '1-v5',
+            productId: '1',
+            variantSku: 'IPH15PM-512-BTT',
+            attributes: { 顏色: 'blue-titanium', 容量: '512GB' },
+            variantName: '藍色鈦金屬 512GB',
+            priceOverride: 40900,
+            stockQuantity: 6,
+            isActive: true,
+            version: 1,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          },
+          {
+            id: '1-v6',
+            productId: '1',
+            variantSku: 'IPH15PM-1TB-BTT',
+            attributes: { 顏色: 'blue-titanium', 容量: '1TB' },
+            variantName: '藍色鈦金屬 1TB',
+            priceOverride: 44900,
+            stockQuantity: 3,
+            isActive: true,
+            version: 1,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          },
+          // 其他顏色省略...（可根據需要添加）
+        ],
+        defaultVariant: {
+          id: '1-v1',
+          productId: '1',
+          variantSku: 'IPH15PM-256-NTT',
+          attributes: { 顏色: 'natural-titanium', 容量: '256GB' },
+          variantName: '原色鈦金屬 256GB',
+          stockQuantity: 15,
+          isActive: true,
+          version: 1,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      },
+    };
   }
 }

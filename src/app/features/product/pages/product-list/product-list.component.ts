@@ -13,7 +13,8 @@
  * 5. 路由導航
  */
 
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, DestroyRef, ChangeDetectionStrategy } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
@@ -34,6 +35,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 // 服務和模型
 import { ProductService } from '../../services/product.service';
 import { ProductListItem, ProductListParams } from '@core/models/product.model';
+import { LoggerService } from '@core/services';
 import { TranslateModule } from '@ngx-translate/core';
 
 // 共用元件和管道
@@ -42,6 +44,7 @@ import { CurrencyFormatPipe, TruncatePipe } from '@shared/pipes';
 @Component({
   selector: 'app-product-list',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
     RouterLink,
@@ -71,6 +74,8 @@ export class ProductListComponent implements OnInit {
    * Inject services
    */
   private readonly productService = inject(ProductService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly logger = inject(LoggerService);
 
   /**
    * 商品列表
@@ -140,20 +145,25 @@ export class ProductListComponent implements OnInit {
     this.searchControl.valueChanges
       .pipe(
         debounceTime(500), // 延遲 500ms
-        distinctUntilChanged() // 只有值改變時才觸發
+        distinctUntilChanged(), // 只有值改變時才觸發
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe(() => {
         this.loadProducts();
       });
 
     // 監聽排序變更
-    this.sortControl.valueChanges.subscribe(() => {
-      this.loadProducts();
-    });
+    this.sortControl.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.loadProducts();
+      });
 
-    this.sortOrderControl.valueChanges.subscribe(() => {
-      this.loadProducts();
-    });
+    this.sortOrderControl.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.loadProducts();
+      });
   }
 
   /**
@@ -172,9 +182,12 @@ export class ProductListComponent implements OnInit {
       status: 'active', // 只顯示上架中的商品
     };
 
-    this.productService.getProducts(params).subscribe({
-      next: (response) => {
-        this.pagination.set({
+    this.productService
+      .getProducts(params)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (response) => {
+          this.pagination.set({
           page: response.currentPage,
           limit: response.pageSize,
           total: response.totalItems,
@@ -183,7 +196,7 @@ export class ProductListComponent implements OnInit {
         this.loading.set(false);
       },
       error: (error) => {
-        console.error('Failed to load products:', error);
+        this.logger.error('Failed to load products:', error);
         this.loading.set(false);
       },
     });

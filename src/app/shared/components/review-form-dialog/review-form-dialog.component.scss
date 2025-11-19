@@ -1,0 +1,235 @@
+/**
+ * 評價表單對話框樣式
+ * Review Form Dialog Styles
+ *
+ * Gemini Design System:
+ * - Google Blue: #1a73e8
+ * - Star Gold: #fbbc04
+ * - Spacing: 8px grid
+ */
+
+.review-form-dialog {
+  min-width: 500px;
+  max-width: 600px;
+
+  @media (max-width: 600px) {
+    min-width: unset;
+    max-width: 100%;
+  }
+
+  // ==================== 標題 / Title ====================
+  h2[mat-dialog-title] {
+    font-size: 20px;
+    font-weight: 500;
+    color: #202124;
+    margin: 0;
+    padding: 24px 24px 16px;
+  }
+
+  // ==================== 內容 / Content ====================
+  mat-dialog-content {
+    padding: 0 24px;
+    max-height: 70vh;
+    overflow-y: auto;
+
+    .review-form {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+
+      // ==================== 表單欄位 / Form Field ====================
+      .form-field {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+
+        .field-label {
+          font-size: 14px;
+          font-weight: 500;
+          color: #202124;
+
+          .required {
+            color: #d93025;
+            margin-left: 4px;
+          }
+
+          .optional {
+            font-weight: 400;
+            color: #5f6368;
+            margin-left: 4px;
+          }
+        }
+
+        .field-hint {
+          font-size: 12px;
+          color: #5f6368;
+          line-height: 1.4;
+        }
+
+        .error-message {
+          font-size: 12px;
+          color: #d93025;
+          margin-top: 4px;
+        }
+      }
+
+      // ==================== 星級評分輸入 / Star Rating Input ====================
+      .star-rating-input {
+        display: flex;
+        gap: 8px;
+
+        .star-button {
+          background: none;
+          border: none;
+          cursor: pointer;
+          padding: 4px;
+          border-radius: 4px;
+          transition: background-color 0.2s;
+
+          &:hover {
+            background-color: #f1f3f4;
+          }
+
+          &:focus {
+            outline: none;
+            background-color: #e8f0fe;
+          }
+
+          mat-icon {
+            font-size: 32px;
+            width: 32px;
+            height: 32px;
+            color: #e0e0e0;
+            transition: color 0.2s;
+
+            &.filled {
+              color: #fbbc04;
+            }
+          }
+        }
+      }
+
+      // ==================== 全寬表單欄位 / Full Width Form Field ====================
+      .full-width {
+        width: 100%;
+      }
+
+      // ==================== 圖片預覽網格 / Image Preview Grid ====================
+      .image-preview-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 12px;
+        margin-bottom: 12px;
+
+        .image-preview-item {
+          position: relative;
+          aspect-ratio: 1;
+          border-radius: 8px;
+          overflow: hidden;
+          border: 1px solid #dadce0;
+
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+          }
+
+          .remove-image-button {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            width: 24px;
+            height: 24px;
+            min-width: 24px;
+            padding: 0;
+            background-color: rgba(0, 0, 0, 0.6);
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s;
+
+            &:hover {
+              background-color: rgba(0, 0, 0, 0.8);
+            }
+
+            mat-icon {
+              font-size: 18px;
+              width: 18px;
+              height: 18px;
+              color: white;
+            }
+          }
+        }
+      }
+
+      // ==================== 上傳按鈕 / Upload Button ====================
+      .upload-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: #1a73e8;
+        border-color: #1a73e8;
+
+        mat-icon {
+          font-size: 20px;
+          width: 20px;
+          height: 20px;
+        }
+      }
+    }
+  }
+
+  // ==================== 操作按鈕 / Action Buttons ====================
+  mat-dialog-actions {
+    padding: 16px 24px 24px;
+    gap: 12px;
+
+    button {
+      min-width: 80px;
+
+      mat-spinner {
+        display: inline-block;
+        margin: 0 auto;
+      }
+    }
+  }
+}
+
+// ==================== 響應式設計 / Responsive Design ====================
+@media (max-width: 600px) {
+  .review-form-dialog {
+    h2[mat-dialog-title] {
+      font-size: 18px;
+      padding: 16px 16px 12px;
+    }
+
+    mat-dialog-content {
+      padding: 0 16px;
+
+      .review-form {
+        gap: 16px;
+
+        .star-rating-input {
+          .star-button {
+            mat-icon {
+              font-size: 28px;
+              width: 28px;
+              height: 28px;
+            }
+          }
+        }
+      }
+    }
+
+    mat-dialog-actions {
+      padding: 12px 16px 16px;
+
+      button {
+        flex: 1;
+      }
+    }
+  }
+}

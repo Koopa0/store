@@ -1,0 +1,509 @@
+/**
+ * 訂單列表頁面樣式
+ * Order List Page Styles
+ *
+ * 使用 Gemini 設計系統
+ * Using Gemini Design System
+ */
+
+@use 'styles/theme' as theme;
+
+.order-list-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  min-height: calc(100vh - 200px);
+
+  @media (max-width: 768px) {
+    padding: 1rem;
+  }
+}
+
+// ============================================================================
+// Page Header
+// ============================================================================
+
+.page-header {
+  margin-bottom: 2rem;
+
+  .header-content {
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      background: var(--primary-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+
+      @media (max-width: 768px) {
+        font-size: 2rem;
+      }
+    }
+
+    .subtitle {
+      font-size: 1.125rem;
+      color: var(--text-secondary);
+      margin: 0;
+    }
+  }
+}
+
+// ============================================================================
+// Filter Section
+// ============================================================================
+
+.filter-section {
+  margin-bottom: 2rem;
+
+  .status-filter {
+    width: 250px;
+
+    @media (max-width: 768px) {
+      width: 100%;
+    }
+
+    ::ng-deep {
+      .mat-mdc-text-field-wrapper {
+        background-color: var(--surface);
+      }
+
+      .mat-mdc-form-field-focus-overlay {
+        background-color: transparent;
+      }
+
+      &.mat-focused {
+        .mdc-notched-outline__leading,
+        .mdc-notched-outline__notch,
+        .mdc-notched-outline__trailing {
+          border-color: var(--primary) !important;
+          border-width: 2px !important;
+        }
+      }
+    }
+  }
+}
+
+// ============================================================================
+// Loading, Error & Empty States
+// ============================================================================
+
+.loading-state,
+.error-state,
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  text-align: center;
+
+  mat-icon {
+    font-size: 64px;
+    width: 64px;
+    height: 64px;
+    margin-bottom: 1rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 0.5rem 0;
+  }
+
+  p {
+    font-size: 1.125rem;
+    color: var(--text-secondary);
+    margin: 0 0 1.5rem 0;
+  }
+
+  button {
+    mat-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+      margin-right: 0.5rem;
+    }
+  }
+}
+
+.loading-state {
+  mat-spinner {
+    margin-bottom: 1.5rem;
+
+    ::ng-deep circle {
+      stroke: var(--primary);
+    }
+  }
+}
+
+.error-state {
+  mat-icon {
+    color: var(--error);
+  }
+}
+
+.empty-state {
+  mat-icon {
+    color: var(--text-disabled);
+  }
+}
+
+// ============================================================================
+// Orders List
+// ============================================================================
+
+.orders-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.order-card {
+  @include theme.gemini-card;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-float);
+  }
+
+  ::ng-deep {
+    .mat-mdc-card-header {
+      padding: 1.5rem 1.5rem 1rem 1.5rem;
+      margin-bottom: 0;
+    }
+
+    .mat-mdc-card-content {
+      padding: 1rem 1.5rem;
+    }
+
+    .mat-mdc-card-actions {
+      padding: 0.5rem 1.5rem 1.5rem 1.5rem;
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+
+      button {
+        mat-icon {
+          margin-right: 0.25rem;
+        }
+      }
+    }
+  }
+}
+
+// ============================================================================
+// Order Header
+// ============================================================================
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+  gap: 1rem;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+
+  .order-info {
+    flex: 1;
+
+    .order-number {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin: 0 0 0.25rem 0;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+
+      mat-icon {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+        color: var(--primary);
+      }
+    }
+
+    .order-date {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      margin: 0;
+    }
+  }
+
+  .order-status {
+    flex-shrink: 0;
+  }
+}
+
+// ============================================================================
+// Status Chip
+// ============================================================================
+
+.status-chip {
+  font-size: 0.875rem;
+  font-weight: 600;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+
+  ::ng-deep {
+    .mdc-evolution-chip__action {
+      padding: 0 12px;
+    }
+
+    .mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+      margin-right: 4px;
+    }
+  }
+
+  &.status-pending {
+    background-color: #fff3e0;
+    color: #e65100;
+
+    ::ng-deep .mat-icon {
+      color: #e65100;
+    }
+  }
+
+  &.status-paid,
+  &.status-confirmed {
+    background-color: #e3f2fd;
+    color: #0277bd;
+
+    ::ng-deep .mat-icon {
+      color: #0277bd;
+    }
+  }
+
+  &.status-processing,
+  &.status-shipped {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+
+    ::ng-deep .mat-icon {
+      color: #2e7d32;
+    }
+  }
+
+  &.status-delivered,
+  &.status-completed {
+    background-color: #c8e6c9;
+    color: #1b5e20;
+
+    ::ng-deep .mat-icon {
+      color: #1b5e20;
+    }
+  }
+
+  &.status-cancelled,
+  &.status-refunded {
+    background-color: #ffebee;
+    color: #c62828;
+
+    ::ng-deep .mat-icon {
+      color: #c62828;
+    }
+  }
+
+  @media (prefers-color-scheme: dark) {
+    &.status-pending {
+      background-color: rgba(255, 152, 0, 0.2);
+      color: #ffb74d;
+
+      ::ng-deep .mat-icon {
+        color: #ffb74d;
+      }
+    }
+
+    &.status-paid,
+    &.status-confirmed {
+      background-color: rgba(33, 150, 243, 0.2);
+      color: #64b5f6;
+
+      ::ng-deep .mat-icon {
+        color: #64b5f6;
+      }
+    }
+
+    &.status-processing,
+    &.status-shipped {
+      background-color: rgba(76, 175, 80, 0.2);
+      color: #81c784;
+
+      ::ng-deep .mat-icon {
+        color: #81c784;
+      }
+    }
+
+    &.status-delivered,
+    &.status-completed {
+      background-color: rgba(76, 175, 80, 0.3);
+      color: #66bb6a;
+
+      ::ng-deep .mat-icon {
+        color: #66bb6a;
+      }
+    }
+
+    &.status-cancelled,
+    &.status-refunded {
+      background-color: rgba(244, 67, 54, 0.2);
+      color: #e57373;
+
+      ::ng-deep .mat-icon {
+        color: #e57373;
+      }
+    }
+  }
+}
+
+// ============================================================================
+// Order Summary
+// ============================================================================
+
+.order-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  border-radius: var(--radius-md);
+  background-color: var(--surface-variant);
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .summary-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+
+    .label {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+
+    .value {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+
+      &.total-amount {
+        font-size: 1.25rem;
+        background: var(--primary-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+    }
+  }
+}
+
+// ============================================================================
+// Address Preview
+// ============================================================================
+
+.address-preview {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  border-radius: var(--radius-sm);
+  background-color: var(--surface-variant);
+
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    color: var(--primary);
+    flex-shrink: 0;
+  }
+
+  span {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    line-height: 1.4;
+  }
+}
+
+// ============================================================================
+// Pagination
+// ============================================================================
+
+.order-paginator {
+  margin-top: 2rem;
+  border-radius: var(--radius-lg);
+  background-color: var(--surface);
+  box-shadow: var(--shadow-sm);
+
+  ::ng-deep {
+    .mat-mdc-paginator-container {
+      padding: 1rem;
+      justify-content: center;
+
+      @media (max-width: 768px) {
+        flex-direction: column;
+        gap: 1rem;
+      }
+    }
+
+    .mat-mdc-paginator-page-size {
+      @media (max-width: 768px) {
+        margin-right: 0;
+      }
+    }
+
+    .mat-mdc-icon-button {
+      color: var(--primary);
+
+      &:disabled {
+        color: var(--text-disabled);
+      }
+    }
+  }
+}
+
+// ============================================================================
+// Animations
+// ============================================================================
+
+.orders-list {
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+// ============================================================================
+// Accessibility
+// ============================================================================
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

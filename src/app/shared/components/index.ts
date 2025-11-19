@@ -9,3 +9,7 @@
 
 export * from './button/button.component';
 export * from './card/card.component';
+export * from './variant-selector/variant-selector.component';
+export * from './image-carousel/image-carousel.component';
+export * from './review-list/review-list.component';
+export * from './review-form-dialog/review-form-dialog.component';

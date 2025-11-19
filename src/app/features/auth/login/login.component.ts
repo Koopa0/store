@@ -13,7 +13,7 @@
  * 5. Angular Material 表單元件
  */
 
-import { Component, OnInit, signal, inject } from '@angular/core';
+import { Component, OnInit, signal, inject, DestroyRef, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import {
@@ -22,6 +22,7 @@ import {
   Validators,
   ReactiveFormsModule,
 } from '@angular/forms';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 // Angular Material
 import { MatCardModule } from '@angular/material/card';
@@ -36,12 +37,13 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TranslateModule } from '@ngx-translate/core';
 
 // 服務
-import { AuthService, LoadingService, NotificationService } from '@core/services';
+import { AuthService, LoadingService, NotificationService, LoggerService } from '@core/services';
 import { LoginRequest } from '@core/models/user.model';
 
 @Component({
   selector: 'app-login',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -68,6 +70,8 @@ export class LoginComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly loadingService = inject(LoadingService);
   private readonly notificationService = inject(NotificationService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly logger = inject(LoggerService);
 
   /**
    * 登入表單
@@ -114,7 +118,7 @@ export class LoginComponent implements OnInit {
     // 取得返回 URL
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
 
-    console.log('[LoginComponent] Initialized, returnUrl:', this.returnUrl);
+    this.logger.info('[LoginComponent] Initialized, returnUrl:', this.returnUrl);
   }
 
   /**
@@ -138,31 +142,32 @@ export class LoginComponent implements OnInit {
       rememberMe: this.loginForm.value.rememberMe,
     };
 
-    console.log('[LoginComponent] Logging in:', credentials.emailOrUsername);
+    this.logger.info('[LoginComponent] Logging in:', credentials.emailOrUsername);
 
     // 呼叫登入服務
-    this.authService.login(credentials).subscribe({
-      next: (response) => {
-        console.log('[LoginComponent] Login successful');
+    this.authService
+      .login(credentials)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (response) => {
+          this.logger.info('[LoginComponent] Login successful');
 
-        // 顯示成功通知
-        this.notificationService.success('auth.login.success');
+          // 顯示成功通知
+          this.notificationService.success('auth.login.success');
 
-        // 導向返回 URL 或首頁
-        this.router.navigate([this.returnUrl]);
-      },
-      error: (error) => {
-        console.error('[LoginComponent] Login failed:', error);
+          // 導向返回 URL 或首頁
+          this.router.navigate([this.returnUrl]);
+        },
+        error: (error) => {
+          this.logger.error('[LoginComponent] Login failed:', error);
 
-        // 設定錯誤訊息
-        this.errorMessage.set(error.message || '登入失敗，請稍後再試');
+          // 設定錯誤訊息
+          this.errorMessage.set(error.message || '登入失敗，請稍後再試');
 
-        // 顯示錯誤通知
-        this.notificationService.error(
-          error.message || 'auth.login.error'
-        );
-      },
-    });
+          // 顯示錯誤通知
+          this.notificationService.error(error.message || 'auth.login.error');
+        },
+      });
   }
 
   /**

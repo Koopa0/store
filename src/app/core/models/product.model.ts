@@ -365,3 +365,82 @@ export interface ProductListParams {
   /** 標籤 / Tags */
   tags?: string[];
 }
+
+/**
+ * 變體屬性類型
+ * Variant attribute type
+ */
+export type VariantAttributeType = 'color' | 'size' | 'material' | 'style' | 'custom';
+
+/**
+ * 變體選項介面
+ * Variant option interface
+ *
+ * 用於定義商品的可選屬性（如顏色、尺寸）
+ * Used to define product optional attributes (like color, size)
+ */
+export interface VariantOption {
+  /** 屬性名稱 / Attribute name */
+  name: string;
+  /** 屬性類型 / Attribute type */
+  type: VariantAttributeType;
+  /** 可選值 / Available values */
+  values: VariantOptionValue[];
+}
+
+/**
+ * 變體選項值介面
+ * Variant option value interface
+ */
+export interface VariantOptionValue {
+  /** 值 / Value */
+  value: string;
+  /** 顯示名稱 / Display name */
+  displayName: string;
+  /** 顏色代碼（用於顏色選項）/ Color code (for color options) */
+  colorCode?: string;
+  /** 圖片 URL（用於視覺化展示）/ Image URL (for visual display) */
+  imageUrl?: string;
+  /** 是否可用 / Is available */
+  isAvailable: boolean;
+  /** 額外價格 / Additional price */
+  priceAdjustment?: number;
+}
+
+/**
+ * 選擇的變體介面
+ * Selected variant interface
+ *
+ * 用於在 UI 中追蹤用戶選擇的變體組合
+ * Used to track user-selected variant combination in UI
+ */
+export interface SelectedVariant {
+  /** 變體 ID（如果存在）/ Variant ID (if exists) */
+  variantId?: string;
+  /** 選擇的屬性 / Selected attributes */
+  attributes: Record<string, string>;
+  /** 最終價格 / Final price */
+  price: number;
+  /** 可用庫存 / Available stock */
+  availableStock: number;
+  /** SKU */
+  sku?: string;
+}
+
+/**
+ * 商品變體配置介面
+ * Product variant configuration interface
+ *
+ * 用於商品詳情頁的變體選擇器
+ * Used for variant selector in product detail page
+ */
+export interface ProductVariantConfig {
+  /** 是否啟用變體 / Has variants enabled */
+  hasVariants: boolean;
+  /** 變體選項 / Variant options */
+  options: VariantOption[];
+  /** 所有變體 / All variants */
+  variants: ProductVariant[];
+  /** 預設選擇的變體 / Default selected variant */
+  defaultVariant?: ProductVariant;
+}

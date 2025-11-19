@@ -176,13 +176,19 @@ export class CartService {
    * 加入商品到購物車
    * Add product to cart
    */
-  addToCart(product: ProductListItem, quantity: number = 1): Observable<CartItemDetail> {
+  addToCart(
+    product: ProductListItem,
+    quantity: number = 1,
+    variantId?: string,
+    variantAttributes?: Record<string, any>
+  ): Observable<CartItemDetail> {
     if (this.useMock) {
-      return this.mockAddToCart(product, quantity);
+      return this.mockAddToCart(product, quantity, variantId, variantAttributes);
     }
 
     const request: AddToCartRequest = {
       productId: product.id,
+      variantId,
       quantity,
     };
 
@@ -290,10 +296,18 @@ export class CartService {
    * Mock: 加入商品到購物車
    * Mock: Add product to cart
    */
-  private mockAddToCart(product: ProductListItem, quantity: number): Observable<CartItemDetail> {
+  private mockAddToCart(
+    product: ProductListItem,
+    quantity: number,
+    variantId?: string,
+    variantAttributes?: Record<string, any>
+  ): Observable<CartItemDetail> {
     // 檢查商品是否已在購物車中
+    // 注意：同商品但不同變體視為不同項目
     const existingItemIndex = this.cartItemsSignal().findIndex(
-      (item) => item.productId === product.id
+      (item) =>
+        item.productId === product.id &&
+        item.variantId === variantId
     );
 
     let updatedItem: CartItemDetail;
@@ -318,6 +332,7 @@ export class CartService {
         id: `cart-item-${Date.now()}`,
         cartId: 'cart-1',
         productId: product.id,
+        variantId,
         quantity,
         unitPrice: product.price,
         subtotal: product.price * quantity,
@@ -328,6 +343,7 @@ export class CartService {
         productName: product.name,
         productImageUrl: product.primaryImageUrl,
         productSku: product.sku,
+        variantAttributes,
         currentPrice: product.price,
         stockQuantity: product.stockQuantity,
         isInStock: product.stockQuantity > 0,

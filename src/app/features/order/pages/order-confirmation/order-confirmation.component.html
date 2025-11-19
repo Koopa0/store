@@ -1,0 +1,205 @@
+<!--
+  訂單確認頁面模板
+  Order Confirmation Page Template
+
+  顯示訂單成功訊息和詳細資訊
+  Shows order success message and detailed information
+-->
+
+<div class="order-confirmation-container">
+  <!-- Loading State -->
+  @if (loading()) {
+    <div class="loading-state">
+      <mat-spinner diameter="60"></mat-spinner>
+      <p>{{ 'common.loading' | translate }}</p>
+    </div>
+  }
+
+  <!-- Error State -->
+  @else if (error()) {
+    <div class="error-state">
+      <mat-icon>error_outline</mat-icon>
+      <h2>{{ 'order.error_loading' | translate }}</h2>
+      <p>{{ error() }}</p>
+      <button mat-flat-button color="primary" routerLink="/products">
+        <mat-icon>shopping_bag</mat-icon>
+        {{ 'cart.continue_shopping' | translate }}
+      </button>
+    </div>
+  }
+
+  <!-- Success State -->
+  @else if (orderLoaded()) {
+    <div class="success-content">
+      <!-- Success Header -->
+      <div class="success-header">
+        <div class="success-icon">
+          <mat-icon>check_circle</mat-icon>
+        </div>
+        <h1>{{ 'order.confirmation.title' | translate }}</h1>
+        <p class="subtitle">{{ 'order.confirmation.subtitle' | translate }}</p>
+      </div>
+
+      <!-- Order Number Card -->
+      <mat-card class="order-number-card">
+        <mat-card-content>
+          <div class="order-number-display">
+            <span class="label">{{ 'order.order_number' | translate }}</span>
+            <span class="number">{{ currentOrder()?.orderNumber }}</span>
+          </div>
+          <p class="order-date">
+            {{ 'order.order_date' | translate }}: {{ currentOrder()?.createdAt | date: 'yyyy/MM/dd HH:mm' }}
+          </p>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Order Summary -->
+      <mat-card class="order-summary-card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar>receipt</mat-icon>
+          <mat-card-title>{{ 'order.order_summary' | translate }}</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <!-- Order Items -->
+          <div class="order-items-section">
+            <h3>{{ 'order.items' | translate }} ({{ itemsCount() }})</h3>
+            @for (item of currentOrder()?.items; track item.id) {
+              <div class="order-item">
+                <img
+                  [src]="item.productSnapshot.imageUrl || '/assets/images/placeholder.jpg'"
+                  [alt]="item.productSnapshot.name"
+                  class="item-image"
+                />
+                <div class="item-info">
+                  <h4>{{ item.productSnapshot.name }}</h4>
+                  <p class="item-sku">{{ 'product.sku' | translate }}: {{ item.productSnapshot.sku }}</p>
+                  @if (item.productSnapshot.attributes) {
+                    <div class="variant-info">
+                      @for (attr of getVariantAttributesArray(item.productSnapshot.attributes); track attr.key) {
+                        <span class="variant-item">
+                          <span class="variant-label">{{ attr.key }}:</span>
+                          <span class="variant-value">{{ attr.value }}</span>
+                        </span>
+                      }
+                    </div>
+                  }
+                  <p class="item-quantity">{{ 'common.quantity' | translate }}: {{ item.quantity }}</p>
+                </div>
+                <div class="item-price">
+                  <span class="unit-price">{{ item.unitPrice | currencyFormat }}</span>
+                  <span class="subtotal">{{ item.subtotal | currencyFormat }}</span>
+                </div>
+              </div>
+            }
+          </div>
+
+          <mat-divider></mat-divider>
+
+          <!-- Price Breakdown -->
+          <div class="price-breakdown">
+            <div class="price-row">
+              <span>{{ 'checkout.subtotal' | translate }}</span>
+              <span>{{ currentOrder()?.subtotal | currencyFormat }}</span>
+            </div>
+            <div class="price-row">
+              <span>{{ 'checkout.shipping_fee' | translate }}</span>
+              <span>
+                @if (currentOrder()?.shippingFee === 0) {
+                  <span class="free-shipping">{{ 'checkout.free_shipping' | translate }}</span>
+                } @else {
+                  {{ currentOrder()?.shippingFee | currencyFormat }}
+                }
+              </span>
+            </div>
+            <div class="price-row">
+              <span>{{ 'checkout.tax' | translate }}</span>
+              <span>{{ currentOrder()?.taxAmount | currencyFormat }}</span>
+            </div>
+            @if (currentOrder()?.discountAmount && currentOrder()!.discountAmount > 0) {
+              <div class="price-row discount">
+                <span>{{ 'cart.discount' | translate }}</span>
+                <span class="discount-amount">-{{ currentOrder()?.discountAmount | currencyFormat }}</span>
+              </div>
+            }
+            <mat-divider></mat-divider>
+            <div class="price-row total">
+              <span>{{ 'checkout.total' | translate }}</span>
+              <span class="total-amount">{{ currentOrder()?.totalAmount | currencyFormat }}</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Shipping & Payment Info -->
+      <div class="info-cards-row">
+        <!-- Shipping Address -->
+        <mat-card class="info-card">
+          <mat-card-header>
+            <mat-icon mat-card-avatar>local_shipping</mat-icon>
+            <mat-card-title>{{ 'order.shipping_address' | translate }}</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            @if (currentOrder()?.shippingAddress) {
+              <p><strong>{{ currentOrder()?.shippingAddress?.recipientName }}</strong></p>
+              <p>{{ currentOrder()?.shippingAddress?.recipientPhone }}</p>
+              <p>
+                {{ currentOrder()?.shippingAddress?.postalCode }}
+                {{ currentOrder()?.shippingAddress?.city }}{{ currentOrder()?.shippingAddress?.district }}
+                {{ currentOrder()?.shippingAddress?.streetAddress }}
+                @if (currentOrder()?.shippingAddress?.buildingFloor) {
+                  <span>{{ currentOrder()?.shippingAddress?.buildingFloor }}</span>
+                }
+              </p>
+            }
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Order Status -->
+        <mat-card class="info-card">
+          <mat-card-header>
+            <mat-icon mat-card-avatar>info</mat-icon>
+            <mat-card-title>{{ 'order.status' | translate }}</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="status-badge" [class]="'status-' + currentOrder()?.status">
+              {{ getStatusText(currentOrder()?.status || '') | translate }}
+            </div>
+            @if (currentOrder()?.customerNote) {
+              <div class="customer-note">
+                <p class="note-label">{{ 'checkout.step3.customer_note' | translate }}:</p>
+                <p class="note-content">{{ currentOrder()?.customerNote }}</p>
+              </div>
+            }
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="action-buttons">
+        <button
+          mat-stroked-button
+          (click)="continueShopping()"
+          class="continue-btn"
+        >
+          <mat-icon>shopping_bag</mat-icon>
+          {{ 'cart.continue_shopping' | translate }}
+        </button>
+        <button
+          mat-flat-button
+          color="primary"
+          (click)="viewMyOrders()"
+          class="view-orders-btn"
+        >
+          <mat-icon>list_alt</mat-icon>
+          {{ 'order.my_orders' | translate }}
+        </button>
+      </div>
+
+      <!-- Help Info -->
+      <div class="help-info">
+        <mat-icon>help_outline</mat-icon>
+        <p>{{ 'order.confirmation.help_text' | translate }}</p>
+      </div>
+    </div>
+  }
+</div>

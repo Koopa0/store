@@ -1,0 +1,368 @@
+/**
+ * 訂單詳情頁面樣式
+ * Order Detail Page Styles
+ */
+
+@use 'styles/theme' as theme;
+
+.order-detail-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  min-height: calc(100vh - 200px);
+
+  @media (max-width: 768px) {
+    padding: 1rem;
+  }
+}
+
+// Loading & Error States
+.loading-state,
+.error-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  text-align: center;
+
+  mat-icon {
+    font-size: 64px;
+    width: 64px;
+    height: 64px;
+    margin-bottom: 1rem;
+  }
+
+  p {
+    font-size: 1.125rem;
+    color: var(--text-secondary);
+    margin: 1rem 0;
+  }
+
+  button mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    margin-right: 0.5rem;
+  }
+}
+
+// Detail Header
+.detail-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 2px solid var(--border);
+
+  @media (max-width: 768px) {
+    flex-wrap: wrap;
+  }
+
+  .back-btn {
+    flex-shrink: 0;
+  }
+
+  .header-info {
+    flex: 1;
+
+    h1 {
+      font-size: 1.75rem;
+      font-weight: 600;
+      margin: 0 0 0.25rem 0;
+      color: var(--text-primary);
+
+      @media (max-width: 768px) {
+        font-size: 1.5rem;
+      }
+    }
+
+    .order-date {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      margin: 0;
+    }
+  }
+
+  .status-chip {
+    @include theme.gemini-card;
+    padding: 0.75rem 1.25rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    mat-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
+
+    &.status-pending { background-color: #fff3e0; color: #e65100; }
+    &.status-paid, &.status-confirmed { background-color: #e3f2fd; color: #0277bd; }
+    &.status-processing, &.status-shipped { background-color: #e8f5e9; color: #2e7d32; }
+    &.status-delivered, &.status-completed { background-color: #c8e6c9; color: #1b5e20; }
+    &.status-cancelled, &.status-refunded { background-color: #ffebee; color: #c62828; }
+
+    @media (prefers-color-scheme: dark) {
+      &.status-pending { background-color: rgba(255, 152, 0, 0.2); color: #ffb74d; }
+      &.status-paid, &.status-confirmed { background-color: rgba(33, 150, 243, 0.2); color: #64b5f6; }
+      &.status-processing, &.status-shipped { background-color: rgba(76, 175, 80, 0.2); color: #81c784; }
+      &.status-delivered, &.status-completed { background-color: rgba(76, 175, 80, 0.3); color: #66bb6a; }
+      &.status-cancelled, &.status-refunded { background-color: rgba(244, 67, 54, 0.2); color: #e57373; }
+    }
+  }
+}
+
+// Items Card
+.items-card {
+  @include theme.gemini-card;
+  margin-bottom: 2rem;
+
+  ::ng-deep {
+    .mat-mdc-card-header {
+      padding: 1.5rem 1.5rem 1rem 1.5rem;
+
+      .mat-mdc-card-avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: var(--radius-md);
+        background: var(--primary-gradient);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        mat-icon {
+          color: white;
+          font-size: 24px;
+          width: 24px;
+          height: 24px;
+        }
+      }
+
+      .mat-mdc-card-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+      }
+    }
+
+    .mat-mdc-card-content {
+      padding: 1rem 1.5rem 1.5rem 1.5rem;
+    }
+  }
+}
+
+// Items Table
+.items-table {
+  width: 100%;
+  margin-bottom: 1.5rem;
+
+  ::ng-deep {
+    th {
+      font-weight: 600;
+      color: var(--text-secondary);
+      background-color: var(--surface-variant);
+    }
+
+    td, th {
+      padding: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .mat-mdc-row:hover {
+      background-color: var(--surface-hover);
+    }
+  }
+
+  .product-cell {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    img {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: var(--radius-sm);
+    }
+
+    .product-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+
+      .product-name {
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+
+      .product-sku {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    .product-cell {
+      flex-direction: column;
+      align-items: flex-start;
+
+      img {
+        width: 100%;
+        height: auto;
+      }
+    }
+  }
+}
+
+// Price Summary
+.price-summary {
+  margin-top: 1.5rem;
+
+  .price-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.75rem 0;
+    font-size: 1rem;
+
+    &:not(:last-child) {
+      border-bottom: 1px solid var(--border);
+    }
+
+    span {
+      color: var(--text-secondary);
+    }
+
+    &.discount span {
+      color: var(--success);
+      font-weight: 600;
+    }
+
+    &.total {
+      padding-top: 1rem;
+      font-size: 1.25rem;
+
+      span {
+        color: var(--text-primary);
+        font-weight: 700;
+      }
+
+      .total-amount {
+        background: var(--primary-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-size: 1.5rem;
+      }
+    }
+
+    .free-shipping {
+      color: var(--success);
+      font-weight: 600;
+    }
+  }
+
+  mat-divider {
+    margin: 0.75rem 0;
+  }
+}
+
+// Info Cards Row
+.info-cards-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.info-card {
+  @include theme.gemini-card;
+
+  ::ng-deep {
+    .mat-mdc-card-header {
+      padding: 1.5rem 1.5rem 1rem 1.5rem;
+
+      .mat-mdc-card-avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: var(--radius-md);
+        background: var(--primary-gradient);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        mat-icon {
+          color: white;
+          font-size: 24px;
+          width: 24px;
+          height: 24px;
+        }
+      }
+
+      .mat-mdc-card-title {
+        font-size: 1.125rem;
+        font-weight: 600;
+      }
+    }
+
+    .mat-mdc-card-content {
+      padding: 0 1.5rem 1.5rem 1.5rem;
+
+      p {
+        margin: 0.5rem 0;
+        color: var(--text-secondary);
+        line-height: 1.6;
+
+        strong {
+          color: var(--text-primary);
+          font-weight: 600;
+        }
+      }
+    }
+  }
+}
+
+// Action Buttons
+.action-buttons {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+
+  button {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    border-radius: var(--radius-lg);
+    transition: all var(--transition-normal);
+
+    mat-icon {
+      margin-right: 0.5rem;
+    }
+
+    &[color="primary"] {
+      background: var(--primary-gradient);
+
+      &:hover {
+        box-shadow: var(--shadow-float);
+        transform: translateY(-2px);
+      }
+    }
+  }
+}
+
+// Accessibility
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

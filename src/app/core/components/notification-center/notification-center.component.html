@@ -1,0 +1,132 @@
+<!-- 通知中心按鈕 / Notification Center Button -->
+<button
+  mat-icon-button
+  [matMenuTriggerFor]="notificationMenu"
+  [matTooltip]="'notification.title' | translate"
+  [attr.aria-label]="hasUnread() ? ('notification.unread_count' | translate) + ': ' + unreadCount() : ('notification.title' | translate)"
+  class="notification-button"
+>
+  <mat-icon
+    [matBadge]="unreadCount()"
+    [matBadgeHidden]="!hasUnread()"
+    matBadgeColor="warn"
+    matBadgeSize="small"
+    [attr.aria-label]="hasUnread() ? ('notification.unread_count' | translate) + ': ' + unreadCount() : ('notification.title' | translate)"
+  >
+    notifications
+  </mat-icon>
+</button>
+
+<!-- 通知下拉選單 / Notification Dropdown Menu -->
+<mat-menu
+  #notificationMenu="matMenu"
+  class="notification-menu"
+  xPosition="before"
+>
+  <!-- 標題列 / Header -->
+  <div class="notification-header" (click)="$event.stopPropagation()">
+    <h3 class="notification-title">
+      {{ 'notification.title' | translate }}
+      <span *ngIf="hasUnread()" class="unread-badge">
+        {{ unreadCount() }}
+      </span>
+    </h3>
+    <button
+      mat-button
+      color="primary"
+      class="mark-all-button"
+      [disabled]="!hasUnread()"
+      (click)="onMarkAllAsRead()"
+      [attr.aria-label]="'notification.mark_all_read' | translate"
+    >
+      {{ 'notification.mark_all_read' | translate }}
+    </button>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <!-- 載入中 / Loading -->
+  <div *ngIf="loading()" class="notification-loading" (click)="$event.stopPropagation()">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p>{{ 'notification.loading' | translate }}</p>
+  </div>
+
+  <!-- 通知列表 / Notification List -->
+  <div
+    *ngIf="!loading() && getDisplayNotifications().length > 0"
+    class="notification-list"
+  >
+    <button
+      mat-menu-item
+      *ngFor="let notification of getDisplayNotifications(); trackBy: trackByNotificationId"
+      class="notification-item"
+      [class.unread]="!notification.isRead"
+      (click)="onNotificationClick(notification)"
+      role="menuitem"
+      [attr.aria-label]="('notification.open_notification' | translate) + ': ' + notification.title"
+    >
+      <!-- 通知圖示 / Notification Icon -->
+      <mat-icon
+        class="notification-icon"
+        [ngClass]="getNotificationIconColor(notification)"
+      >
+        {{ notification.icon }}
+      </mat-icon>
+
+      <!-- 通知內容 / Notification Content -->
+      <div class="notification-content">
+        <div class="notification-header-row">
+          <span [ngClass]="getNotificationTitleClass(notification)">
+            {{ notification.title }}
+          </span>
+          <button
+            mat-icon-button
+            class="delete-button"
+            (click)="onDeleteNotification($event, notification.id)"
+            [attr.aria-label]="'notification.delete_notification' | translate"
+          >
+            <mat-icon class="delete-icon">close</mat-icon>
+          </button>
+        </div>
+        <p [ngClass]="getNotificationMessageClass(notification)">
+          {{ notification.message }}
+        </p>
+        <span class="notification-time">
+          {{ notification.relativeTime }}
+        </span>
+      </div>
+
+      <!-- 未讀指示器 / Unread Indicator -->
+      <div *ngIf="!notification.isRead" class="unread-indicator"></div>
+    </button>
+  </div>
+
+  <!-- 空狀態 / Empty State -->
+  <div
+    *ngIf="!loading() && getDisplayNotifications().length === 0"
+    class="notification-empty"
+    (click)="$event.stopPropagation()"
+  >
+    <mat-icon class="empty-icon">notifications_none</mat-icon>
+    <p>{{ 'notification.empty' | translate }}</p>
+  </div>
+
+  <mat-divider *ngIf="!loading() && getDisplayNotifications().length > 0"></mat-divider>
+
+  <!-- 查看全部 / View All -->
+  <div
+    *ngIf="!loading() && getDisplayNotifications().length > 0"
+    class="notification-footer"
+    (click)="$event.stopPropagation()"
+  >
+    <button
+      mat-button
+      color="primary"
+      class="view-all-button"
+      (click)="onViewAll()"
+      [attr.aria-label]="'notification.view_all' | translate"
+    >
+      {{ 'notification.view_all' | translate }}
+    </button>
+  </div>
+</mat-menu>

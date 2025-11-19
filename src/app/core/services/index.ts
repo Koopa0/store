@@ -13,3 +13,8 @@ export * from './theme.service';
 export * from './loading.service';
 export * from './auth.service';
 export * from './notification.service';
+export * from './user-notification.service';
+export * from './address.service';
+export * from './review.service';
+export * from './inventory.service';
+export * from './logger.service';

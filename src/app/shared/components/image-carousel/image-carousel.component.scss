@@ -1,0 +1,194 @@
+/**
+ * 圖片輪播組件樣式 - Gemini 風格
+ * Image Carousel Component Styles - Gemini Design
+ */
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+.image-carousel {
+  width: 100%;
+
+  .main-image-container {
+    position: relative;
+    width: 100%;
+    background-color: var(--surface-variant, #f5f5f5);
+    border-radius: var(--radius-lg, 12px);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .main-image {
+      max-width: 100%;
+      max-height: 100%;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      transition: opacity var(--transition-normal);
+    }
+
+    // 導航按鈕
+    .nav-button {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background-color: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      z-index: 2;
+      transition: all var(--transition-fast);
+
+      &:hover:not(:disabled) {
+        background-color: white;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      }
+
+      &:disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+      }
+
+      mat-icon {
+        font-size: 2rem;
+        width: 2rem;
+        height: 2rem;
+      }
+
+      &.prev-button {
+        left: 1rem;
+      }
+
+      &.next-button {
+        right: 1rem;
+      }
+    }
+
+    // 圖片指示器
+    .image-indicators {
+      position: absolute;
+      bottom: 1rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 0.5rem;
+      z-index: 2;
+
+      .indicator {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: rgba(255, 255, 255, 0.5);
+        border: none;
+        padding: 0;
+        cursor: pointer;
+        transition: all var(--transition-fast);
+
+        &:hover {
+          background-color: rgba(255, 255, 255, 0.8);
+        }
+
+        &.active {
+          width: 24px;
+          border-radius: 4px;
+          background-color: var(--primary, #1a73e8);
+        }
+      }
+    }
+  }
+
+  // 縮圖區域
+  .thumbnails-container {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1rem;
+    overflow-x: auto;
+    padding: 0.5rem 0;
+    scrollbar-width: thin;
+
+    &::-webkit-scrollbar {
+      height: 6px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: var(--surface-variant, #f5f5f5);
+      border-radius: 3px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: var(--text-secondary, #999);
+      border-radius: 3px;
+
+      &:hover {
+        background: var(--text-primary, #333);
+      }
+    }
+
+    .thumbnail {
+      flex-shrink: 0;
+      width: 80px;
+      height: 80px;
+      border: 2px solid transparent;
+      border-radius: var(--radius-md, 8px);
+      padding: 0;
+      cursor: pointer;
+      overflow: hidden;
+      background-color: var(--surface-variant, #f5f5f5);
+      transition: all var(--transition-fast);
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      &:hover {
+        border-color: var(--primary, #1a73e8);
+        box-shadow: 0 2px 8px rgba(26, 115, 232, 0.2);
+      }
+
+      &.active {
+        border-color: var(--primary, #1a73e8);
+        box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
+      }
+    }
+  }
+}
+
+// 響應式設計 Responsive Design
+@media (max-width: 768px) {
+  .image-carousel {
+    .main-image-container {
+      .nav-button {
+        width: 32px;
+        height: 32px;
+
+        mat-icon {
+          font-size: 1.5rem;
+          width: 1.5rem;
+          height: 1.5rem;
+        }
+
+        &.prev-button {
+          left: 0.5rem;
+        }
+
+        &.next-button {
+          right: 0.5rem;
+        }
+      }
+
+      .image-indicators {
+        bottom: 0.5rem;
+      }
+    }
+
+    .thumbnails-container {
+      .thumbnail {
+        width: 60px;
+        height: 60px;
+      }
+    }
+  }
+}

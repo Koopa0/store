@@ -1,0 +1,665 @@
+/**
+ * 訂單確認頁面樣式
+ * Order Confirmation Page Styles
+ *
+ * 使用 Gemini 設計系統
+ * Using Gemini Design System
+ */
+
+@use 'styles/theme' as theme;
+
+.order-confirmation-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  min-height: calc(100vh - 200px);
+
+  @media (max-width: 768px) {
+    padding: 1rem;
+  }
+}
+
+// ============================================================================
+// Loading & Error States
+// ============================================================================
+
+.loading-state,
+.error-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  text-align: center;
+
+  mat-icon {
+    font-size: 64px;
+    width: 64px;
+    height: 64px;
+    margin-bottom: 1rem;
+  }
+
+  p {
+    font-size: 1.125rem;
+    color: var(--text-secondary);
+    margin: 1rem 0;
+  }
+
+  button {
+    margin-top: 1rem;
+  }
+}
+
+.loading-state {
+  mat-spinner {
+    margin-bottom: 1.5rem;
+
+    ::ng-deep circle {
+      stroke: var(--primary);
+    }
+  }
+}
+
+.error-state {
+  mat-icon {
+    color: var(--error);
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 0.5rem 0;
+  }
+}
+
+// ============================================================================
+// Success Content
+// ============================================================================
+
+.success-content {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+.success-header {
+  text-align: center;
+  margin-bottom: 2rem;
+
+  .success-icon {
+    margin: 0 auto 1.5rem;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #26c6da 0%, #00acc1 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: scaleIn 0.5s ease-out 0.2s both;
+
+    mat-icon {
+      font-size: 48px;
+      width: 48px;
+      height: 48px;
+      color: white;
+    }
+  }
+
+  h1 {
+    font-size: 2rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+
+    @media (max-width: 768px) {
+      font-size: 1.75rem;
+    }
+  }
+
+  .subtitle {
+    font-size: 1.125rem;
+    color: var(--text-secondary);
+    margin: 0;
+  }
+}
+
+// ============================================================================
+// Order Number Card
+// ============================================================================
+
+.order-number-card {
+  @include theme.gemini-card;
+  margin-bottom: 2rem;
+  background: linear-gradient(135deg, var(--primary-gradient));
+  color: white;
+
+  ::ng-deep .mat-mdc-card-content {
+    padding: 2rem;
+    text-align: center;
+  }
+
+  .order-number-display {
+    margin-bottom: 1rem;
+
+    .label {
+      display: block;
+      font-size: 0.875rem;
+      opacity: 0.9;
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .number {
+      display: block;
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+
+      @media (max-width: 768px) {
+        font-size: 1.5rem;
+      }
+    }
+  }
+
+  .order-date {
+    margin: 0;
+    font-size: 0.875rem;
+    opacity: 0.9;
+  }
+}
+
+// ============================================================================
+// Order Summary Card
+// ============================================================================
+
+.order-summary-card {
+  @include theme.gemini-card;
+  margin-bottom: 2rem;
+
+  ::ng-deep {
+    .mat-mdc-card-header {
+      padding: 1.5rem 1.5rem 1rem 1.5rem;
+
+      .mat-mdc-card-avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: var(--radius-md);
+        background: var(--primary-gradient);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        mat-icon {
+          color: white;
+          font-size: 24px;
+          width: 24px;
+          height: 24px;
+        }
+      }
+
+      .mat-mdc-card-header-text {
+        margin-left: 1rem;
+      }
+
+      .mat-mdc-card-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0;
+      }
+    }
+
+    .mat-mdc-card-content {
+      padding: 1rem 1.5rem 1.5rem 1.5rem;
+    }
+  }
+}
+
+// ============================================================================
+// Order Items
+// ============================================================================
+
+.order-items-section {
+  margin-bottom: 1.5rem;
+
+  h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin: 0 0 1rem 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+}
+
+.order-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+  border-radius: var(--radius-md);
+  background-color: var(--surface-variant);
+  transition: all var(--transition-fast);
+
+  &:hover {
+    background-color: var(--surface-hover);
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .item-image {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: var(--radius-sm);
+    flex-shrink: 0;
+
+    @media (max-width: 768px) {
+      width: 100%;
+      height: auto;
+      aspect-ratio: 16 / 9;
+    }
+  }
+
+  .item-info {
+    flex: 1;
+
+    h4 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin: 0 0 0.25rem 0;
+      color: var(--text-primary);
+    }
+
+    .item-sku,
+    .item-quantity {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      margin: 0.25rem 0 0 0;
+    }
+  }
+
+  .item-price {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.25rem;
+
+    @media (max-width: 768px) {
+      width: 100%;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .unit-price {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+
+    .subtotal {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+  }
+}
+
+// ============================================================================
+// Price Breakdown
+// ============================================================================
+
+.price-breakdown {
+  margin-top: 1.5rem;
+
+  .price-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    font-size: 1rem;
+
+    &:not(:last-child) {
+      border-bottom: 1px solid var(--border);
+    }
+
+    span {
+      color: var(--text-secondary);
+    }
+
+    &.discount {
+      span {
+        color: var(--success);
+      }
+
+      .discount-amount {
+        font-weight: 600;
+      }
+    }
+
+    &.total {
+      padding-top: 1rem;
+      font-size: 1.25rem;
+
+      span {
+        color: var(--text-primary);
+        font-weight: 700;
+      }
+
+      .total-amount {
+        background: var(--primary-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        font-size: 1.5rem;
+      }
+    }
+
+    .free-shipping {
+      color: var(--success);
+      font-weight: 600;
+    }
+  }
+
+  mat-divider {
+    margin: 0.75rem 0;
+  }
+}
+
+// ============================================================================
+// Info Cards Row
+// ============================================================================
+
+.info-cards-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.info-card {
+  @include theme.gemini-card;
+
+  ::ng-deep {
+    .mat-mdc-card-header {
+      padding: 1.5rem 1.5rem 1rem 1.5rem;
+
+      .mat-mdc-card-avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: var(--radius-md);
+        background: var(--primary-gradient);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        mat-icon {
+          color: white;
+          font-size: 24px;
+          width: 24px;
+          height: 24px;
+        }
+      }
+
+      .mat-mdc-card-header-text {
+        margin-left: 1rem;
+      }
+
+      .mat-mdc-card-title {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0;
+      }
+    }
+
+    .mat-mdc-card-content {
+      padding: 0 1.5rem 1.5rem 1.5rem;
+
+      p {
+        margin: 0.5rem 0;
+        color: var(--text-secondary);
+        line-height: 1.6;
+
+        strong {
+          color: var(--text-primary);
+          font-weight: 600;
+        }
+      }
+    }
+  }
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-full);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+
+  &.status-pending {
+    background-color: #fff3e0;
+    color: #e65100;
+  }
+
+  &.status-paid,
+  &.status-confirmed {
+    background-color: #e3f2fd;
+    color: #0277bd;
+  }
+
+  &.status-processing,
+  &.status-shipped {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+  }
+
+  &.status-delivered,
+  &.status-completed {
+    background-color: #c8e6c9;
+    color: #1b5e20;
+  }
+
+  &.status-cancelled,
+  &.status-refunded {
+    background-color: #ffebee;
+    color: #c62828;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    &.status-pending {
+      background-color: rgba(255, 152, 0, 0.2);
+      color: #ffb74d;
+    }
+
+    &.status-paid,
+    &.status-confirmed {
+      background-color: rgba(33, 150, 243, 0.2);
+      color: #64b5f6;
+    }
+
+    &.status-processing,
+    &.status-shipped {
+      background-color: rgba(76, 175, 80, 0.2);
+      color: #81c784;
+    }
+
+    &.status-delivered,
+    &.status-completed {
+      background-color: rgba(76, 175, 80, 0.3);
+      color: #66bb6a;
+    }
+
+    &.status-cancelled,
+    &.status-refunded {
+      background-color: rgba(244, 67, 54, 0.2);
+      color: #e57373;
+    }
+  }
+}
+
+.customer-note {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+
+  .note-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 0.25rem;
+  }
+
+  .note-content {
+    font-size: 0.875rem;
+    color: var(--text-primary);
+    font-style: italic;
+  }
+}
+
+// ============================================================================
+// Action Buttons
+// ============================================================================
+
+.action-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+
+  button {
+    flex: 1;
+    padding: 0.75rem 2rem;
+    font-size: 1rem;
+    font-weight: 500;
+    border-radius: var(--radius-lg);
+    transition: all var(--transition-normal);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+
+    @media (max-width: 768px) {
+      width: 100%;
+    }
+
+    mat-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
+
+    &.view-orders-btn {
+      &:not(:disabled) {
+        background: var(--primary-gradient);
+        color: white;
+
+        &:hover {
+          background: var(--primary-gradient-hover);
+          box-shadow: var(--shadow-float);
+          transform: translateY(-2px);
+        }
+
+        &:active {
+          transform: translateY(0);
+        }
+      }
+    }
+  }
+}
+
+// ============================================================================
+// Help Info
+// ============================================================================
+
+.help-info {
+  @include theme.gemini-card;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem;
+  background-color: var(--surface-variant);
+
+  mat-icon {
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+    color: var(--primary);
+    flex-shrink: 0;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+}
+
+// ============================================================================
+// Animations
+// ============================================================================
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+// ============================================================================
+// Dark Mode Adjustments
+// ============================================================================
+
+@media (prefers-color-scheme: dark) {
+  .order-number-card {
+    background: linear-gradient(135deg, #1565c0 0%, #0d47a1 100%);
+  }
+}
+
+// ============================================================================
+// Accessibility
+// ============================================================================
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

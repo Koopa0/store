@@ -35,7 +35,11 @@ import {
   ThemeService,
   TranslationService,
   NotificationService,
+  LoggerService,
 } from '@core/services';
+
+// 組件
+import { NotificationCenterComponent } from '@core/components';
 
 @Component({
   selector: 'app-header',
@@ -52,6 +56,7 @@ import {
     MatBadgeModule,
     MatTooltipModule,
     MatDividerModule,
+    NotificationCenterComponent,
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
@@ -66,6 +71,7 @@ export class HeaderComponent {
   private readonly translationService = inject(TranslationService);
   private readonly notificationService = inject(NotificationService);
   private readonly router = inject(Router);
+  private readonly logger = inject(LoggerService);
 
   /**
    * 當前用戶
@@ -178,14 +184,19 @@ export class HeaderComponent {
    * Logout
    */
   async logout(): Promise<void> {
-    const confirmed = await this.notificationService.confirm(
-      'auth.logout.confirm',
-      'common.confirm'
-    );
+    try {
+      const confirmed = await this.notificationService.confirm(
+        'auth.logout.confirm',
+        'common.confirm'
+      );
 
-    if (confirmed) {
-      this.authService.logout();
-      this.notificationService.success('auth.logout.success');
+      if (confirmed) {
+        this.authService.logout();
+        this.notificationService.success('auth.logout.success');
+      }
+    } catch (error) {
+      this.logger.error('[Header] Logout error:', error);
+      this.notificationService.error('common.error');
     }
   }
 

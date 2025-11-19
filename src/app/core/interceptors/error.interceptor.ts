@@ -22,7 +22,7 @@ import {
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { catchError, throwError, Observable } from 'rxjs';
-import { StorageService } from '@core/services';
+import { StorageService, NotificationService } from '@core/services';
 import { STORAGE_KEYS } from '@core/constants/app.constants';
 
 /**
@@ -56,6 +56,7 @@ export const errorInterceptor: HttpInterceptorFn = (
    */
   const router = inject(Router);
   const storageService = inject(StorageService);
+  const notificationService = inject(NotificationService);
 
   /**
    * 處理請求並捕獲錯誤
@@ -71,7 +72,7 @@ export const errorInterceptor: HttpInterceptorFn = (
        * 處理錯誤
        * Handle error
        */
-      handleError(error, router, storageService, req);
+      handleError(error, router, storageService, notificationService, req);
 
       /**
        * 重新拋出錯誤
@@ -92,6 +93,7 @@ export const errorInterceptor: HttpInterceptorFn = (
  * @param error HTTP 錯誤回應
  * @param router 路由器
  * @param storageService 儲存服務
+ * @param notificationService 通知服務
  * @param req 原始請求
  *
  * 教學說明：根據不同的錯誤狀態碼執行不同的處理邏輯
@@ -100,6 +102,7 @@ function handleError(
   error: HttpErrorResponse,
   router: Router,
   storageService: StorageService,
+  notificationService: NotificationService,
   req: HttpRequest<unknown>
 ): void {
   console.error('[ErrorInterceptor] HTTP Error:', {
@@ -119,7 +122,7 @@ function handleError(
        * 網路錯誤（無法連接到伺服器）
        * Network error (cannot connect to server)
        */
-      handleNetworkError(error);
+      handleNetworkError(error, notificationService);
       break;
 
     case 400:
@@ -127,7 +130,7 @@ function handleError(
        * 錯誤的請求（Bad Request）
        * Bad request
        */
-      handleBadRequest(error);
+      handleBadRequest(error, notificationService);
       break;
 
     case 401:
@@ -135,7 +138,7 @@ function handleError(
        * 未授權（Unauthorized）
        * Unauthorized
        */
-      handleUnauthorized(error, router, storageService);
+      handleUnauthorized(error, router, storageService, notificationService);
       break;
 
     case 403:
@@ -143,7 +146,7 @@ function handleError(
        * 禁止訪問（Forbidden）
        * Forbidden
        */
-      handleForbidden(error, router);
+      handleForbidden(error, router, notificationService);
       break;
 
     case 404:
@@ -151,7 +154,7 @@ function handleError(
        * 找不到資源（Not Found）
        * Not found
        */
-      handleNotFound(error);
+      handleNotFound(error, notificationService);
       break;
 
     case 422:
@@ -159,7 +162,7 @@ function handleError(
        * 驗證錯誤（Unprocessable Entity）
        * Validation error
        */
-      handleValidationError(error);
+      handleValidationError(error, notificationService);
       break;
 
     case 429:
@@ -167,7 +170,7 @@ function handleError(
        * 請求過於頻繁（Too Many Requests）
        * Too many requests
        */
-      handleTooManyRequests(error);
+      handleTooManyRequests(error, notificationService);
       break;
 
     case 500:
@@ -178,7 +181,7 @@ function handleError(
        * 伺服器錯誤（Server Error）
        * Server error
        */
-      handleServerError(error);
+      handleServerError(error, notificationService);
       break;
 
     default:
@@ -186,7 +189,7 @@ function handleError(
        * 其他錯誤
        * Other errors
        */
-      handleUnknownError(error);
+      handleUnknownError(error, notificationService);
       break;
   }
 }
@@ -195,25 +198,29 @@ function handleError(
  * 處理網路錯誤
  * Handle network error
  */
-function handleNetworkError(error: HttpErrorResponse): void {
+function handleNetworkError(
+  error: HttpErrorResponse,
+  notificationService: NotificationService
+): void {
   console.error('[ErrorInterceptor] Network error - cannot connect to server');
 
-  // TODO: 顯示使用者友善的錯誤訊息
-  // 例如：「無法連接到伺服器，請檢查您的網路連線」
+  notificationService.error('無法連接到伺服器，請檢查您的網路連線');
 }
 
 /**
  * 處理錯誤請求
  * Handle bad request
  */
-function handleBadRequest(error: HttpErrorResponse): void {
+function handleBadRequest(
+  error: HttpErrorResponse,
+  notificationService: NotificationService
+): void {
   console.error('[ErrorInterceptor] Bad request:', error.error);
 
   const apiError = error.error as ApiErrorResponse;
   const message = apiError?.message || '請求參數錯誤';
 
-  // TODO: 顯示錯誤訊息
-  console.log('[ErrorInterceptor] Message:', message);
+  notificationService.error(message);
 }
 
 /**
@@ -230,7 +237,8 @@ function handleBadRequest(error: HttpErrorResponse): void {
 function handleUnauthorized(
   error: HttpErrorResponse,
   router: Router,
-  storageService: StorageService
+  storageService: StorageService,
+  notificationService: NotificationService
 ): void {
   console.error('[ErrorInterceptor] Unauthorized - clearing auth data');
 
@@ -241,6 +249,9 @@ function handleUnauthorized(
   // 保存當前頁面路徑
   const currentUrl = router.url;
   storageService.set(STORAGE_KEYS.REDIRECT_URL, currentUrl);
+
+  // 通知用戶
+  notificationService.warning('登入已過期，請重新登入');
 
   // 導向登入頁面
   router.navigate(['/auth/login'], {
@@ -255,10 +266,14 @@ function handleUnauthorized(
  * 教學說明：
  * 403 表示已登入但沒有權限訪問該資源
  */
-function handleForbidden(error: HttpErrorResponse, router: Router): void {
+function handleForbidden(
+  error: HttpErrorResponse,
+  router: Router,
+  notificationService: NotificationService
+): void {
   console.error('[ErrorInterceptor] Forbidden - no permission');
 
-  // TODO: 顯示「您沒有權限訪問此資源」訊息
+  notificationService.error('您沒有權限執行此操作');
 
   // 可以導向到權限不足頁面
   // router.navigate(['/403']);
@@ -268,14 +283,16 @@ function handleForbidden(error: HttpErrorResponse, router: Router): void {
  * 處理找不到資源錯誤
  * Handle not found error
  */
-function handleNotFound(error: HttpErrorResponse): void {
+function handleNotFound(
+  error: HttpErrorResponse,
+  notificationService: NotificationService
+): void {
   console.error('[ErrorInterceptor] Resource not found');
 
   const apiError = error.error as ApiErrorResponse;
   const message = apiError?.message || '找不到請求的資源';
 
-  // TODO: 顯示錯誤訊息
-  console.log('[ErrorInterceptor] Message:', message);
+  notificationService.error(message);
 }
 
 /**
@@ -286,21 +303,28 @@ function handleNotFound(error: HttpErrorResponse): void {
  * 422 通常用於表單驗證錯誤
  * 後端會返回詳細的欄位錯誤訊息
  */
-function handleValidationError(error: HttpErrorResponse): void {
+function handleValidationError(
+  error: HttpErrorResponse,
+  notificationService: NotificationService
+): void {
   console.error('[ErrorInterceptor] Validation error');
 
   const apiError = error.error as ApiErrorResponse;
 
   if (apiError?.errors) {
     // 處理欄位級別的錯誤
+    const errorMessages: string[] = [];
     Object.entries(apiError.errors).forEach(([field, messages]) => {
       console.log(`[ErrorInterceptor] Field '${field}':`, messages);
-      // TODO: 在表單中顯示對應欄位的錯誤訊息
+      errorMessages.push(...messages);
     });
+    // 顯示第一個錯誤訊息
+    if (errorMessages.length > 0) {
+      notificationService.error(errorMessages[0]);
+    }
   } else {
     const message = apiError?.message || '資料驗證失敗';
-    // TODO: 顯示一般錯誤訊息
-    console.log('[ErrorInterceptor] Message:', message);
+    notificationService.error(message);
   }
 }
 
@@ -311,7 +335,10 @@ function handleValidationError(error: HttpErrorResponse): void {
  * 教學說明：
  * 429 表示請求頻率超過限制（Rate Limiting）
  */
-function handleTooManyRequests(error: HttpErrorResponse): void {
+function handleTooManyRequests(
+  error: HttpErrorResponse,
+  notificationService: NotificationService
+): void {
   console.error('[ErrorInterceptor] Too many requests - rate limit exceeded');
 
   // 從 Header 中取得重試時間
@@ -320,8 +347,7 @@ function handleTooManyRequests(error: HttpErrorResponse): void {
     ? `請求過於頻繁，請在 ${retryAfter} 秒後重試`
     : '請求過於頻繁，請稍後再試';
 
-  // TODO: 顯示錯誤訊息
-  console.log('[ErrorInterceptor] Message:', message);
+  notificationService.warning(message);
 }
 
 /**
@@ -331,7 +357,10 @@ function handleTooManyRequests(error: HttpErrorResponse): void {
  * 教學說明：
  * 5xx 錯誤表示伺服器端出現問題
  */
-function handleServerError(error: HttpErrorResponse): void {
+function handleServerError(
+  error: HttpErrorResponse,
+  notificationService: NotificationService
+): void {
   console.error('[ErrorInterceptor] Server error:', error.status);
 
   const messages: Record<number, string> = {
@@ -343,8 +372,7 @@ function handleServerError(error: HttpErrorResponse): void {
 
   const message = messages[error.status] || '伺服器錯誤';
 
-  // TODO: 顯示錯誤訊息
-  console.log('[ErrorInterceptor] Message:', message);
+  notificationService.error(message);
 
   // 可以記錄到錯誤監控系統（例如 Sentry）
   // logErrorToMonitoring(error);
@@ -354,11 +382,13 @@ function handleServerError(error: HttpErrorResponse): void {
  * 處理未知錯誤
  * Handle unknown error
  */
-function handleUnknownError(error: HttpErrorResponse): void {
+function handleUnknownError(
+  error: HttpErrorResponse,
+  notificationService: NotificationService
+): void {
   console.error('[ErrorInterceptor] Unknown error:', error);
 
-  // TODO: 顯示一般錯誤訊息
-  console.log('[ErrorInterceptor] Message: 發生未知錯誤，請稍後再試');
+  notificationService.error('發生未知錯誤，請稍後再試');
 }
 
 /**

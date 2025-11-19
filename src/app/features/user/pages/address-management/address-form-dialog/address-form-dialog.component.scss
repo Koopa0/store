@@ -1,0 +1,72 @@
+/**
+ * 地址表單對話框樣式 - Gemini 風格
+ * Address Form Dialog Styles - Gemini Design
+ */
+
+:host {
+  display: block;
+}
+
+mat-dialog-content {
+  min-height: 400px;
+  padding: 1.5rem !important;
+
+  .address-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    .full-width {
+      width: 100%;
+    }
+
+    .form-row {
+      display: flex;
+      gap: 1rem;
+
+      .flex-1 {
+        flex: 1;
+      }
+
+      .flex-2 {
+        flex: 2;
+      }
+    }
+
+    .checkbox-field {
+      padding: 0.5rem 0;
+    }
+
+    mat-form-field {
+      mat-icon[matPrefix] {
+        color: var(--text-secondary);
+        margin-right: 0.5rem;
+      }
+    }
+  }
+}
+
+mat-dialog-actions {
+  padding: 1rem 1.5rem !important;
+  gap: 0.5rem;
+
+  button {
+    min-width: 80px;
+
+    mat-spinner {
+      display: inline-block;
+      margin: 0 auto;
+    }
+  }
+}
+
+// 響應式設計 Responsive Design
+@media (max-width: 600px) {
+  mat-dialog-content {
+    .address-form {
+      .form-row {
+        flex-direction: column;
+      }
+    }
+  }
+}

@@ -85,6 +85,12 @@ export interface User {
 }
 
 /**
+ * 地址標籤類型
+ * Address label type
+ */
+export type AddressLabel = 'home' | 'office' | 'other';
+
+/**
  * 用戶地址介面
  * User address interface
  *
@@ -96,8 +102,10 @@ export interface UserAddress {
   id: string;
   /** 用戶 ID / User ID */
   userId: string;
-  /** 地址標籤（如：家、公司）/ Address label (e.g., home, office) */
-  label: string;
+  /** 地址標籤（家、公司、其他）/ Label (home, office, other) */
+  label: AddressLabel;
+  /** 自定義標籤名稱（當 label = 'other' 時使用）/ Custom label name (when label = 'other') */
+  customLabel?: string;
   /** 是否為預設地址 / Is default address */
   isDefault: boolean;
   /** 收件人姓名 / Recipient name */
@@ -128,6 +136,103 @@ export interface UserAddress {
   createdAt: Date;
   /** 更新時間 / Updated timestamp */
   updatedAt: Date;
+}
+
+/**
+ * 新增地址請求
+ * Add address request
+ */
+export interface AddAddressRequest {
+  /** 地址標籤 / Label */
+  label: AddressLabel;
+  /** 自定義標籤名稱 / Custom label name */
+  customLabel?: string;
+  /** 是否為預設地址 / Is default */
+  isDefault: boolean;
+  /** 收件人姓名 / Recipient name */
+  recipientName: string;
+  /** 收件人電話 / Recipient phone */
+  recipientPhone: string;
+  /** 國家代碼 / Country code */
+  countryCode: string;
+  /** 郵遞區號 / Postal code */
+  postalCode: string;
+  /** 州/省 / State/Province */
+  stateProvince?: string;
+  /** 城市 / City */
+  city: string;
+  /** 區 / District */
+  district?: string;
+  /** 街道地址 / Street address */
+  streetAddress: string;
+  /** 大樓/樓層 / Building/Floor */
+  buildingFloor?: string;
+}
+
+/**
+ * 更新地址請求
+ * Update address request
+ */
+export interface UpdateAddressRequest extends AddAddressRequest {
+  /** 地址 ID / Address ID */
+  id: string;
+}
+
+/**
+ * 地址格式化輔助函式
+ * Address formatting helper functions
+ */
+export class AddressFormatter {
+  /**
+   * 取得地址標籤顯示名稱
+   * Get address label display name
+   */
+  static getLabelDisplayName(address: UserAddress): string {
+    if (address.label === 'other' && address.customLabel) {
+      return address.customLabel;
+    }
+    const labelMap: Record<AddressLabel, string> = {
+      home: '住家',
+      office: '公司',
+      other: '其他',
+    };
+    return labelMap[address.label] || address.label;
+  }
+
+  /**
+   * 格式化完整地址（單行）
+   * Format full address (single line)
+   */
+  static formatFullAddress(address: UserAddress): string {
+    const parts: string[] = [];
+
+    // 郵遞區號
+    if (address.postalCode) {
+      parts.push(address.postalCode);
+    }
+
+    // 城市
+    if (address.city) {
+      parts.push(address.city);
+    }
+
+    // 區
+    if (address.district) {
+      parts.push(address.district);
+    }
+
+    // 街道地址
+    if (address.streetAddress) {
+      parts.push(address.streetAddress);
+    }
+
+    // 大樓/樓層
+    if (address.buildingFloor) {
+      parts.push(address.buildingFloor);
+    }
+
+    return parts.join(' ');
+  }
 }
 
 /**

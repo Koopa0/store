@@ -1,0 +1,740 @@
+/**
+ * 結帳頁面樣式
+ * Checkout Page Styles
+ *
+ * 使用 Gemini 設計系統
+ * Using Gemini Design System
+ */
+
+@use 'styles/theme' as theme;
+
+.checkout-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+
+  @media (max-width: 768px) {
+    padding: 1rem;
+  }
+}
+
+// ============================================================================
+// Page Header
+// ============================================================================
+
+.page-header {
+  text-align: center;
+  margin-bottom: 3rem;
+
+  h1 {
+    font-size: 2.5rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+
+    @media (max-width: 768px) {
+      font-size: 2rem;
+    }
+  }
+
+  .subtitle {
+    font-size: 1.125rem;
+    color: var(--text-secondary);
+    margin: 0;
+  }
+}
+
+// ============================================================================
+// Stepper 樣式
+// ============================================================================
+
+.checkout-stepper {
+  background: transparent;
+
+  ::ng-deep {
+    // Stepper header
+    .mat-stepper-horizontal {
+      background: transparent;
+    }
+
+    .mat-step-header {
+      padding: 1.5rem 1rem;
+      border-radius: var(--radius-lg);
+      transition: all var(--transition-normal);
+
+      &:hover {
+        background-color: var(--surface-hover);
+      }
+
+      &.cdk-keyboard-focused,
+      &.cdk-program-focused {
+        background-color: transparent;
+      }
+
+      .mat-step-icon {
+        background-color: var(--surface-variant);
+        color: var(--text-secondary);
+        width: 40px;
+        height: 40px;
+        margin-right: 12px;
+
+        .mat-icon {
+          font-size: 24px;
+          width: 24px;
+          height: 24px;
+        }
+      }
+
+      .mat-step-icon-selected {
+        background: var(--primary-gradient);
+        color: white;
+      }
+
+      .mat-step-icon-state-done {
+        background-color: var(--success);
+        color: white;
+      }
+
+      .mat-step-label {
+        font-size: 1rem;
+        font-weight: 500;
+      }
+
+      .mat-step-label-selected {
+        font-weight: 600;
+        color: var(--primary);
+      }
+    }
+
+    // Stepper line
+    .mat-stepper-horizontal-line {
+      border-top-width: 2px;
+      border-top-color: var(--border);
+      margin: 0 -16px;
+    }
+
+    // Step content
+    .mat-horizontal-content-container {
+      padding: 2rem 0;
+    }
+  }
+}
+
+// ============================================================================
+// Step Content
+// ============================================================================
+
+.step-content {
+  max-width: 800px;
+  margin: 0 auto;
+
+  h2 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    color: var(--text-primary);
+
+    @media (max-width: 768px) {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+  }
+
+  h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+  }
+}
+
+// ============================================================================
+// Step 1: 購物車確認
+// ============================================================================
+
+.cart-items-review {
+  margin-bottom: 2rem;
+}
+
+.cart-item-card {
+  @include theme.gemini-card;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  transition: all var(--transition-normal);
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-float);
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .item-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: var(--radius-md);
+    flex-shrink: 0;
+
+    @media (max-width: 768px) {
+      width: 100%;
+      height: auto;
+      aspect-ratio: 16 / 9;
+    }
+  }
+
+  .item-details {
+    flex: 1;
+
+    h3 {
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin: 0 0 0.5rem 0;
+      color: var(--text-primary);
+    }
+
+    .item-price {
+      font-size: 1rem;
+      color: var(--primary);
+      font-weight: 500;
+      margin: 0 0 0.25rem 0;
+    }
+
+    .item-quantity {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      margin: 0;
+    }
+  }
+
+  .item-subtotal {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+
+    @media (max-width: 768px) {
+      width: 100%;
+      text-align: right;
+    }
+  }
+}
+
+.cart-summary-preview {
+  @include theme.gemini-card;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+
+  .summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    font-size: 1rem;
+
+    &:not(:last-child) {
+      border-bottom: 1px solid var(--border);
+    }
+
+    span {
+      color: var(--text-secondary);
+    }
+
+    .amount {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+  }
+}
+
+.empty-cart {
+  @include theme.gemini-card;
+  text-align: center;
+  padding: 4rem 2rem;
+
+  mat-icon {
+    font-size: 64px;
+    width: 64px;
+    height: 64px;
+    color: var(--text-disabled);
+    margin-bottom: 1rem;
+  }
+
+  p {
+    font-size: 1.125rem;
+    color: var(--text-secondary);
+    margin: 0;
+  }
+}
+
+// ============================================================================
+// Step 2: 配送地址表單
+// ============================================================================
+
+.shipping-form,
+.payment-form {
+  .form-section {
+    margin-bottom: 2rem;
+
+    h3 {
+      margin-bottom: 1.5rem;
+    }
+  }
+
+  .form-row {
+    margin-bottom: 1rem;
+
+    &.two-columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+
+      @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .full-width {
+      width: 100%;
+    }
+  }
+
+  ::ng-deep {
+    .mat-mdc-form-field {
+      .mat-mdc-text-field-wrapper {
+        background-color: var(--surface);
+      }
+
+      .mat-mdc-form-field-focus-overlay {
+        background-color: transparent;
+      }
+
+      &.mat-focused {
+        .mdc-notched-outline__leading,
+        .mdc-notched-outline__notch,
+        .mdc-notched-outline__trailing {
+          border-color: var(--primary) !important;
+          border-width: 2px !important;
+        }
+      }
+
+      .mat-icon {
+        color: var(--text-secondary);
+      }
+
+      &.mat-form-field-invalid {
+        .mat-icon {
+          color: var(--error);
+        }
+      }
+    }
+
+    textarea.mat-mdc-input-element {
+      resize: vertical;
+      min-height: 100px;
+    }
+  }
+
+  mat-divider {
+    margin: 2rem 0;
+  }
+}
+
+// ============================================================================
+// Step 3: 支付方式
+// ============================================================================
+
+.payment-methods {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.payment-method-card {
+  @include theme.gemini-card;
+  padding: 0;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-float);
+  }
+
+  ::ng-deep {
+    .mat-mdc-card-content {
+      padding: 0;
+    }
+
+    .mat-mdc-radio-button {
+      width: 100%;
+      padding: 1.5rem;
+
+      .mdc-radio {
+        padding: 0;
+      }
+
+      .mdc-form-field {
+        width: 100%;
+      }
+
+      .mdc-label {
+        width: 100%;
+        padding-left: 0;
+      }
+
+      &.mat-mdc-radio-checked {
+        .method-content {
+          .method-icon {
+            background: var(--primary-gradient);
+            mat-icon {
+              color: white;
+            }
+          }
+
+          .method-info h4 {
+            color: var(--primary);
+          }
+        }
+      }
+    }
+  }
+
+  .method-content {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    width: 100%;
+
+    @media (max-width: 768px) {
+      gap: 1rem;
+    }
+
+    .method-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: var(--radius-md);
+      background-color: var(--surface-variant);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all var(--transition-normal);
+
+      mat-icon {
+        font-size: 32px;
+        width: 32px;
+        height: 32px;
+        color: var(--text-secondary);
+        transition: color var(--transition-normal);
+      }
+    }
+
+    .method-info {
+      flex: 1;
+
+      h4 {
+        font-size: 1.125rem;
+        font-weight: 600;
+        margin: 0 0 0.25rem 0;
+        color: var(--text-primary);
+        transition: color var(--transition-normal);
+      }
+
+      p {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        margin: 0;
+      }
+    }
+  }
+}
+
+// ============================================================================
+// Step 4: 訂單確認
+// ============================================================================
+
+.order-summary-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.summary-card {
+  @include theme.gemini-card;
+
+  ::ng-deep {
+    .mat-mdc-card-header {
+      padding: 1.5rem 1.5rem 1rem 1.5rem;
+
+      .mat-mdc-card-avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: var(--radius-md);
+        background: var(--primary-gradient);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        mat-icon {
+          color: white;
+          font-size: 24px;
+          width: 24px;
+          height: 24px;
+        }
+      }
+
+      .mat-mdc-card-header-text {
+        margin-left: 1rem;
+      }
+
+      .mat-mdc-card-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0;
+      }
+    }
+
+    .mat-mdc-card-content {
+      padding: 1rem 1.5rem;
+
+      p {
+        margin: 0.5rem 0;
+        color: var(--text-secondary);
+        line-height: 1.6;
+
+        strong {
+          color: var(--text-primary);
+          font-weight: 600;
+        }
+      }
+
+      .description {
+        font-size: 0.875rem;
+        color: var(--text-tertiary);
+      }
+    }
+
+    .mat-mdc-card-actions {
+      padding: 0.5rem 1.5rem 1.5rem 1.5rem;
+
+      button {
+        color: var(--primary);
+
+        mat-icon {
+          margin-right: 0.25rem;
+        }
+      }
+    }
+  }
+
+  .selected-payment {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    mat-icon {
+      font-size: 32px;
+      width: 32px;
+      height: 32px;
+      color: var(--primary);
+    }
+
+    div {
+      flex: 1;
+    }
+  }
+}
+
+.order-totals {
+  .totals-list {
+    .total-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 0;
+      font-size: 1rem;
+
+      &:not(:last-child) {
+        border-bottom: 1px solid var(--border);
+      }
+
+      span {
+        color: var(--text-secondary);
+      }
+
+      .amount {
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+
+      .free-shipping {
+        color: var(--success);
+        font-weight: 600;
+      }
+
+      &.total {
+        padding-top: 1rem;
+        font-size: 1.25rem;
+
+        span {
+          color: var(--text-primary);
+          font-weight: 700;
+        }
+
+        .total-amount {
+          background: var(--primary-gradient);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          font-size: 1.5rem;
+        }
+      }
+    }
+
+    mat-divider {
+      margin: 0.75rem 0;
+    }
+  }
+}
+
+// ============================================================================
+// Step Actions (Navigation Buttons)
+// ============================================================================
+
+.step-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border);
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+
+  button {
+    padding: 0.75rem 2rem;
+    font-size: 1rem;
+    font-weight: 500;
+    border-radius: var(--radius-lg);
+    transition: all var(--transition-normal);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    @media (max-width: 768px) {
+      width: 100%;
+      justify-content: center;
+    }
+
+    mat-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
+
+    &.back-btn {
+      mat-icon {
+        margin-right: 0.25rem;
+      }
+    }
+
+    &.next-btn,
+    &.submit-btn {
+      mat-icon {
+        margin-left: 0.25rem;
+      }
+
+      &:not(:disabled) {
+        background: var(--primary-gradient);
+        color: white;
+
+        &:hover {
+          background: var(--primary-gradient-hover);
+          box-shadow: var(--shadow-float);
+          transform: translateY(-2px);
+        }
+
+        &:active {
+          transform: translateY(0);
+        }
+      }
+
+      &:disabled {
+        background-color: var(--surface-variant);
+        color: var(--text-disabled);
+      }
+    }
+
+    &.submit-btn {
+      mat-spinner {
+        margin-right: 0.5rem;
+
+        ::ng-deep circle {
+          stroke: white;
+        }
+      }
+    }
+  }
+}
+
+// ============================================================================
+// Dark Mode Adjustments
+// ============================================================================
+
+@media (prefers-color-scheme: dark) {
+  .cart-item-card,
+  .payment-method-card,
+  .summary-card {
+    &:hover {
+      background-color: var(--surface-hover);
+    }
+  }
+}
+
+// ============================================================================
+// Animations
+// ============================================================================
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.step-content {
+  animation: fadeIn 0.3s ease-out;
+}
+
+// ============================================================================
+// Accessibility
+// ============================================================================
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

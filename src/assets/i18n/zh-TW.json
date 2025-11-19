@@ -30,7 +30,14 @@
     "required": "必填",
     "optional": "選填",
     "yes": "是",
-    "no": "否"
+    "no": "否",
+    "back_to_cart": "返回購物車",
+    "quantity": "數量",
+    "retry": "重試",
+    "increase_quantity": "增加數量",
+    "decrease_quantity": "減少數量",
+    "remove": "移除",
+    "menu": "選單"
   },
   "nav": {
     "products": "商品",
@@ -128,7 +135,15 @@
     "save": "省下",
     "free_shipping": "免運費",
     "delivery_time": "配送時間",
-    "return_policy": "退貨政策"
+    "return_policy": "退貨政策",
+    "variant": {
+      "select": "選擇規格",
+      "price": "價格",
+      "stock": "庫存",
+      "in_stock": "件",
+      "out_of_stock": "無庫存",
+      "please_select_all": "請選擇所有規格選項"
+    }
   },
   "cart": {
     "title": "購物車",
@@ -178,6 +193,7 @@
     "shipping_address": "配送地址",
     "billing_address": "帳單地址",
     "order_summary": "訂單摘要",
+    "status_draft": "草稿",
     "status_pending": "待付款",
     "status_paid": "已付款",
     "status_confirmed": "已確認",
@@ -190,7 +206,23 @@
     "status_refunded": "已退款",
     "created": "訂單已建立",
     "cancelled": "訂單已取消",
-    "cancel_confirm": "確定要取消此訂單嗎？"
+    "cancel_confirm": "確定要取消此訂單嗎？",
+    "error_loading": "載入訂單失敗",
+    "confirmation": {
+      "title": "訂單已成功建立！",
+      "subtitle": "感謝您的購買，我們將盡快為您處理訂單",
+      "help_text": "如有任何問題，請聯繫客服或查看訂單詳情"
+    },
+    "filter": {
+      "all": "全部訂單",
+      "status": "訂單狀態"
+    },
+    "empty": {
+      "title": "目前沒有訂單",
+      "description": "您還沒有任何訂單記錄，快去選購商品吧！"
+    },
+    "paid_at": "付款時間",
+    "shipped_at": "發貨時間"
   },
   "profile": {
     "title": "個人資料",
@@ -392,6 +424,287 @@
       "tax": "稅額",
       "shipping": "運費",
       "total": "總計"
+    }
+  },
+  "checkout": {
+    "title": "結帳",
+    "subtitle": "請填寫以下資訊完成訂單",
+    "empty_cart": "購物車是空的",
+    "subtotal": "商品小計",
+    "items_count": "商品數量",
+    "shipping_fee": "運費",
+    "tax": "稅額 (5%)",
+    "total": "訂單總額",
+    "free_shipping": "免運費",
+    "processing": "處理中...",
+    "submit_order": "確認訂單",
+    "step1": {
+      "title": "購物車確認",
+      "review_items": "確認購物車商品"
+    },
+    "step2": {
+      "title": "配送地址",
+      "shipping_address": "配送地址",
+      "recipient_info": "收件人資訊",
+      "recipient_name": "收件人姓名",
+      "recipient_phone": "收件人電話",
+      "address_info": "地址資訊",
+      "postal_code": "郵遞區號",
+      "city": "城市",
+      "district": "區域",
+      "street_address": "街道地址",
+      "building_floor": "大樓/樓層"
+    },
+    "step3": {
+      "title": "付款方式",
+      "payment_method": "選擇付款方式",
+      "customer_note": "訂單備註",
+      "note_placeholder": "請輸入備註（選填）"
+    },
+    "step4": {
+      "title": "訂單確認",
+      "review_order": "確認訂單資訊",
+      "shipping_info": "配送資訊",
+      "payment_info": "付款資訊",
+      "order_totals": "訂單金額"
+    }
+  },
+  "validation": {
+    "required": "此欄位為必填",
+    "phone_format": "請輸入正確的手機號碼格式 (例：0912345678)",
+    "postal_code": "請輸入正確的郵遞區號 (3-5位數字)",
+    "street_address": "街道地址至少需要5個字元"
+  },
+  "payment": {
+    "title": "支付",
+    "payment_method": "支付方式",
+    "payment_methods": "支付方式",
+    "select_payment_method": "選擇支付方式",
+    "credit_card": "信用卡",
+    "paypal": "PayPal",
+    "bank_transfer": "銀行轉帳",
+    "cash_on_delivery": "貨到付款",
+    "apple_pay": "Apple Pay",
+    "google_pay": "Google Pay",
+    "cryptocurrency": "加密貨幣",
+    "processing": {
+      "order": "正在建立訂單...",
+      "payment": "正在處理支付...",
+      "complete": "完成中..."
+    },
+    "status": {
+      "pending": "待支付",
+      "processing": "處理中",
+      "success": "支付成功",
+      "failed": "支付失敗",
+      "cancelled": "已取消",
+      "refunded": "已退款"
+    },
+    "success": "支付成功",
+    "failed": "支付失敗",
+    "cancelled": "支付已取消",
+    "amount": "支付金額",
+    "transaction_id": "交易編號",
+    "paid_at": "支付時間",
+    "retry": "重試支付",
+    "cancel": "取消支付",
+    "refund": "申請退款",
+    "refund_amount": "退款金額",
+    "refund_reason": "退款原因",
+    "refund_success": "退款成功",
+    "refund_failed": "退款失敗",
+    "error": {
+      "payment_failed": "支付失敗，請重試",
+      "invalid_method": "無效的支付方式",
+      "insufficient_funds": "餘額不足",
+      "card_declined": "卡片被拒絕",
+      "timeout": "支付超時",
+      "network_error": "網路錯誤，請檢查連線"
+    }
+  },
+  "address": {
+    "title": "收貨地址管理",
+    "add_new": "新增地址",
+    "add_first": "新增第一個地址",
+    "empty": "尚無收貨地址",
+    "empty_description": "請新增您的收貨地址，以便結帳時使用",
+    "default": "預設地址",
+    "set_as_default": "設為預設",
+    "edit_address": "編輯地址",
+    "delete_address": "刪除地址",
+    "confirm_delete": "確定要刪除此地址嗎？",
+    "cannot_delete_default": "無法刪除預設地址",
+    "label": {
+      "home": "住家",
+      "office": "公司",
+      "other": "其他"
+    },
+    "form": {
+      "address_type": "地址類型",
+      "custom_label": "自定義標籤",
+      "recipient_name": "收件人姓名",
+      "recipient_phone": "聯絡電話",
+      "postal_code": "郵遞區號",
+      "city": "城市",
+      "district": "區",
+      "street_address": "街道地址",
+      "building_floor": "大樓/樓層",
+      "set_as_default": "設為預設收貨地址",
+      "placeholder": {
+        "custom_label": "例如：父母家、朋友家",
+        "recipient_name": "請輸入收件人姓名",
+        "recipient_phone": "0912345678",
+        "postal_code": "106",
+        "district": "例如：大安區、信義區",
+        "street_address": "例如：信義路四段1號",
+        "building_floor": "例如：10樓、3F-2"
+      },
+      "error": {
+        "required": "此欄位為必填",
+        "minlength": "至少需要 {length} 個字元",
+        "phone_invalid": "請輸入有效的手機號碼 (09xxxxxxxx)",
+        "postal_code_invalid": "請輸入有效的郵遞區號"
+      }
+    },
+    "notification": {
+      "added": "地址已新增",
+      "updated": "地址已更新",
+      "deleted": "地址已刪除",
+      "set_default": "已設為預設地址",
+      "add_failed": "新增地址失敗",
+      "update_failed": "更新地址失敗",
+      "delete_failed": "刪除地址失敗"
+    }
+  },
+  "review": {
+    "title": "商品評價",
+    "total_reviews": "則評價",
+    "verified_purchase": "已驗證購買",
+    "verified_only": "僅顯示驗證購買",
+    "with_images_only": "有圖片的評價",
+    "write_review": "撰寫評價",
+    "edit_review": "編輯評價",
+    "delete_review": "刪除評價",
+    "helpful": "有幫助",
+    "no_reviews": "目前尚無評價",
+    "no_reviews_description": "成為第一位評價的顧客吧！",
+    "load_more": "載入更多評價",
+    "sort_by": "排序方式",
+    "sort": {
+      "newest": "最新評價",
+      "highest": "評分最高",
+      "lowest": "評分最低",
+      "helpful": "最有幫助"
+    },
+    "filter": {
+      "all": "所有評價",
+      "rating": "{{rating}} 星"
+    },
+    "form": {
+      "rating": "評分",
+      "title": "評價標題",
+      "title_placeholder": "請簡短描述您的購買體驗",
+      "content": "評價內容",
+      "content_placeholder": "請詳細描述您對商品的評價，幫助其他買家做出決定",
+      "images": "上傳圖片",
+      "add_images": "新增圖片",
+      "images_hint": "最多可上傳 5 張圖片，支援 JPG、PNG 格式",
+      "chars_remaining": "個剩餘字元",
+      "submit": "送出評價",
+      "error": {
+        "rating_required": "請選擇評分",
+        "title_required": "請輸入評價標題",
+        "title_too_short": "標題至少需要 5 個字元",
+        "content_required": "請輸入評價內容",
+        "content_too_short": "內容至少需要 10 個字元"
+      }
+    },
+    "notification": {
+      "submitted": "評價已送出",
+      "updated": "評價已更新",
+      "deleted": "評價已刪除",
+      "marked_helpful": "已標記為有幫助",
+      "submit_failed": "送出評價失敗",
+      "update_failed": "更新評價失敗",
+      "delete_failed": "刪除評價失敗"
+    }
+  },
+  "inventory": {
+    "title": "庫存管理",
+    "history": {
+      "title": "庫存交易歷史",
+      "subtitle": "查看所有庫存變動記錄，追蹤商品進出庫狀況"
+    },
+    "type": {
+      "sale": "銷售出庫",
+      "return": "退貨入庫",
+      "adjustment": "手動調整",
+      "initial": "期初建立"
+    },
+    "reference": {
+      "order": "訂單",
+      "manual": "手動",
+      "system": "系統"
+    },
+    "stats": {
+      "current_stock": "當前庫存",
+      "total_sales": "總銷售量",
+      "total_returns": "總退貨量",
+      "total_adjustments": "總調整量"
+    },
+    "filter": {
+      "search": "搜尋",
+      "search_placeholder": "搜尋商品名稱、SKU、訂單編號...",
+      "type": "交易類型",
+      "reference_type": "參考類型",
+      "start_date": "開始日期",
+      "end_date": "結束日期"
+    },
+    "table": {
+      "created_at": "交易時間",
+      "product": "商品",
+      "type": "類型",
+      "quantity_change": "數量變更",
+      "before_quantity": "變更前",
+      "after_quantity": "變更後",
+      "reference": "參考來源",
+      "created_by": "操作人員",
+      "note": "備註"
+    },
+    "no_transactions": "目前沒有庫存交易記錄",
+    "export_csv": "匯出 CSV",
+    "common": {
+      "all": "全部",
+      "reset": "重置"
+    }
+  },
+  "notification": {
+    "title": "通知",
+    "mark_all_read": "全部標記為已讀",
+    "view_all": "查看全部通知",
+    "empty": "目前沒有通知",
+    "loading": "載入中...",
+    "unread_count": "未讀通知數量",
+    "delete_notification": "刪除通知",
+    "open_notification": "開啟通知",
+    "type": {
+      "order_created": "訂單已建立",
+      "order_paid": "付款成功",
+      "order_confirmed": "訂單已確認",
+      "order_shipped": "訂單已發貨",
+      "order_delivered": "訂單已送達",
+      "order_completed": "訂單已完成",
+      "order_cancelled": "訂單已取消",
+      "order_refunded": "訂單已退款",
+      "promotion": "促銷活動",
+      "system": "系統通知",
+      "review_replied": "評價已回覆"
+    },
+    "priority": {
+      "low": "低",
+      "normal": "一般",
+      "high": "高",
+      "urgent": "緊急"
     }
   }
 }

@@ -26,7 +26,7 @@
       <div class="cart-items">
         <div class="items-header">
           <h2>{{ 'cart.items' | translate }} ({{ itemsCount() }})</h2>
-          <button mat-button color="warn" (click)="clearCart()">
+          <button mat-button color="warn" (click)="clearCart()" [attr.aria-label]="'cart.clearCart' | translate">
             <mat-icon>delete</mat-icon>
             {{ 'cart.clearCart' | translate }}
           </button>
@@ -44,6 +44,17 @@
               </h3>
               <p class="item-sku">SKU: {{ item.productSku }}</p>
 
+              @if (item.variantAttributes) {
+                <div class="variant-info">
+                  @for (attr of getVariantAttributesArray(item.variantAttributes); track attr.key) {
+                    <span class="variant-item">
+                      <span class="variant-label">{{ attr.key }}:</span>
+                      <span class="variant-value">{{ attr.value }}</span>
+                    </span>
+                  }
+                </div>
+              }
+
               @if (isOutOfStock(item)) {
                 <p class="warning">{{ 'cart.outOfStock' | translate }}</p>
               }
@@ -57,7 +68,7 @@
             </div>
 
             <div class="item-quantity">
-              <button mat-icon-button (click)="decreaseQuantity(item)" [disabled]="item.quantity <= 1">
+              <button mat-icon-button (click)="decreaseQuantity(item)" [disabled]="item.quantity <= 1" [attr.aria-label]="'common.decrease_quantity' | translate">
                 <mat-icon>remove</mat-icon>
               </button>
               <input
@@ -67,8 +78,9 @@
                 (change)="updateQuantity(item, $event)"
                 min="1"
                 [max]="item.stockQuantity"
+                [attr.aria-label]="'common.quantity' | translate"
               />
-              <button mat-icon-button (click)="increaseQuantity(item)" [disabled]="item.quantity >= item.stockQuantity">
+              <button mat-icon-button (click)="increaseQuantity(item)" [disabled]="item.quantity >= item.stockQuantity" [attr.aria-label]="'common.increase_quantity' | translate">
                 <mat-icon>add</mat-icon>
               </button>
             </div>
@@ -78,7 +90,7 @@
             </div>
 
             <div class="item-actions">
-              <button mat-icon-button color="warn" (click)="removeItem(item)" [matTooltip]="'common.delete' | translate">
+              <button mat-icon-button color="warn" (click)="removeItem(item)" [matTooltip]="'common.delete' | translate" [attr.aria-label]="'common.remove' | translate">
                 <mat-icon>delete</mat-icon>
               </button>
             </div>

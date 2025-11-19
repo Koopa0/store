@@ -1,0 +1,67 @@
+<div
+  class="image-carousel"
+  (mouseenter)="onMouseEnter()"
+  (mouseleave)="onMouseLeave()"
+>
+  <!-- 主圖片區域 -->
+  <div class="main-image-container" [style.height]="height">
+    <!-- 當前圖片 -->
+    <img
+      [src]="currentImage()"
+      [alt]="'Image ' + (currentIndex() + 1)"
+      class="main-image"
+    />
+
+    <!-- 導航按鈕 -->
+    @if (hasMultipleImages()) {
+      <!-- 上一張按鈕 -->
+      <button
+        mat-icon-button
+        class="nav-button prev-button"
+        (click)="previous()"
+        [disabled]="!canGoPrevious()"
+        matTooltip="上一張"
+      >
+        <mat-icon>chevron_left</mat-icon>
+      </button>
+
+      <!-- 下一張按鈕 -->
+      <button
+        mat-icon-button
+        class="nav-button next-button"
+        (click)="next()"
+        [disabled]="!canGoNext() && !autoPlay"
+        matTooltip="下一張"
+      >
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+
+      <!-- 圖片指示器 -->
+      <div class="image-indicators">
+        @for (image of images$(); track $index) {
+          <button
+            class="indicator"
+            [class.active]="$index === currentIndex()"
+            (click)="selectImage($index)"
+            [attr.aria-label]="'圖片 ' + ($index + 1)"
+          ></button>
+        }
+      </div>
+    }
+  </div>
+
+  <!-- 縮圖區域 -->
+  @if (showThumbnails && hasMultipleImages()) {
+    <div class="thumbnails-container">
+      @for (image of images$(); track $index) {
+        <button
+          class="thumbnail"
+          [class.active]="$index === currentIndex()"
+          (click)="selectImage($index)"
+        >
+          <img [src]="image" [alt]="'縮圖 ' + ($index + 1)" />
+        </button>
+      }
+    </div>
+  }
+</div>

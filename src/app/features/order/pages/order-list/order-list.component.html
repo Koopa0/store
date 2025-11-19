@@ -1,0 +1,175 @@
+<!--
+  訂單列表頁面模板
+  Order List Page Template
+
+  顯示用戶的所有訂單
+  Shows user's order list
+-->
+
+<div class="order-list-container">
+  <!-- Page Header -->
+  <header class="page-header">
+    <div class="header-content">
+      <h1>{{ 'order.my_orders' | translate }}</h1>
+      <p class="subtitle">{{ 'order.order_history' | translate }}</p>
+    </div>
+  </header>
+
+  <!-- Status Filter -->
+  <div class="filter-section">
+    <mat-form-field appearance="outline" class="status-filter">
+      <mat-label>{{ 'order.filter.status' | translate }}</mat-label>
+      <mat-select
+        [value]="statusFilter()"
+        (selectionChange)="onStatusFilterChange($event.value)"
+      >
+        @for (status of availableStatuses; track status.value) {
+          <mat-option [value]="status.value">
+            {{ status.label | translate }}
+          </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <!-- Loading State -->
+  @if (loading()) {
+    <div class="loading-state">
+      <mat-spinner diameter="60"></mat-spinner>
+      <p>{{ 'common.loading' | translate }}</p>
+    </div>
+  }
+
+  <!-- Error State -->
+  @else if (error()) {
+    <div class="error-state">
+      <mat-icon>error_outline</mat-icon>
+      <h2>{{ 'error.network' | translate }}</h2>
+      <p>{{ error() }}</p>
+      <button mat-flat-button color="primary" (click)="loadOrders()">
+        <mat-icon>refresh</mat-icon>
+        {{ 'common.retry' | translate }}
+      </button>
+    </div>
+  }
+
+  <!-- Empty State -->
+  @else if (orders().length === 0) {
+    <div class="empty-state">
+      <mat-icon>receipt_long</mat-icon>
+      <h2>{{ 'order.empty.title' | translate }}</h2>
+      <p>{{ 'order.empty.description' | translate }}</p>
+      <button mat-flat-button color="primary" routerLink="/products">
+        <mat-icon>shopping_bag</mat-icon>
+        {{ 'cart.continue_shopping' | translate }}
+      </button>
+    </div>
+  }
+
+  <!-- Orders List -->
+  @else {
+    <div class="orders-list">
+      @for (order of orders(); track order.id) {
+        <mat-card class="order-card" (click)="viewOrderDetail(order.id)">
+          <mat-card-header>
+            <div class="order-header">
+              <div class="order-info">
+                <h3 class="order-number">
+                  <mat-icon>receipt</mat-icon>
+                  {{ order.orderNumber }}
+                </h3>
+                <p class="order-date">
+                  {{ order.createdAt | date: 'yyyy/MM/dd HH:mm' }}
+                </p>
+              </div>
+              <div class="order-status">
+                <mat-chip class="status-chip" [class]="'status-' + order.status">
+                  <mat-icon>{{ getStatusIcon(order.status) }}</mat-icon>
+                  {{ getStatusText(order.status) | translate }}
+                </mat-chip>
+              </div>
+            </div>
+          </mat-card-header>
+
+          <mat-card-content>
+            <div class="order-summary">
+              <!-- Order Amount -->
+              <div class="summary-item">
+                <span class="label">{{ 'order.total' | translate }}</span>
+                <span class="value total-amount">{{ order.totalAmount | currencyFormat }}</span>
+              </div>
+
+              <!-- Payment Status -->
+              @if (order.paidAt) {
+                <div class="summary-item">
+                  <span class="label">{{ 'order.paid_at' | translate }}</span>
+                  <span class="value">{{ order.paidAt | date: 'yyyy/MM/dd HH:mm' }}</span>
+                </div>
+              }
+
+              <!-- Shipping Status -->
+              @if (order.shippedAt) {
+                <div class="summary-item">
+                  <span class="label">{{ 'order.shipped_at' | translate }}</span>
+                  <span class="value">{{ order.shippedAt | date: 'yyyy/MM/dd HH:mm' }}</span>
+                </div>
+              }
+            </div>
+
+            <!-- Shipping Address Preview -->
+            <div class="address-preview">
+              <mat-icon>local_shipping</mat-icon>
+              <span>
+                {{ order.shippingAddress.city }}{{ order.shippingAddress.district }}
+                {{ order.shippingAddress.recipientName }}
+              </span>
+            </div>
+          </mat-card-content>
+
+          <mat-card-actions>
+            <button
+              mat-button
+              (click)="viewOrderDetail(order.id); $event.stopPropagation()"
+            >
+              <mat-icon>visibility</mat-icon>
+              {{ 'order.view_details' | translate }}
+            </button>
+            @if (order.status === 'shipped' || order.status === 'processing') {
+              <button
+                mat-button
+                (click)="trackOrder(order.orderNumber); $event.stopPropagation()"
+              >
+                <mat-icon>track_changes</mat-icon>
+                {{ 'order.track_order' | translate }}
+              </button>
+            }
+            @if (order.status === 'completed' || order.status === 'delivered') {
+              <button
+                mat-button
+                color="primary"
+                (click)="reorder(order); $event.stopPropagation()"
+              >
+                <mat-icon>replay</mat-icon>
+                {{ 'order.reorder' | translate }}
+              </button>
+            }
+          </mat-card-actions>
+        </mat-card>
+      }
+    </div>
+
+    <!-- Pagination -->
+    @if (pagination().totalPages > 1) {
+      <mat-paginator
+        class="order-paginator"
+        [length]="pagination().totalItems"
+        [pageSize]="pagination().pageSize"
+        [pageIndex]="pagination().currentPage - 1"
+        [pageSizeOptions]="[5, 10, 25, 50]"
+        (page)="onPageChange($event)"
+        showFirstLastButtons
+      >
+      </mat-paginator>
+    }
+  }
+</div>
