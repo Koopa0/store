@@ -97,11 +97,11 @@ describe('AuthService', () => {
 
     it('應該從 localStorage 載入用戶資料', () => {
       // 重新配置 storage 返回用戶資料
-      storageService.get.and.callFake((key: string) => {
+      storageService.get.and.callFake(((key: string) => {
         if (key === STORAGE_KEYS.USER_INFO) return mockUser;
         if (key === STORAGE_KEYS.ACCESS_TOKEN) return mockToken;
         return null;
-      });
+      }) as any);
 
       // 重新創建服務以觸發 constructor
       const newService = TestBed.inject(AuthService);
@@ -112,11 +112,11 @@ describe('AuthService', () => {
 
     it('如果 token 無效應該清除 storage', () => {
       storageService.get.and.returnValue(null);
-      storageService.get.and.callFake((key: string) => {
+      storageService.get.and.callFake(((key: string) => {
         if (key === STORAGE_KEYS.USER_INFO) return mockUser;
         // 沒有 token
         return null;
-      });
+      }) as any);
 
       TestBed.inject(AuthService);
 
@@ -355,10 +355,10 @@ describe('AuthService', () => {
     it('refreshToken() 應該更新 access token', fakeAsync(() => {
       // 設定當前狀態
       service['currentUserSignal'].set(mockUser);
-      storageService.get.and.callFake((key: string) => {
+      storageService.get.and.callFake(((key: string) => {
         if (key === STORAGE_KEYS.REFRESH_TOKEN) return 'refresh-token';
         return null;
-      });
+      }) as any);
 
       let completed = false;
       service.refreshToken().subscribe({

@@ -103,70 +103,76 @@
     }
   },
   "product": {
-    "title": "Products",
-    "all_products": "All Products",
-    "featured_products": "Featured Products",
-    "new_arrivals": "New Arrivals",
-    "best_sellers": "Best Sellers",
-    "on_sale": "On Sale",
-    "search_placeholder": "Search products...",
-    "price": "Price",
-    "price_range": "Price Range",
-    "category": "Category",
-    "brand": "Brand",
+    "list": {
+      "title": "Products",
+      "subtitle": "Explore our curated collection of quality products",
+      "search": "Search Products",
+      "searchPlaceholder": "Enter product name or keyword...",
+      "sortBy": "Sort By",
+      "ascending": "Ascending",
+      "descending": "Descending",
+      "noProducts": "No Products Found",
+      "noProductsDesc": "No products match your criteria. Please try adjusting your search.",
+      "clearSearch": "Clear Search"
+    },
+    "detail": {
+      "title": "Product Details",
+      "sku": "SKU",
+      "brand": "Brand",
+      "category": "Category",
+      "price": "Price",
+      "total": "Total",
+      "quantity": "Quantity",
+      "stock": "Stock",
+      "inStock": "In Stock",
+      "outOfStock": "Out of Stock",
+      "lowStock": "Low Stock",
+      "sold": "Sold",
+      "reviews": "Reviews",
+      "addToCart": "Add to Cart",
+      "buyNow": "Buy Now",
+      "backToList": "Back to Products",
+      "error": "Failed to Load Product",
+      "descriptionPlaceholder": "No detailed description available for this product. Please contact customer service for more information.",
+      "reviewsPlaceholder": "No reviews yet. Be the first to review this product!",
+      "tabs": {
+        "description": "Description",
+        "specifications": "Specifications",
+        "reviews": "Customer Reviews"
+      }
+    },
+    "featured": "Featured",
+    "new": "New",
+    "sale": "Sale",
+    "sold": "Sold",
     "rating": "Rating",
-    "in_stock": "In Stock",
-    "out_of_stock": "Out of Stock",
-    "low_stock": "Low Stock",
-    "stock": "Stock",
-    "sku": "SKU",
-    "description": "Description",
-    "specifications": "Specifications",
     "reviews": "Reviews",
-    "related_products": "Related Products",
-    "add_to_cart": "Add to Cart",
-    "buy_now": "Buy Now",
-    "add_to_wishlist": "Add to Wishlist",
-    "compare": "Compare",
-    "share": "Share",
-    "quantity": "Quantity",
-    "select_variant": "Select Variant",
-    "original_price": "Original Price",
-    "sale_price": "Sale Price",
-    "save": "Save",
-    "free_shipping": "Free Shipping",
-    "delivery_time": "Delivery Time",
-    "return_policy": "Return Policy"
+    "addToCart": "Add to Cart",
+    "buyNow": "Buy Now",
+    "viewDetails": "View Details",
+    "category": "Category",
+    "price": "Price",
+    "originalPrice": "Original Price",
+    "discount": "Discount",
+    "tag": "Tag"
   },
   "cart": {
     "title": "Shopping Cart",
     "empty": "Your cart is empty",
-    "continue_shopping": "Continue Shopping",
-    "item": "Item",
+    "emptyDescription": "You haven't added any products yet. Start shopping now!",
     "items": "Items",
-    "product": "Product",
-    "price": "Price",
-    "quantity": "Quantity",
-    "subtotal": "Subtotal",
-    "total": "Total",
-    "tax": "Tax",
-    "shipping": "Shipping",
-    "discount": "Discount",
-    "estimated_total": "Estimated Total",
-    "apply_coupon": "Apply Coupon",
-    "coupon_code": "Coupon Code",
-    "apply": "Apply",
-    "remove": "Remove",
-    "update": "Update",
-    "clear_cart": "Clear Cart",
-    "checkout": "Checkout",
-    "save_for_later": "Save for Later",
-    "move_to_cart": "Move to Cart",
-    "added_to_cart": "Added to cart",
-    "removed_from_cart": "Removed from cart",
-    "updated": "Cart updated",
-    "invalid_coupon": "Invalid coupon code",
-    "coupon_applied": "Coupon applied"
+    "clearCart": "Clear Cart",
+    "continueShopping": "Continue Shopping",
+    "checkout": "Proceed to Checkout",
+    "outOfStock": "This product is out of stock",
+    "priceChanged": "Product price has changed",
+    "summary": {
+      "title": "Order Summary",
+      "subtotal": "Subtotal",
+      "tax": "Tax",
+      "shipping": "Shipping",
+      "total": "Total"
+    }
   },
   "order": {
     "title": "Orders",
@@ -330,78 +336,6 @@
     "USD": "US$",
     "symbol": "NT$"
   },
-  "product": {
-    "list": {
-      "title": "Products",
-      "subtitle": "Explore our curated collection of quality products",
-      "search": "Search Products",
-      "searchPlaceholder": "Enter product name or keyword...",
-      "sortBy": "Sort By",
-      "ascending": "Ascending",
-      "descending": "Descending",
-      "noProducts": "No Products Found",
-      "noProductsDesc": "No products match your criteria. Please try adjusting your search.",
-      "clearSearch": "Clear Search"
-    },
-    "detail": {
-      "title": "Product Details",
-      "sku": "SKU",
-      "brand": "Brand",
-      "category": "Category",
-      "price": "Price",
-      "total": "Total",
-      "quantity": "Quantity",
-      "stock": "Stock",
-      "inStock": "In Stock",
-      "outOfStock": "Out of Stock",
-      "lowStock": "Low Stock",
-      "sold": "Sold",
-      "reviews": "Reviews",
-      "addToCart": "Add to Cart",
-      "buyNow": "Buy Now",
-      "backToList": "Back to Products",
-      "error": "Failed to Load Product",
-      "descriptionPlaceholder": "No detailed description available for this product. Please contact customer service for more information.",
-      "reviewsPlaceholder": "No reviews yet. Be the first to review this product!",
-      "tabs": {
-        "description": "Description",
-        "specifications": "Specifications",
-        "reviews": "Customer Reviews"
-      }
-    },
-    "featured": "Featured",
-    "new": "New",
-    "sale": "Sale",
-    "sold": "Sold",
-    "rating": "Rating",
-    "reviews": "Reviews",
-    "addToCart": "Add to Cart",
-    "buyNow": "Buy Now",
-    "viewDetails": "View Details",
-    "category": "Category",
-    "price": "Price",
-    "originalPrice": "Original Price",
-    "discount": "Discount",
-    "tag": "Tag"
-  },
-  "cart": {
-    "title": "Shopping Cart",
-    "empty": "Your cart is empty",
-    "emptyDescription": "You haven't added any products yet. Start shopping now!",
-    "items": "Items",
-    "clearCart": "Clear Cart",
-    "continueShopping": "Continue Shopping",
-    "checkout": "Proceed to Checkout",
-    "outOfStock": "This product is out of stock",
-    "priceChanged": "Product price has changed",
-    "summary": {
-      "title": "Order Summary",
-      "subtotal": "Subtotal",
-      "tax": "Tax",
-      "shipping": "Shipping",
-      "total": "Total"
-    }
-  },
   "notification": {
     "title": "Notifications",
     "mark_all_read": "Mark All as Read",
@@ -430,5 +364,185 @@
       "high": "High",
       "urgent": "Urgent"
     }
+  },
+  "address": {
+    "title": "Addresses",
+    "label": "Address",
+    "add_new": "Add New Address",
+    "add_first": "Add Your First Address",
+    "edit_address": "Edit Address",
+    "delete_address": "Delete Address",
+    "set_as_default": "Set as Default",
+    "default": "Default",
+    "empty": "No addresses",
+    "empty_description": "You haven't added any addresses yet",
+    "confirm_delete": "Are you sure you want to delete this address?",
+    "cannot_delete_default": "Cannot delete default address",
+    "form": {
+      "recipient_name": "Recipient Name",
+      "recipient_phone": "Recipient Phone",
+      "country_code": "Country",
+      "postal_code": "Postal Code",
+      "state_province": "State/Province",
+      "city": "City",
+      "district": "District",
+      "street_address": "Street Address",
+      "building_floor": "Building/Floor",
+      "is_default": "Set as default address"
+    },
+    "notification": {
+      "created": "Address created successfully",
+      "updated": "Address updated successfully",
+      "deleted": "Address deleted successfully",
+      "set_default": "Default address updated"
+    }
+  },
+  "checkout": {},
+  "home": {
+    "hero": {
+      "title": "Welcome to Koopa Store",
+      "subtitle": "Discover quality products at great prices",
+      "shop_now": "Shop Now",
+      "learn_more": "Learn More"
+    },
+    "categories": {
+      "title": "Shop by Category",
+      "view_all": "View All Categories"
+    },
+    "featured": {
+      "title": "Featured Products",
+      "view_all": "View All Products"
+    },
+    "newArrivals": {
+      "title": "New Arrivals",
+      "view_all": "View All"
+    }
+  },
+  "inventory": {
+    "title": "Inventory Management",
+    "stats": {
+      "total_products": "Total Products",
+      "low_stock": "Low Stock Items",
+      "out_of_stock": "Out of Stock",
+      "total_value": "Total Value"
+    },
+    "table": {
+      "product": "Product",
+      "sku": "SKU",
+      "stock": "Stock",
+      "status": "Status",
+      "last_updated": "Last Updated"
+    },
+    "history": {
+      "title": "Transaction History",
+      "date": "Date",
+      "type": "Type",
+      "quantity": "Quantity",
+      "reference": "Reference"
+    },
+    "type": {
+      "purchase": "Purchase",
+      "sale": "Sale",
+      "adjustment": "Adjustment",
+      "return": "Return"
+    },
+    "filter": {
+      "all": "All",
+      "in_stock": "In Stock",
+      "low_stock": "Low Stock",
+      "out_of_stock": "Out of Stock"
+    },
+    "no_transactions": "No transactions",
+    "export_csv": "Export CSV",
+    "common": {
+      "stock": "Stock",
+      "status": "Status"
+    }
+  },
+  "payment": {
+    "title": "Payment",
+    "select_payment_method": "Select Payment Method",
+    "payment_methods": "Payment Methods",
+    "payment_method": "Payment Method",
+    "credit_card": "Credit Card",
+    "paypal": "PayPal",
+    "apple_pay": "Apple Pay",
+    "google_pay": "Google Pay",
+    "bank_transfer": "Bank Transfer",
+    "cash_on_delivery": "Cash on Delivery",
+    "cryptocurrency": "Cryptocurrency",
+    "transaction_id": "Transaction ID",
+    "amount": "Amount",
+    "status": "Status",
+    "paid_at": "Paid At",
+    "processing": "Processing",
+    "success": "Payment Successful",
+    "failed": "Payment Failed",
+    "cancelled": "Payment Cancelled",
+    "error": "Payment Error",
+    "retry": "Retry Payment",
+    "cancel": "Cancel Payment",
+    "refund": "Refund",
+    "refund_amount": "Refund Amount",
+    "refund_reason": "Refund Reason",
+    "refund_success": "Refund Successful",
+    "refund_failed": "Refund Failed"
+  },
+  "review": {
+    "title": "Reviews",
+    "total_reviews": "Total Reviews",
+    "write_review": "Write a Review",
+    "edit_review": "Edit Review",
+    "delete_review": "Delete Review",
+    "verified_purchase": "Verified Purchase",
+    "helpful": "Helpful",
+    "no_reviews": "No reviews yet",
+    "no_reviews_description": "Be the first to review this product",
+    "sort_by": {
+      "newest": "Newest First",
+      "oldest": "Oldest First",
+      "highest_rating": "Highest Rating",
+      "lowest_rating": "Lowest Rating",
+      "most_helpful": "Most Helpful"
+    },
+    "filter": {
+      "all": "All Reviews",
+      "5_star": "5 Stars",
+      "4_star": "4 Stars",
+      "3_star": "3 Stars",
+      "2_star": "2 Stars",
+      "1_star": "1 Star",
+      "with_images": "With Images",
+      "verified_only": "Verified Purchases Only"
+    },
+    "form": {
+      "rating": "Rating",
+      "title": "Review Title",
+      "content": "Your Review",
+      "images": "Add Images",
+      "submit": "Submit Review"
+    },
+    "notification": {
+      "created": "Review submitted successfully",
+      "updated": "Review updated successfully",
+      "deleted": "Review deleted successfully"
+    },
+    "sort": "Sort By",
+    "load_more": "Load More Reviews",
+    "verified_only": "Verified Only",
+    "with_images_only": "With Images Only"
+  },
+  "validation": {
+    "required": "This field is required",
+    "email": "Invalid email format",
+    "phone_format": "Invalid phone number format",
+    "postal_code": "Invalid postal code",
+    "min_length": "Minimum length is {{min}} characters",
+    "max_length": "Maximum length is {{max}} characters",
+    "min_value": "Minimum value is {{min}}",
+    "max_value": "Maximum value is {{max}}",
+    "pattern": "Invalid format",
+    "unique": "This value already exists",
+    "street_address": "Street address is required"
   }
 }
