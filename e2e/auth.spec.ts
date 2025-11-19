@@ -16,9 +16,12 @@ test.describe('Authentication', () => {
     // Login with valid credentials
     await loginPage.login('admin@koopa.com', 'admin123');
 
-    // Verify logged in - should redirect to home and show user menu
-    await expect(page).toHaveURL('/');
+    // Verify logged in - should redirect to /home (not /) and show user menu
+    await expect(page).toHaveURL('/home');
     await expect(await headerPage.isLoggedIn()).toBe(true);
+
+    // Verify homepage content is visible (not duplicate header)
+    await expect(page.locator('.hero-section')).toBeVisible();
   });
 
   test('should logout successfully', async ({ page }) => {
@@ -30,7 +33,7 @@ test.describe('Authentication', () => {
     await loginPage.login('admin@koopa.com', 'admin123');
 
     // Wait for redirect to home
-    await expect(page).toHaveURL('/');
+    await expect(page).toHaveURL('/home');
 
     // Logout
     await headerPage.logout();
@@ -80,8 +83,8 @@ test.describe('Authentication', () => {
     // Login with remember me checked
     await loginPage.login('user@koopa.com', 'user123', true);
 
-    // Verify logged in
-    await expect(page).toHaveURL('/');
+    // Verify logged in - should redirect to /home
+    await expect(page).toHaveURL('/home');
     await expect(await headerPage.isLoggedIn()).toBe(true);
   });
 });

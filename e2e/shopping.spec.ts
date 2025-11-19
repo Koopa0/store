@@ -9,8 +9,8 @@ test.describe('Shopping Flow', () => {
     await loginPage.goto();
     await loginPage.login('user@koopa.com', 'user123');
 
-    // Wait for successful login
-    await expect(page).toHaveURL('/');
+    // Wait for successful login - should redirect to /home
+    await expect(page).toHaveURL('/home');
   });
 
   test('should add product to cart', async ({ page }) => {
