@@ -19,7 +19,7 @@ import {
   LOCALE_ID,
 } from '@angular/core';
 import { DatePipe, CurrencyPipe, registerLocaleData } from '@angular/common';
-import localeZhTw from '@angular/common/locales/zh-Hant-TW';
+import localeZhTw from '@angular/common/locales/zh-Hant';
 import { provideRouter, withComponentInputBinding } from '@angular/router';
 
 // Register zh-TW locale data

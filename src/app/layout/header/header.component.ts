@@ -125,7 +125,13 @@ export class HeaderComponent {
    * 定義導航選單項目
    * 可根據用戶角色動態顯示
    */
-  navItems = [
+  navItems: Array<{
+    label: string;
+    path: string;
+    icon: string;
+    requireAuth: boolean;
+    badge?: number;
+  }> = [
     {
       label: 'nav.home',
       path: '/home',

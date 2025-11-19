@@ -294,15 +294,13 @@ export class HomeComponent implements OnInit {
     this.cartService.addToCart(product, 1).subscribe({
       next: (cartItem) => {
         this.notificationService.success(
-          `已將「${product.name}」加入購物車！`,
-          '成功'
+          `已將「${product.name}」加入購物車！`
         );
       },
       error: (error) => {
         this.logger.error('Failed to add to cart:', error);
         this.notificationService.error(
-          '加入購物車失敗，請稍後再試',
-          '錯誤'
+          '加入購物車失敗，請稍後再試'
         );
       },
     });
