@@ -42,7 +42,6 @@
               }
             ],
             "styles": [
-              "@fontsource/material-icons/index.css",
               "src/styles.scss"
             ]
           },
@@ -60,7 +59,10 @@
                   "maximumError": "200kB"
                 }
               ],
-              "outputHashing": "all"
+              "outputHashing": "all",
+              "optimization": {
+                "fonts": false
+              }
             },
             "development": {
               "optimization": false,
@@ -106,7 +108,6 @@
               }
             ],
             "styles": [
-              "@fontsource/material-icons/index.css",
               "src/styles.scss"
             ]
           }
