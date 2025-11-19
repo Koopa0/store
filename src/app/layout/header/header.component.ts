@@ -37,6 +37,7 @@ import {
   NotificationService,
   LoggerService,
 } from '@core/services';
+import { CartService } from '@features/cart/services/cart.service';
 
 // 組件
 import { NotificationCenterComponent } from '@core/components';
@@ -67,6 +68,7 @@ export class HeaderComponent {
    * Inject services
    */
   protected readonly authService = inject(AuthService);
+  private readonly cartService = inject(CartService);
   private readonly themeService = inject(ThemeService);
   private readonly translationService = inject(TranslationService);
   private readonly notificationService = inject(NotificationService);
@@ -110,6 +112,12 @@ export class HeaderComponent {
   showMobileMenu = signal(false);
 
   /**
+   * 購物車項目數量
+   * Cart items count
+   */
+  cartItemsCount = this.cartService.itemsCount;
+
+  /**
    * 導航項目
    * Navigation items
    *
@@ -118,6 +126,12 @@ export class HeaderComponent {
    * 可根據用戶角色動態顯示
    */
   navItems = [
+    {
+      label: 'nav.home',
+      path: '/home',
+      icon: 'home',
+      requireAuth: true,
+    },
     {
       label: 'nav.products',
       path: '/products',
@@ -129,13 +143,6 @@ export class HeaderComponent {
       path: '/categories',
       icon: 'category',
       requireAuth: false,
-    },
-    {
-      label: 'nav.cart',
-      path: '/cart',
-      icon: 'shopping_cart',
-      badge: 3, // 示範徽章
-      requireAuth: true,
     },
     {
       label: 'nav.orders',

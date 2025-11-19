@@ -67,6 +67,26 @@
         <mat-icon>language</mat-icon>
       </button>
 
+      <!-- 購物車 (僅登入用戶顯示) -->
+      @if (isAuthenticated()) {
+        <button
+          mat-icon-button
+          routerLink="/cart"
+          [matTooltip]="'nav.cart' | translate"
+          [attr.aria-label]="'nav.cart' | translate"
+          class="action-button cart-button"
+          data-testid="header-cart-button"
+        >
+          @if (cartItemsCount() > 0) {
+            <mat-icon [matBadge]="cartItemsCount()" matBadgeColor="warn" matBadgeSize="small">
+              shopping_cart
+            </mat-icon>
+          } @else {
+            <mat-icon>shopping_cart</mat-icon>
+          }
+        </button>
+      }
+
       <!-- 通知中心 (僅登入用戶顯示) -->
       @if (isAuthenticated()) {
         <app-notification-center></app-notification-center>
