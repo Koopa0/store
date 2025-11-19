@@ -26,3 +26,6 @@ export * from './cart.model';
 
 // 評價相關模型 / Review-related models
 export * from './review.model';
+
+// 庫存相關模型 / Inventory-related models
+export * from './inventory.model';

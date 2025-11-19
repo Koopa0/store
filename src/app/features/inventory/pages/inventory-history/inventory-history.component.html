@@ -1,0 +1,286 @@
+<!--
+  庫存歷史查詢頁面
+  Inventory History Page
+
+  顯示所有庫存交易記錄
+  Displays all inventory transaction records
+-->
+
+<div class="inventory-history-page">
+  <!-- 頁面標題 Page Header -->
+  <div class="page-header">
+    <h1>{{ 'inventory.history.title' | translate }}</h1>
+    <p class="subtitle">{{ 'inventory.history.subtitle' | translate }}</p>
+  </div>
+
+  <!-- 統計卡片 Statistics Cards -->
+  @if (statistics(); as stats) {
+    <div class="statistics-cards">
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-icon current-stock">
+            <mat-icon>inventory_2</mat-icon>
+          </div>
+          <div class="stat-content">
+            <div class="stat-label">{{ 'inventory.stats.current_stock' | translate }}</div>
+            <div class="stat-value">{{ stats.currentStock }}</div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-icon total-sales">
+            <mat-icon>shopping_cart</mat-icon>
+          </div>
+          <div class="stat-content">
+            <div class="stat-label">{{ 'inventory.stats.total_sales' | translate }}</div>
+            <div class="stat-value">{{ stats.totalSales }}</div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-icon total-returns">
+            <mat-icon>keyboard_return</mat-icon>
+          </div>
+          <div class="stat-content">
+            <div class="stat-label">{{ 'inventory.stats.total_returns' | translate }}</div>
+            <div class="stat-value">{{ stats.totalReturns }}</div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-icon total-adjustments">
+            <mat-icon>tune</mat-icon>
+          </div>
+          <div class="stat-content">
+            <div class="stat-label">{{ 'inventory.stats.total_adjustments' | translate }}</div>
+            <div class="stat-value">{{ stats.totalAdjustments > 0 ? '+' + stats.totalAdjustments : stats.totalAdjustments }}</div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  }
+
+  <!-- 篩選區 Filter Section -->
+  <mat-card class="filter-card">
+    <mat-card-content>
+      <form [formGroup]="filterForm" class="filter-form">
+        <!-- 搜尋關鍵字 Search Keyword -->
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-label>{{ 'inventory.filter.search' | translate }}</mat-label>
+          <input
+            matInput
+            formControlName="search"
+            [placeholder]="'inventory.filter.search_placeholder' | translate"
+          />
+          <mat-icon matPrefix>search</mat-icon>
+        </mat-form-field>
+
+        <!-- 交易類型 Transaction Type -->
+        <mat-form-field appearance="outline">
+          <mat-label>{{ 'inventory.filter.type' | translate }}</mat-label>
+          <mat-select formControlName="type">
+            <mat-option [value]="null">{{ 'common.all' | translate }}</mat-option>
+            @for (type of transactionTypes; track type.value) {
+              <mat-option [value]="type.value">{{ type.label | translate }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <!-- 參考類型 Reference Type -->
+        <mat-form-field appearance="outline">
+          <mat-label>{{ 'inventory.filter.reference_type' | translate }}</mat-label>
+          <mat-select formControlName="referenceType">
+            <mat-option [value]="null">{{ 'common.all' | translate }}</mat-option>
+            @for (refType of referenceTypes; track refType.value) {
+              <mat-option [value]="refType.value">{{ refType.label | translate }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <!-- 開始日期 Start Date -->
+        <mat-form-field appearance="outline">
+          <mat-label>{{ 'inventory.filter.start_date' | translate }}</mat-label>
+          <input
+            matInput
+            [matDatepicker]="startPicker"
+            formControlName="startDate"
+          />
+          <mat-datepicker-toggle matIconSuffix [for]="startPicker"></mat-datepicker-toggle>
+          <mat-datepicker #startPicker></mat-datepicker>
+        </mat-form-field>
+
+        <!-- 結束日期 End Date -->
+        <mat-form-field appearance="outline">
+          <mat-label>{{ 'inventory.filter.end_date' | translate }}</mat-label>
+          <input
+            matInput
+            [matDatepicker]="endPicker"
+            formControlName="endDate"
+          />
+          <mat-datepicker-toggle matIconSuffix [for]="endPicker"></mat-datepicker-toggle>
+          <mat-datepicker #endPicker></mat-datepicker>
+        </mat-form-field>
+
+        <!-- 重置按鈕 Reset Button -->
+        <button
+          mat-stroked-button
+          type="button"
+          (click)="resetFilters()"
+          class="reset-button"
+        >
+          <mat-icon>refresh</mat-icon>
+          {{ 'common.reset' | translate }}
+        </button>
+
+        <!-- 導出按鈕 Export Button -->
+        <button
+          mat-raised-button
+          color="primary"
+          type="button"
+          (click)="exportToCSV()"
+          class="export-button"
+        >
+          <mat-icon>download</mat-icon>
+          {{ 'inventory.export_csv' | translate }}
+        </button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- 交易列表 Transaction List -->
+  <mat-card class="table-card">
+    <mat-card-content>
+      <!-- 載入中 Loading -->
+      @if (loading()) {
+        <div class="loading-container">
+          <mat-spinner diameter="50"></mat-spinner>
+          <p>{{ 'common.loading' | translate }}</p>
+        </div>
+      } @else if (transactions().length === 0) {
+        <!-- 空狀態 Empty State -->
+        <div class="empty-state">
+          <mat-icon>inventory</mat-icon>
+          <p>{{ 'inventory.no_transactions' | translate }}</p>
+        </div>
+      } @else {
+        <!-- 資料表 Data Table -->
+        <div class="table-container">
+          <table mat-table [dataSource]="transactions()" class="transactions-table">
+            <!-- 交易時間 Created At Column -->
+            <ng-container matColumnDef="createdAt">
+              <th mat-header-cell *matHeaderCellDef>{{ 'inventory.table.created_at' | translate }}</th>
+              <td mat-cell *matCellDef="let transaction">
+                {{ transaction.createdAt | date:'yyyy-MM-dd HH:mm' }}
+              </td>
+            </ng-container>
+
+            <!-- 商品名稱 Product Name Column -->
+            <ng-container matColumnDef="productName">
+              <th mat-header-cell *matHeaderCellDef>{{ 'inventory.table.product' | translate }}</th>
+              <td mat-cell *matCellDef="let transaction">
+                <div class="product-info">
+                  <div class="product-name">{{ transaction.productName }}</div>
+                  <div class="product-sku">{{ transaction.productSku }}</div>
+                  @if (transaction.variantAttributes) {
+                    <div class="variant-info">
+                      @for (attr of Object.entries(transaction.variantAttributes); track attr[0]) {
+                        <span class="variant-chip">{{ attr[0] }}: {{ attr[1] }}</span>
+                      }
+                    </div>
+                  }
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- 交易類型 Type Column -->
+            <ng-container matColumnDef="type">
+              <th mat-header-cell *matHeaderCellDef>{{ 'inventory.table.type' | translate }}</th>
+              <td mat-cell *matCellDef="let transaction">
+                <mat-chip [color]="getTypeColor(transaction.type)" highlighted>
+                  {{ transaction.typeDisplayName }}
+                </mat-chip>
+              </td>
+            </ng-container>
+
+            <!-- 數量變更 Quantity Change Column -->
+            <ng-container matColumnDef="quantityChange">
+              <th mat-header-cell *matHeaderCellDef>{{ 'inventory.table.quantity_change' | translate }}</th>
+              <td mat-cell *matCellDef="let transaction">
+                <span [class]="getQuantityChangeClass(transaction.quantityChange)">
+                  {{ transaction.quantityChangeDisplay }}
+                </span>
+              </td>
+            </ng-container>
+
+            <!-- 變更前數量 Before Quantity Column -->
+            <ng-container matColumnDef="beforeQuantity">
+              <th mat-header-cell *matHeaderCellDef>{{ 'inventory.table.before_quantity' | translate }}</th>
+              <td mat-cell *matCellDef="let transaction">
+                {{ transaction.beforeQuantity }}
+              </td>
+            </ng-container>
+
+            <!-- 變更後數量 After Quantity Column -->
+            <ng-container matColumnDef="afterQuantity">
+              <th mat-header-cell *matHeaderCellDef>{{ 'inventory.table.after_quantity' | translate }}</th>
+              <td mat-cell *matCellDef="let transaction">
+                <strong>{{ transaction.afterQuantity }}</strong>
+              </td>
+            </ng-container>
+
+            <!-- 參考編號 Reference Number Column -->
+            <ng-container matColumnDef="referenceNumber">
+              <th mat-header-cell *matHeaderCellDef>{{ 'inventory.table.reference' | translate }}</th>
+              <td mat-cell *matCellDef="let transaction">
+                <div class="reference-info">
+                  <span class="reference-type">{{ transaction.referenceTypeDisplayName }}</span>
+                  @if (transaction.referenceNumber) {
+                    <span class="reference-number">{{ transaction.referenceNumber }}</span>
+                  }
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- 操作人員 Created By Column -->
+            <ng-container matColumnDef="createdByName">
+              <th mat-header-cell *matHeaderCellDef>{{ 'inventory.table.created_by' | translate }}</th>
+              <td mat-cell *matCellDef="let transaction">
+                {{ transaction.createdByName }}
+              </td>
+            </ng-container>
+
+            <!-- 備註 Note Column -->
+            <ng-container matColumnDef="note">
+              <th mat-header-cell *matHeaderCellDef>{{ 'inventory.table.note' | translate }}</th>
+              <td mat-cell *matCellDef="let transaction">
+                <span [matTooltip]="transaction.note" matTooltipPosition="above">
+                  {{ transaction.note.length > 30 ? transaction.note.substring(0, 30) + '...' : transaction.note }}
+                </span>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+        </div>
+
+        <!-- 分頁器 Paginator -->
+        <mat-paginator
+          [length]="totalCount()"
+          [pageSize]="pageSize()"
+          [pageIndex]="currentPage() - 1"
+          [pageSizeOptions]="[10, 20, 50, 100]"
+          (page)="onPageChange($event)"
+          showFirstLastButtons
+        >
+        </mat-paginator>
+      }
+    </mat-card-content>
+  </mat-card>
+</div>

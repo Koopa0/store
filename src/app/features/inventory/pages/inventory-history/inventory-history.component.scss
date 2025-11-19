@@ -1,0 +1,348 @@
+/**
+ * 庫存歷史查詢頁面樣式
+ * Inventory History Page Styles
+ *
+ * Gemini Design System:
+ * - Google Blue: #1a73e8
+ * - Success Green: #34a853
+ * - Warning Orange: #fbbc04
+ * - Error Red: #ea4335
+ * - Spacing: 8px grid
+ */
+
+.inventory-history-page {
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+
+  // ==================== 頁面標題 / Page Header ====================
+  .page-header {
+    margin-bottom: 24px;
+
+    h1 {
+      font-size: 28px;
+      font-weight: 500;
+      color: #202124;
+      margin: 0 0 8px 0;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: #5f6368;
+      margin: 0;
+    }
+  }
+
+  // ==================== 統計卡片 / Statistics Cards ====================
+  .statistics-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+
+    .stat-card {
+      mat-card-content {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 20px !important;
+
+        .stat-icon {
+          width: 56px;
+          height: 56px;
+          border-radius: 12px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          mat-icon {
+            font-size: 32px;
+            width: 32px;
+            height: 32px;
+            color: white;
+          }
+
+          &.current-stock {
+            background: linear-gradient(135deg, #1a73e8 0%, #4285f4 100%);
+          }
+
+          &.total-sales {
+            background: linear-gradient(135deg, #ea4335 0%, #f28b82 100%);
+          }
+
+          &.total-returns {
+            background: linear-gradient(135deg, #34a853 0%, #81c995 100%);
+          }
+
+          &.total-adjustments {
+            background: linear-gradient(135deg, #fbbc04 0%, #fdd663 100%);
+          }
+        }
+
+        .stat-content {
+          flex: 1;
+
+          .stat-label {
+            font-size: 13px;
+            color: #5f6368;
+            margin-bottom: 4px;
+          }
+
+          .stat-value {
+            font-size: 28px;
+            font-weight: 500;
+            color: #202124;
+          }
+        }
+      }
+    }
+  }
+
+  // ==================== 篩選卡片 / Filter Card ====================
+  .filter-card {
+    margin-bottom: 24px;
+
+    .filter-form {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      align-items: start;
+
+      .search-field {
+        grid-column: span 2;
+
+        @media (max-width: 768px) {
+          grid-column: span 1;
+        }
+      }
+
+      .reset-button,
+      .export-button {
+        margin-top: 8px;
+        height: 48px;
+
+        mat-icon {
+          margin-right: 8px;
+        }
+      }
+    }
+  }
+
+  // ==================== 表格卡片 / Table Card ====================
+  .table-card {
+    .loading-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 48px 16px;
+      gap: 16px;
+
+      p {
+        font-size: 14px;
+        color: #5f6368;
+        margin: 0;
+      }
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 48px 16px;
+      color: #5f6368;
+
+      mat-icon {
+        font-size: 64px;
+        width: 64px;
+        height: 64px;
+        color: #dadce0;
+        margin-bottom: 16px;
+      }
+
+      p {
+        font-size: 16px;
+        margin: 0;
+      }
+    }
+
+    .table-container {
+      overflow-x: auto;
+
+      .transactions-table {
+        width: 100%;
+        min-width: 1200px;
+
+        th {
+          background-color: #f8f9fa;
+          color: #5f6368;
+          font-weight: 500;
+          font-size: 13px;
+          padding: 12px 16px;
+        }
+
+        td {
+          padding: 16px;
+          font-size: 14px;
+          color: #202124;
+        }
+
+        // 商品資訊欄
+        .product-info {
+          .product-name {
+            font-weight: 500;
+            margin-bottom: 4px;
+          }
+
+          .product-sku {
+            font-size: 12px;
+            color: #5f6368;
+            margin-bottom: 4px;
+          }
+
+          .variant-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+
+            .variant-chip {
+              display: inline-block;
+              padding: 2px 8px;
+              background-color: #e8f0fe;
+              color: #1a73e8;
+              border-radius: 12px;
+              font-size: 11px;
+            }
+          }
+        }
+
+        // 數量變更顏色
+        .quantity-increase {
+          color: #34a853;
+          font-weight: 500;
+        }
+
+        .quantity-decrease {
+          color: #ea4335;
+          font-weight: 500;
+        }
+
+        .quantity-neutral {
+          color: #5f6368;
+        }
+
+        // 參考資訊欄
+        .reference-info {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+
+          .reference-type {
+            font-size: 12px;
+            color: #5f6368;
+          }
+
+          .reference-number {
+            font-weight: 500;
+            color: #1a73e8;
+          }
+        }
+
+        // 表格行懸停效果
+        tr.mat-mdc-row:hover {
+          background-color: #f8f9fa;
+        }
+      }
+    }
+
+    mat-paginator {
+      border-top: 1px solid #dadce0;
+    }
+  }
+}
+
+// ==================== 響應式設計 / Responsive Design ====================
+@media (max-width: 768px) {
+  .inventory-history-page {
+    padding: 16px;
+
+    .page-header {
+      h1 {
+        font-size: 24px;
+      }
+    }
+
+    .statistics-cards {
+      grid-template-columns: 1fr;
+
+      .stat-card {
+        mat-card-content {
+          .stat-icon {
+            width: 48px;
+            height: 48px;
+
+            mat-icon {
+              font-size: 28px;
+              width: 28px;
+              height: 28px;
+            }
+          }
+
+          .stat-content {
+            .stat-value {
+              font-size: 24px;
+            }
+          }
+        }
+      }
+    }
+
+    .filter-card {
+      .filter-form {
+        grid-template-columns: 1fr;
+
+        .search-field {
+          grid-column: span 1;
+        }
+      }
+    }
+
+    .table-card {
+      .table-container {
+        .transactions-table {
+          min-width: 800px;
+          font-size: 13px;
+
+          th, td {
+            padding: 12px;
+          }
+        }
+      }
+    }
+  }
+}
+
+// ==================== Material 組件客製化 / Material Component Customization ====================
+::ng-deep {
+  .inventory-history-page {
+    // 客製化 Material Chip 顏色
+    mat-chip {
+      &[color="warn"] {
+        background-color: #fce8e6 !important;
+        color: #ea4335 !important;
+      }
+
+      &[color="primary"] {
+        background-color: #e8f0fe !important;
+        color: #1a73e8 !important;
+      }
+
+      &[color="accent"] {
+        background-color: #e6f4ea !important;
+        color: #34a853 !important;
+      }
+
+      &[color="default"] {
+        background-color: #f1f3f4 !important;
+        color: #5f6368 !important;
+      }
+    }
+  }
+}

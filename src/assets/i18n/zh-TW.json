@@ -624,5 +624,54 @@
       "update_failed": "更新評價失敗",
       "delete_failed": "刪除評價失敗"
     }
+  },
+  "inventory": {
+    "title": "庫存管理",
+    "history": {
+      "title": "庫存交易歷史",
+      "subtitle": "查看所有庫存變動記錄，追蹤商品進出庫狀況"
+    },
+    "type": {
+      "sale": "銷售出庫",
+      "return": "退貨入庫",
+      "adjustment": "手動調整",
+      "initial": "期初建立"
+    },
+    "reference": {
+      "order": "訂單",
+      "manual": "手動",
+      "system": "系統"
+    },
+    "stats": {
+      "current_stock": "當前庫存",
+      "total_sales": "總銷售量",
+      "total_returns": "總退貨量",
+      "total_adjustments": "總調整量"
+    },
+    "filter": {
+      "search": "搜尋",
+      "search_placeholder": "搜尋商品名稱、SKU、訂單編號...",
+      "type": "交易類型",
+      "reference_type": "參考類型",
+      "start_date": "開始日期",
+      "end_date": "結束日期"
+    },
+    "table": {
+      "created_at": "交易時間",
+      "product": "商品",
+      "type": "類型",
+      "quantity_change": "數量變更",
+      "before_quantity": "變更前",
+      "after_quantity": "變更後",
+      "reference": "參考來源",
+      "created_by": "操作人員",
+      "note": "備註"
+    },
+    "no_transactions": "目前沒有庫存交易記錄",
+    "export_csv": "匯出 CSV",
+    "common": {
+      "all": "全部",
+      "reset": "重置"
+    }
   }
 }
