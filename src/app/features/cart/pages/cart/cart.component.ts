@@ -214,9 +214,8 @@ export class CartComponent implements OnInit {
    * Go to checkout
    */
   checkout(): void {
-    // TODO: 實作結帳頁面
     this.logger.info('Checkout:', this.cartSummary());
-    alert('結帳功能開發中...');
+    this.router.navigate(['/checkout']);
   }
 
   /**
