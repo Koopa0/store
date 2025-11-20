@@ -167,9 +167,9 @@ export class NotificationService {
     // 合併配置
     const config: MatSnackBarConfig = {
       ...this.defaultConfig,
-      duration: options?.duration,
-      horizontalPosition: options?.horizontalPosition,
-      verticalPosition: options?.verticalPosition,
+      ...(options?.duration !== undefined && { duration: options.duration }),
+      ...(options?.horizontalPosition && { horizontalPosition: options.horizontalPosition }),
+      ...(options?.verticalPosition && { verticalPosition: options.verticalPosition }),
       panelClass: this.getPanelClass(type, options?.panelClass),
     };
 

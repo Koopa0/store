@@ -157,11 +157,14 @@
  * User Button
  */
 .user-button {
-  display: flex;
-  align-items: center;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
   gap: 0.5rem;
   padding: 0.25rem 0.75rem;
   color: white;
+  min-width: auto !important;
 
   @media (max-width: 768px) {
     .user-name {

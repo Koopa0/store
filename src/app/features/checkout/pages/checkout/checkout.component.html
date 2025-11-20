@@ -430,8 +430,10 @@
                 <span>{{ 'payment.processing.complete' | translate }}</span>
               }
             } @else {
-              <mat-icon>check_circle</mat-icon>
-              <span>{{ 'checkout.submit_order' | translate }}</span>
+              <ng-container>
+                <mat-icon>check_circle</mat-icon>
+                <span>{{ 'checkout.submit_order' | translate }}</span>
+              </ng-container>
             }
           </button>
         </div>
