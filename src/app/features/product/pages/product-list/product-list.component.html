@@ -40,6 +40,18 @@
         }
       </mat-form-field>
 
+      <!-- 分類篩選 Category Filter -->
+      <mat-form-field class="category-field" appearance="outline">
+        <mat-label>{{ 'product.list.category' | translate }}</mat-label>
+        <mat-select [formControl]="categoryControl">
+          @for (category of categories(); track category.path) {
+            <mat-option [value]="category.path">
+              {{ category.name }}
+            </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
       <!-- 排序選擇 Sort Select -->
       <mat-form-field class="sort-field" appearance="outline">
         <mat-label>{{ 'product.list.sortBy' | translate }}</mat-label>

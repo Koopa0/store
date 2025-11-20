@@ -16,7 +16,7 @@
 import { Component, OnInit, inject, signal, DestroyRef, ChangeDetectionStrategy } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
-import { Router, RouterLink } from '@angular/router';
+import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 
@@ -79,6 +79,7 @@ export class ProductListComponent implements OnInit {
   private readonly cartService = inject(CartService);
   private readonly notificationService = inject(NotificationService);
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
   private readonly destroyRef = inject(DestroyRef);
   private readonly logger = inject(LoggerService);
 
@@ -116,6 +117,12 @@ export class ProductListComponent implements OnInit {
   public readonly sortOrderControl = new FormControl<'asc' | 'desc'>('desc');
 
   /**
+   * 分類控制
+   * Category control
+   */
+  public readonly categoryControl = new FormControl('');
+
+  /**
    * 分頁資訊
    * Pagination info
    */
@@ -125,6 +132,17 @@ export class ProductListComponent implements OnInit {
     total: 0,
     totalPages: 0,
   });
+
+  /**
+   * 可用分類列表
+   * Available categories
+   */
+  public readonly categories = signal<Array<{ name: string; path: string }>>([
+    { name: '全部分類', path: '' },
+    { name: '智慧型手機', path: 'smartphones' },
+    { name: '筆記型電腦', path: 'laptops' },
+    { name: '音訊設備', path: 'audio' },
+  ]);
 
   /**
    * 排序選項
@@ -143,8 +161,17 @@ export class ProductListComponent implements OnInit {
    * Initialize
    */
   ngOnInit(): void {
-    // 載入商品
-    this.loadProducts();
+    // 監聽路由參數（用於分類篩選）
+    this.route.params
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((params) => {
+        const categorySlug = params['slug'];
+        if (categorySlug) {
+          // 從 URL 設定分類
+          this.categoryControl.setValue(categorySlug, { emitEvent: false });
+        }
+        this.loadProducts();
+      });
 
     // 監聽搜尋輸入
     this.searchControl.valueChanges
@@ -153,6 +180,13 @@ export class ProductListComponent implements OnInit {
         distinctUntilChanged(), // 只有值改變時才觸發
         takeUntilDestroyed(this.destroyRef)
       )
+      .subscribe(() => {
+        this.loadProducts();
+      });
+
+    // 監聽分類變更
+    this.categoryControl.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.loadProducts();
       });
@@ -182,6 +216,7 @@ export class ProductListComponent implements OnInit {
       page: this.pagination().page,
       limit: this.pagination().limit,
       search: this.searchControl.value || undefined,
+      categoryId: this.categoryControl.value || undefined,
       sortBy: this.sortControl.value || undefined,
       sortOrder: this.sortOrderControl.value || undefined,
       status: 'active', // 只顯示上架中的商品

@@ -48,25 +48,21 @@ export const routes: Routes = [
   },
 
   /**
-   * 首頁路由（需要登入）
-   * Home route (requires authentication)
+   * 首頁路由（無需登入）
+   * Home route (no authentication required)
    */
   {
     path: 'home',
-    canActivate: [authGuard],
     loadComponent: () =>
       import('./pages/home/home.component').then((m) => m.HomeComponent),
   },
 
   /**
-   * 商品路由
-   * Product routes
-   *
-   * 教學說明：懶載入商品相關元件
+   * 商品路由（無需登入，可訪覽）
+   * Product routes (no authentication required)
    */
   {
     path: 'products',
-    canActivate: [authGuard],
     children: [
       {
         path: '',
@@ -86,12 +82,11 @@ export const routes: Routes = [
   },
 
   /**
-   * 分類路由
-   * Categories route
+   * 分類路由（無需登入）
+   * Categories route (no authentication required)
    */
   {
     path: 'categories',
-    canActivate: [authGuard],
     children: [
       {
         path: '',
@@ -183,15 +178,41 @@ export const routes: Routes = [
   },
 
   /**
-   * 管理後台路由（需要管理員權限）
-   * Admin routes (requires ADMIN role)
+   * 個人資料路由
+   * Profile routes
    */
-  // {
-  //   path: 'admin',
-  //   canActivate: [authGuard, roleGuard],
-  //   data: { roles: ['ADMIN'] },
-  //   loadChildren: () => import('./features/admin/admin.routes'),
-  // },
+  {
+    path: 'profile',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/user/pages/address-management/address-management.component').then(
+        (m) => m.AddressManagementComponent
+      ),
+  },
+
+  /**
+   * 設定路由
+   * Settings route
+   */
+  {
+    path: 'settings',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/user/pages/address-management/address-management.component').then(
+        (m) => m.AddressManagementComponent
+      ),
+  },
+
+  /**
+   * 管理後台路由
+   * Admin route (placeholder)
+   */
+  {
+    path: 'admin',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./pages/home/home.component').then((m) => m.HomeComponent),
+  },
 
   /**
    * 404 頁面
@@ -199,6 +220,6 @@ export const routes: Routes = [
    */
   {
     path: '**',
-    redirectTo: '/auth/login',
+    redirectTo: '/home',
   },
 ];

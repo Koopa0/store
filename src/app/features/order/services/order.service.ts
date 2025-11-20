@@ -27,6 +27,7 @@ import {
 } from '@core/models/order.model';
 import { PaginatedResponse, ApiResponse } from '@core/models/common.model';
 import { InventoryService } from '@core/services/inventory.service';
+import { StorageService } from '@core/services/storage.service';
 import { CreateInventoryTransactionRequest } from '@core/models/inventory.model';
 import { UserNotificationService } from '@core/services/user-notification.service';
 import {
@@ -36,10 +37,59 @@ import {
 } from '@core/models/notification.model';
 
 /**
+ * LocalStorage 儲存鍵
+ */
+const STORAGE_KEY = 'mock_orders';
+
+/**
+ * 從 localStorage 載入訂單
+ */
+function loadOrdersFromStorage(storage: StorageService): OrderDetail[] {
+  try {
+    const stored = storage.get<OrderDetail[]>(STORAGE_KEY);
+    if (Array.isArray(stored)) {
+      // 轉換日期字符串回 Date 對象
+      return stored.map(order => ({
+        ...order,
+        createdAt: new Date(order.createdAt),
+        updatedAt: new Date(order.updatedAt),
+        confirmedAt: order.confirmedAt ? new Date(order.confirmedAt) : undefined,
+        paidAt: order.paidAt ? new Date(order.paidAt) : undefined,
+        shippedAt: order.shippedAt ? new Date(order.shippedAt) : undefined,
+        deliveredAt: order.deliveredAt ? new Date(order.deliveredAt) : undefined,
+        completedAt: order.completedAt ? new Date(order.completedAt) : undefined,
+        cancelledAt: order.cancelledAt ? new Date(order.cancelledAt) : undefined,
+        refundedAt: order.refundedAt ? new Date(order.refundedAt) : undefined,
+        items: order.items.map(item => ({
+          ...item,
+          createdAt: new Date(item.createdAt),
+          shippedAt: item.shippedAt ? new Date(item.shippedAt) : undefined,
+          returnedAt: item.returnedAt ? new Date(item.returnedAt) : undefined,
+        })),
+      }));
+    }
+  } catch (error) {
+    console.error('[OrderService] Failed to load orders from storage:', error);
+  }
+  return [];
+}
+
+/**
+ * 保存訂單到 localStorage
+ */
+function saveOrdersToStorage(storage: StorageService, orders: OrderDetail[]): void {
+  try {
+    storage.set(STORAGE_KEY, orders);
+  } catch (error) {
+    console.error('[OrderService] Failed to save orders to storage:', error);
+  }
+}
+
+/**
  * Mock 訂單資料
  * Mock order data (用於示範，實際會從購物車創建)
  */
-const MOCK_ORDERS: OrderDetail[] = [];
+let MOCK_ORDERS: OrderDetail[] = [];
 
 @Injectable({
   providedIn: 'root',
@@ -48,8 +98,17 @@ export class OrderService {
   private readonly http = inject(HttpClient);
   private readonly inventoryService = inject(InventoryService);
   private readonly notificationService = inject(UserNotificationService);
+  private readonly storageService = inject(StorageService);
   private readonly apiUrl = `${environment.apiUrl}/orders`;
   private readonly useMock = true; // TODO: 後端完成後改為 false
+
+  constructor() {
+    // 從 localStorage 載入訂單
+    if (this.useMock) {
+      MOCK_ORDERS = loadOrdersFromStorage(this.storageService);
+      console.log('[OrderService] Loaded orders from storage:', MOCK_ORDERS.length);
+    }
+  }
 
   /**
    * 當前訂單 Signal
@@ -456,6 +515,9 @@ export class OrderService {
     // 儲存到 Mock 資料庫
     MOCK_ORDERS.push(order);
 
+    // 保存到 localStorage
+    saveOrdersToStorage(this.storageService, MOCK_ORDERS);
+
     // 創建訂單建立通知
     return this.createNotificationForOrderStatus(order, OrderStatus.PENDING).pipe(
       map(() => order)
@@ -549,6 +611,9 @@ export class OrderService {
         break;
     }
 
+    // 保存到 localStorage
+    saveOrdersToStorage(this.storageService, MOCK_ORDERS);
+
     // 創建庫存交易記錄（僅當訂單付款時）
     if (status === OrderStatus.PAID) {
       return this.createInventoryTransactionsForOrder(order, 'sale').pipe(
@@ -576,6 +641,9 @@ export class OrderService {
     order.status = OrderStatus.CANCELLED;
     order.cancelledAt = new Date();
     order.updatedAt = new Date();
+
+    // 保存到 localStorage
+    saveOrdersToStorage(this.storageService, MOCK_ORDERS);
 
     // 如果訂單已付款，需要創建退貨交易恢復庫存
     if (order.paidAt) {
