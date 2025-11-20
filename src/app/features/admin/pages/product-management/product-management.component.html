@@ -1,0 +1,260 @@
+<!--
+  商品管理頁面
+  Product Management Page
+-->
+
+<div class="product-management">
+  <!-- 頁面標題 -->
+  <div class="page-header">
+    <div class="header-content">
+      <h1>商品管理</h1>
+      <p>管理所有商店商品、庫存和狀態</p>
+    </div>
+    <div class="header-actions">
+      <button mat-raised-button color="primary" (click)="goToCreateProduct()">
+        <mat-icon>add</mat-icon>
+        新增商品
+      </button>
+      <button mat-stroked-button (click)="exportProducts()">
+        <mat-icon>download</mat-icon>
+        匯出資料
+      </button>
+    </div>
+  </div>
+
+  <!-- 搜尋和篩選 -->
+  <mat-card class="filter-card">
+    <mat-card-content>
+      <div class="filters">
+        <!-- 搜尋 -->
+        <mat-form-field class="search-field" appearance="outline">
+          <mat-label>搜尋商品</mat-label>
+          <input
+            matInput
+            [(ngModel)]="searchTerm"
+            placeholder="輸入商品名稱、分類或描述..."
+          />
+          <mat-icon matPrefix>search</mat-icon>
+          @if (searchTerm()) {
+            <button
+              matSuffix
+              mat-icon-button
+              (click)="searchTerm.set('')"
+              aria-label="清除搜尋"
+            >
+              <mat-icon>clear</mat-icon>
+            </button>
+          }
+        </mat-form-field>
+
+        <!-- 分類篩選 -->
+        <mat-form-field appearance="outline">
+          <mat-label>分類</mat-label>
+          <mat-select [(ngModel)]="categoryFilter">
+            @for (category of categories; track category.value) {
+              <mat-option [value]="category.value">
+                {{ category.label }}
+              </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <!-- 狀態篩選 -->
+        <mat-form-field appearance="outline">
+          <mat-label>狀態</mat-label>
+          <mat-select [(ngModel)]="statusFilter">
+            <mat-option value="all">全部狀態</mat-option>
+            <mat-option value="active">已上架</mat-option>
+            <mat-option value="inactive">已下架</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- 重置按鈕 -->
+        <button
+          mat-stroked-button
+          (click)="resetFilters()"
+          class="reset-btn"
+        >
+          <mat-icon>refresh</mat-icon>
+          重置篩選
+        </button>
+      </div>
+
+      <!-- 結果統計 -->
+      <div class="filter-results">
+        <span>顯示 {{ totalProducts() }} 個商品</span>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- 商品列表表格 -->
+  <mat-card class="table-card">
+    <mat-card-content>
+      <div class="table-container">
+        <table mat-table [dataSource]="pagedProducts()" class="products-table">
+          <!-- 商品圖片 -->
+          <ng-container matColumnDef="image">
+            <th mat-header-cell *matHeaderCellDef>圖片</th>
+            <td mat-cell *matCellDef="let product">
+              <div class="product-image">
+                <img
+                  [src]="product.primaryImageUrl"
+                  [alt]="product.name"
+                  (error)="$any($event.target).src='/assets/images/placeholder.png'"
+                />
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- 商品名稱 -->
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef>商品名稱</th>
+            <td mat-cell *matCellDef="let product">
+              <div class="product-name-cell">
+                <span class="product-name">{{ product.name }}</span>
+                <span class="product-summary">{{ product.summary }}</span>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- 分類 -->
+          <ng-container matColumnDef="category">
+            <th mat-header-cell *matHeaderCellDef>分類</th>
+            <td mat-cell *matCellDef="let product">
+              <mat-chip>{{ product.categoryName }}</mat-chip>
+            </td>
+          </ng-container>
+
+          <!-- 價格 -->
+          <ng-container matColumnDef="price">
+            <th mat-header-cell *matHeaderCellDef>價格</th>
+            <td mat-cell *matCellDef="let product">
+              <div class="price-cell">
+                <span class="current-price">{{
+                  product.price | currencyFormat : 'TWD' : 'symbol'
+                }}</span>
+                @if (product.comparePrice && product.comparePrice > product.price) {
+                  <span class="compare-price">{{
+                    product.comparePrice | currencyFormat : 'TWD' : 'symbol'
+                  }}</span>
+                }
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- 庫存 -->
+          <ng-container matColumnDef="stock">
+            <th mat-header-cell *matHeaderCellDef>庫存</th>
+            <td mat-cell *matCellDef="let product">
+              <div class="stock-cell">
+                <span class="stock-number">{{ product.totalStock }}</span>
+                <span
+                  class="stock-status"
+                  [style.color]="getStockStatusColor(product.totalStock)"
+                >
+                  {{ getStockStatus(product.totalStock) }}
+                </span>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- 狀態 -->
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef>狀態</th>
+            <td mat-cell *matCellDef="let product">
+              <mat-slide-toggle
+                [checked]="product.isActive"
+                (change)="toggleProductStatus(product, $event)"
+                [matTooltip]="product.isActive ? '點擊下架' : '點擊上架'"
+              >
+                {{ product.isActive ? '已上架' : '已下架' }}
+              </mat-slide-toggle>
+            </td>
+          </ng-container>
+
+          <!-- 銷量 -->
+          <ng-container matColumnDef="sold">
+            <th mat-header-cell *matHeaderCellDef>銷量</th>
+            <td mat-cell *matCellDef="let product">
+              {{ product.totalSold }}
+            </td>
+          </ng-container>
+
+          <!-- 評分 -->
+          <ng-container matColumnDef="rating">
+            <th mat-header-cell *matHeaderCellDef>評分</th>
+            <td mat-cell *matCellDef="let product">
+              <div class="rating-cell">
+                <mat-icon class="star-icon">star</mat-icon>
+                <span>{{ product.ratingAverage }}</span>
+                <span class="review-count">({{ product.reviewCount }})</span>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- 操作 -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>操作</th>
+            <td mat-cell *matCellDef="let product">
+              <div class="action-buttons">
+                <button
+                  mat-icon-button
+                  [matMenuTriggerFor]="menu"
+                  aria-label="更多操作"
+                >
+                  <mat-icon>more_vert</mat-icon>
+                </button>
+                <mat-menu #menu="matMenu">
+                  <button mat-menu-item (click)="viewProduct(product.id)">
+                    <mat-icon>visibility</mat-icon>
+                    <span>查看</span>
+                  </button>
+                  <button mat-menu-item (click)="goToEditProduct(product.id)">
+                    <mat-icon>edit</mat-icon>
+                    <span>編輯</span>
+                  </button>
+                  <button
+                    mat-menu-item
+                    (click)="deleteProduct(product)"
+                    class="delete-action"
+                  >
+                    <mat-icon>delete</mat-icon>
+                    <span>刪除</span>
+                  </button>
+                </mat-menu>
+              </div>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+          <!-- 無資料顯示 -->
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" [attr.colspan]="displayedColumns.length">
+              <div class="no-data">
+                <mat-icon>inbox</mat-icon>
+                <p>沒有找到符合條件的商品</p>
+                <button mat-stroked-button (click)="resetFilters()">
+                  重置篩選條件
+                </button>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- 分頁 -->
+      <mat-paginator
+        [length]="totalProducts()"
+        [pageSize]="pageSize()"
+        [pageIndex]="pageIndex()"
+        [pageSizeOptions]="[5, 10, 25, 50, 100]"
+        (page)="onPageChange($event)"
+        showFirstLastButtons
+        aria-label="選擇頁面"
+      >
+      </mat-paginator>
+    </mat-card-content>
+  </mat-card>
+</div>
