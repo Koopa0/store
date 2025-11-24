@@ -8,9 +8,36 @@
   3. 商品卡片設計
   4. 搜尋和篩選 UI
   5. 分頁元件
+  6. 左側分類導航
 -->
 
 <div class="product-list-page">
+  <!-- 左側分類導航 Category Sidebar -->
+  <aside class="category-sidebar">
+    <div class="sidebar-header">
+      <h2 class="sidebar-title">
+        <mat-icon>category</mat-icon>
+        商品分類
+      </h2>
+    </div>
+    <mat-divider></mat-divider>
+    <mat-nav-list class="category-list">
+      @for (category of categories(); track category.slug) {
+        <mat-list-item
+          class="category-item"
+          [class.active]="selectedCategory() === category.slug"
+          (click)="selectCategory(category.slug)"
+        >
+          <mat-icon matListItemIcon class="category-icon">{{ category.icon }}</mat-icon>
+          <span matListItemTitle class="category-name">{{ category.name }}</span>
+          <span matListItemMeta class="category-count" [matBadge]="category.count" matBadgeColor="primary"></span>
+        </mat-list-item>
+      }
+    </mat-nav-list>
+  </aside>
+
+  <!-- 主內容區域 Main Content Area -->
+  <div class="main-content">
   <!-- 頁面標題和搜尋列 Page Header and Search Bar -->
   <div class="page-header">
     <div class="header-content">
@@ -38,18 +65,6 @@
             <mat-icon>close</mat-icon>
           </button>
         }
-      </mat-form-field>
-
-      <!-- 分類篩選 Category Filter -->
-      <mat-form-field class="category-field" appearance="outline">
-        <mat-label>{{ 'product.list.category' | translate }}</mat-label>
-        <mat-select [formControl]="categoryControl">
-          @for (category of categories(); track category.path) {
-            <mat-option [value]="category.path">
-              {{ category.name }}
-            </mat-option>
-          }
-        </mat-select>
       </mat-form-field>
 
       <!-- 排序選擇 Sort Select -->
@@ -219,4 +234,5 @@
       </div>
     }
   }
-</div>
+  </div><!-- End of main-content -->
+</div><!-- End of product-list-page -->

@@ -1,0 +1,228 @@
+/**訂單管理頁面樣式*/
+.order-management {
+  padding: 2rem;
+  max-width: 1600px;
+  margin: 0 auto;
+
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+
+    .header-content {
+      h1 {
+        margin: 0 0 0.5rem 0;
+        font-size: 2rem;
+        font-weight: 500;
+      }
+
+      p {
+        margin: 0;
+        color: var(--text-secondary-color, #666);
+        font-size: 0.95rem;
+      }
+    }
+
+    button mat-icon {
+      margin-right: 0.5rem;
+    }
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+
+    .stat-card mat-card-content {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1.5rem;
+    }
+
+    .stat-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      mat-icon {
+        color: white;
+        font-size: 32px;
+        width: 32px;
+        height: 32px;
+      }
+    }
+
+    .stat-content {
+      flex: 1;
+
+      .stat-value {
+        font-size: 2rem;
+        font-weight: 600;
+        line-height: 1;
+        margin-bottom: 0.25rem;
+      }
+
+      .stat-label {
+        font-size: 0.9rem;
+        color: var(--text-secondary-color, #666);
+      }
+    }
+  }
+
+  .filter-card {
+    margin-bottom: 1.5rem;
+
+    mat-card-content {
+      padding: 1.5rem;
+    }
+
+    .filters {
+      display: grid;
+      grid-template-columns: 2fr 1fr auto;
+      gap: 1rem;
+      margin-bottom: 1rem;
+
+      mat-form-field {
+        width: 100%;
+      }
+
+      .reset-btn {
+        height: 56px;
+
+        mat-icon {
+          margin-right: 0.5rem;
+        }
+      }
+    }
+
+    .filter-results {
+      padding: 0.5rem 0;
+      color: var(--text-secondary-color, #666);
+      font-size: 0.9rem;
+    }
+  }
+
+  .table-card {
+    mat-card-content {
+      padding: 0;
+    }
+
+    .table-container {
+      overflow-x: auto;
+    }
+
+    .orders-table {
+      width: 100%;
+      min-width: 1000px;
+
+      th.mat-header-cell {
+        background-color: var(--surface-color, #fafafa);
+        font-weight: 600;
+        padding: 1rem;
+        font-size: 0.9rem;
+      }
+
+      td.mat-cell {
+        padding: 1rem;
+        border-bottom: 1px solid var(--border-color, #e0e0e0);
+      }
+
+      .order-row:hover {
+        background-color: var(--surface-color, #f5f5f5);
+      }
+
+      .order-id {
+        font-weight: 600;
+        color: var(--primary-color, #1976d2);
+        font-family: monospace;
+      }
+
+      .customer-info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+
+        .customer-name {
+          font-weight: 500;
+        }
+
+        .customer-phone {
+          font-size: 0.85rem;
+          color: var(--text-secondary-color, #666);
+        }
+      }
+
+      .total-amount {
+        font-weight: 600;
+        font-size: 1.05rem;
+      }
+
+      mat-chip {
+        color: white !important;
+        font-weight: 500;
+      }
+
+      .delete-action {
+        color: #d32f2f;
+
+        mat-icon {
+          color: #d32f2f;
+        }
+      }
+    }
+
+    .no-data {
+      padding: 4rem 2rem;
+      text-align: center;
+      color: var(--text-secondary-color, #999);
+
+      mat-icon {
+        font-size: 64px;
+        width: 64px;
+        height: 64px;
+        margin-bottom: 1rem;
+        opacity: 0.5;
+      }
+
+      p {
+        margin: 0 0 1.5rem 0;
+        font-size: 1.1rem;
+      }
+    }
+
+    mat-paginator {
+      border-top: 1px solid var(--border-color, #e0e0e0);
+    }
+  }
+}
+
+@media (max-width: 1024px) {
+  .order-management {
+    padding: 1rem;
+
+    .page-header {
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .stats-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .filter-card .filters {
+      grid-template-columns: 1fr;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .order-management .stats-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,277 @@
+/**
+ * Dashboard 樣式
+ */
+
+.dashboard {
+  max-width: 1400px;
+  margin: 0 auto;
+
+  .dashboard-header {
+    margin-bottom: 2rem;
+
+    h1 {
+      font-size: 2rem;
+      font-weight: 600;
+      margin: 0 0 0.5rem 0;
+      color: var(--text-primary);
+    }
+
+    p {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      margin: 0;
+    }
+  }
+
+  /**
+   * 統計卡片
+   */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+
+    .stat-card {
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &.clickable:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+      }
+
+      ::ng-deep .mat-mdc-card-content {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        padding: 1.5rem;
+      }
+
+      .stat-icon {
+        width: 64px;
+        height: 64px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        mat-icon {
+          font-size: 32px;
+          width: 32px;
+          height: 32px;
+          color: white;
+        }
+      }
+
+      .stat-content {
+        flex: 1;
+
+        .stat-title {
+          font-size: 0.875rem;
+          color: var(--text-secondary);
+          margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+          font-size: 1.75rem;
+          font-weight: 600;
+          color: var(--text-primary);
+          margin-bottom: 0.5rem;
+        }
+
+        .stat-change {
+          display: flex;
+          align-items: center;
+          gap: 0.25rem;
+          font-size: 0.875rem;
+          font-weight: 500;
+
+          &.increase {
+            color: #388e3c;
+          }
+
+          &.decrease {
+            color: #d32f2f;
+          }
+
+          mat-icon {
+            font-size: 18px;
+            width: 18px;
+            height: 18px;
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * 內容網格
+   */
+  .content-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+
+    @media (max-width: 960px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /**
+   * 待處理事項
+   */
+  .pending-tasks-card {
+    ::ng-deep .mat-mdc-card-header {
+      align-items: center;
+    }
+
+    .task-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+
+      .task-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+
+        &:hover {
+          background-color: var(--hover-color);
+        }
+
+        .task-icon {
+          width: 48px;
+          height: 48px;
+          border-radius: 8px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          mat-icon {
+            font-size: 24px;
+            width: 24px;
+            height: 24px;
+          }
+        }
+
+        .task-content {
+          flex: 1;
+
+          .task-title {
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+          }
+
+          .task-count {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+          }
+        }
+
+        .task-arrow {
+          color: var(--text-secondary);
+        }
+      }
+    }
+  }
+
+  /**
+   * 最近訂單
+   */
+  .recent-orders-card {
+    ::ng-deep .mat-mdc-card-header {
+      align-items: center;
+
+      .mat-mdc-card-header-text {
+        flex: 1;
+      }
+    }
+
+    .view-all-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .orders-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+
+      .order-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+
+        .order-info {
+          flex: 1;
+
+          .order-id {
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+          }
+
+          .order-customer {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+          }
+        }
+
+        .order-amount {
+          font-weight: 600;
+          color: var(--text-primary);
+        }
+
+        .order-status {
+          font-size: 0.875rem;
+          font-weight: 500;
+          padding: 0.25rem 0.75rem;
+          border-radius: 12px;
+          background-color: currentColor;
+          color: white;
+          opacity: 0.9;
+        }
+      }
+    }
+  }
+
+  /**
+   * 快捷操作
+   */
+  .quick-actions {
+    margin-bottom: 2rem;
+
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin: 0 0 1rem 0;
+      color: var(--text-primary);
+    }
+
+    .actions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+
+      button {
+        height: 56px;
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+      }
+    }
+  }
+}

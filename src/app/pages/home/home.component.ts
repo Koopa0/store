@@ -305,4 +305,15 @@ export class HomeComponent implements OnInit {
       },
     });
   }
+
+  /**
+   * 取得折扣百分比
+   * Get discount percentage
+   */
+  getDiscountPercentage(product: ProductListItem): number {
+    if (!product.comparePrice) return 0;
+    return Math.round(
+      ((product.comparePrice - product.price) / product.comparePrice) * 100
+    );
+  }
 }

@@ -136,25 +136,19 @@ export class HeaderComponent {
       label: 'nav.home',
       path: '/home',
       icon: 'home',
-      requireAuth: true,
+      requireAuth: false, // 主頁對所有人開放
     },
     {
       label: 'nav.products',
       path: '/products',
       icon: 'shopping_bag',
-      requireAuth: true,
-    },
-    {
-      label: 'nav.categories',
-      path: '/categories',
-      icon: 'category',
-      requireAuth: false,
+      requireAuth: false, // 商品頁對所有人開放
     },
     {
       label: 'nav.orders',
       path: '/orders',
       icon: 'receipt_long',
-      requireAuth: true,
+      requireAuth: true, // 訂單需要登入
     },
   ];
 

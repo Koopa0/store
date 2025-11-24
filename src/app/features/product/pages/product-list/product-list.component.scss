@@ -12,9 +12,98 @@
 @use 'styles/theme' as theme;
 
 .product-list-page {
+  display: flex;
+  gap: 2rem;
   padding: 2rem;
-  max-width: 1400px;
+  max-width: 1600px;
   margin: 0 auto;
+
+  /**
+   * 左側分類導航
+   * Category sidebar
+   */
+  .category-sidebar {
+    flex-shrink: 0;
+    width: 260px;
+    background-color: var(--surface-color);
+    border-radius: 12px;
+    box-shadow: var(--shadow-sm);
+    height: fit-content;
+    position: sticky;
+    top: 80px; // Adjust based on header height
+
+    .sidebar-header {
+      padding: 1.5rem;
+
+      .sidebar-title {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin: 0;
+        color: var(--text-primary);
+
+        mat-icon {
+          color: var(--primary-color);
+        }
+      }
+    }
+
+    .category-list {
+      padding: 0.5rem 0;
+
+      .category-item {
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+        border-radius: 0;
+        margin: 0;
+
+        &:hover {
+          background-color: var(--hover-color);
+        }
+
+        &.active {
+          background-color: var(--primary-color-light);
+          border-left: 4px solid var(--primary-color);
+
+          .category-name {
+            color: var(--primary-color);
+            font-weight: 600;
+          }
+
+          .category-icon {
+            color: var(--primary-color);
+          }
+        }
+
+        .category-icon {
+          color: var(--text-secondary);
+          transition: color 0.2s ease;
+        }
+
+        .category-name {
+          font-size: 0.95rem;
+          color: var(--text-primary);
+          transition: color 0.2s ease;
+        }
+
+        .category-count {
+          font-size: 0.875rem;
+          color: var(--text-secondary);
+          font-weight: 500;
+        }
+      }
+    }
+  }
+
+  /**
+   * 主內容區域
+   * Main content area
+   */
+  .main-content {
+    flex: 1;
+    min-width: 0; // Allow content to shrink
 
   /**
    * 頁面標題區
@@ -54,10 +143,6 @@
     .search-field {
       flex: 1;
       min-width: 250px;
-    }
-
-    .category-field {
-      min-width: 180px;
     }
 
     .sort-field {
@@ -389,7 +474,8 @@
       margin: 0 0 1.5rem 0;
     }
   }
-}
+  } // End of .main-content
+} // End of .product-list-page
 
 /**
  * 響應式設計
@@ -399,11 +485,45 @@
 // 平板 Tablet
 @media (max-width: 960px) {
   .product-list-page {
+    flex-direction: column;
     padding: 1.5rem;
 
-    .product-grid {
-      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-      gap: 1rem;
+    .category-sidebar {
+      width: 100%;
+      position: static;
+
+      .category-list {
+        display: flex;
+        overflow-x: auto;
+        padding: 0.5rem;
+        gap: 0.5rem;
+
+        .category-item {
+          flex-shrink: 0;
+          border-radius: 20px;
+          padding: 0.5rem 1rem;
+          border-left: none !important;
+
+          &.active {
+            background-color: var(--primary-color);
+
+            .category-name {
+              color: white;
+            }
+
+            .category-icon {
+              color: white;
+            }
+          }
+        }
+      }
+    }
+
+    .main-content {
+      .product-grid {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 1rem;
+      }
     }
   }
 }
@@ -413,29 +533,40 @@
   .product-list-page {
     padding: 1rem;
 
-    .page-header {
-      .page-title {
-        font-size: 1.5rem;
-      }
+    .category-sidebar {
+      .sidebar-header {
+        padding: 1rem;
 
-      .toolbar {
-        flex-direction: column;
-        align-items: stretch;
-
-        .search-field,
-        .category-field,
-        .sort-field {
-          width: 100%;
-        }
-
-        .sort-order-btn {
-          align-self: flex-end;
+        .sidebar-title {
+          font-size: 1rem;
         }
       }
     }
 
-    .product-grid {
-      grid-template-columns: 1fr;
+    .main-content {
+      .page-header {
+        .page-title {
+          font-size: 1.5rem;
+        }
+
+        .toolbar {
+          flex-direction: column;
+          align-items: stretch;
+
+          .search-field,
+          .sort-field {
+            width: 100%;
+          }
+
+          .sort-order-btn {
+            align-self: flex-end;
+          }
+        }
+      }
+
+      .product-grid {
+        grid-template-columns: 1fr;
+      }
     }
   }
 }

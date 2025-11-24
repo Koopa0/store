@@ -340,6 +340,49 @@ export class OrderService {
   }
 
   /**
+   * 取得所有訂單（管理員用）
+   * Get all orders (for admin)
+   *
+   * @returns Observable<OrderDetail[]>
+   */
+  getOrders(): Observable<OrderDetail[]> {
+    this.loadingSignal.set(true);
+    this.errorSignal.set(null);
+
+    if (this.useMock) {
+      return this.mockGetOrders().pipe(
+        delay(500),
+        map((orders) => {
+          this.loadingSignal.set(false);
+          return orders;
+        }),
+        catchError((error) => {
+          this.errorSignal.set(error.message);
+          this.loadingSignal.set(false);
+          return throwError(() => error);
+        })
+      );
+    }
+
+    return this.http
+      .get<ApiResponse<OrderDetail[]>>(`${this.apiUrl}/admin/all`)
+      .pipe(
+        map((response) => {
+          if (!response.data) {
+            throw new Error('No orders data in response');
+          }
+          this.loadingSignal.set(false);
+          return response.data;
+        }),
+        catchError((error) => {
+          this.errorSignal.set(error.message);
+          this.loadingSignal.set(false);
+          return throwError(() => error);
+        })
+      );
+  }
+
+  /**
    * 更新訂單狀態
    * Update order status
    *
@@ -575,6 +618,13 @@ export class OrderService {
       hasNextPage: page * limit < total,
       hasPreviousPage: page > 1,
     });
+  }
+
+  /**
+   * Mock: 取得所有訂單
+   */
+  private mockGetOrders(): Observable<OrderDetail[]> {
+    return of(MOCK_ORDERS);
   }
 
   /**

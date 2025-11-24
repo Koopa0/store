@@ -112,7 +112,7 @@ export class PaymentService {
       id: 5,
       type: PaymentMethodType.APPLE_PAY,
       name: 'Apple Pay',
-      icon: 'apple',
+      icon: 'smartphone',
       description: '快速且安全',
       isActive: true,
       processingFeeRate: 0.029, // 2.9%
@@ -123,7 +123,7 @@ export class PaymentService {
       id: 6,
       type: PaymentMethodType.GOOGLE_PAY,
       name: 'Google Pay',
-      icon: 'google',
+      icon: 'account_balance_wallet',
       description: '輕觸付款',
       isActive: true,
       processingFeeRate: 0.029, // 2.9%

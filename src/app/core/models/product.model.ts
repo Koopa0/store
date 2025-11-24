@@ -348,6 +348,8 @@ export interface ProductListParams {
   search?: string;
   /** 分類 ID / Category ID */
   categoryId?: string;
+  /** 分類 Slug / Category slug */
+  categorySlug?: string;
   /** 品牌 ID / Brand ID */
   brandId?: string;
   /** 商品狀態 / Product status */

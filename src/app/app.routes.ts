@@ -11,6 +11,7 @@
 
 import { Routes } from '@angular/router';
 import { authGuard, roleGuard } from '@core/guards';
+import { UserRole } from '@core/models/user.model';
 
 export const routes: Routes = [
   /**
@@ -210,13 +211,51 @@ export const routes: Routes = [
 
   /**
    * 管理後台路由
-   * Admin route (placeholder)
+   * Admin routes
    */
   {
     path: 'admin',
-    canActivate: [authGuard],
+    canActivate: [authGuard, roleGuard],
+    data: { roles: [UserRole.ADMIN, UserRole.SUPER_ADMIN] },
     loadComponent: () =>
-      import('./pages/home/home.component').then((m) => m.HomeComponent),
+      import('./features/admin/layout/admin-layout.component').then(
+        (m) => m.AdminLayoutComponent
+      ),
+    children: [
+      {
+        path: '',
+        redirectTo: 'dashboard',
+        pathMatch: 'full',
+      },
+      {
+        path: 'dashboard',
+        loadComponent: () =>
+          import('./features/admin/pages/dashboard/dashboard.component').then(
+            (m) => m.DashboardComponent
+          ),
+      },
+      {
+        path: 'products',
+        loadComponent: () =>
+          import('./features/admin/pages/product-management/product-management.component').then(
+            (m) => m.ProductManagementComponent
+          ),
+      },
+      {
+        path: 'orders',
+        loadComponent: () =>
+          import('./features/admin/pages/order-management/order-management.component').then(
+            (m) => m.OrderManagementComponent
+          ),
+      },
+      {
+        path: 'users',
+        loadComponent: () =>
+          import('./features/admin/pages/user-management/user-management.component').then(
+            (m) => m.UserManagementComponent
+          ),
+      },
+    ],
   },
 
   /**

@@ -1,0 +1,144 @@
+<!--
+  管理後台 Layout
+  Admin Layout
+-->
+
+<mat-sidenav-container class="admin-container">
+  <!-- 側邊導航欄 -->
+  <mat-sidenav
+    mode="side"
+    [opened]="sidenavOpened()"
+    class="admin-sidenav"
+  >
+    <!-- Logo -->
+    <div class="sidenav-header">
+      <div class="logo">
+        <mat-icon class="logo-icon">admin_panel_settings</mat-icon>
+        <h2 class="logo-text">管理後台</h2>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <!-- 導航選單 -->
+    <mat-nav-list class="nav-list">
+      @for (item of navItems; track item.route) {
+        <a
+          mat-list-item
+          [routerLink]="item.route"
+          routerLinkActive="active"
+          class="nav-item"
+        >
+          <mat-icon matListItemIcon [matBadge]="item.badge" matBadgeColor="warn">
+            {{ item.icon }}
+          </mat-icon>
+          <span matListItemTitle>{{ item.label }}</span>
+        </a>
+      }
+    </mat-nav-list>
+
+    <mat-divider></mat-divider>
+
+    <!-- 底部操作 -->
+    <div class="sidenav-footer">
+      <button
+        mat-list-item
+        (click)="goToFrontend()"
+        class="footer-action"
+      >
+        <mat-icon matListItemIcon>storefront</mat-icon>
+        <span matListItemTitle>返回前台</span>
+      </button>
+    </div>
+  </mat-sidenav>
+
+  <!-- 主內容區 -->
+  <mat-sidenav-content class="admin-content">
+    <!-- 頂部工具欄 -->
+    <mat-toolbar color="primary" class="admin-toolbar">
+      <button
+        mat-icon-button
+        (click)="toggleSidenav()"
+        matTooltip="切換側邊欄"
+      >
+        <mat-icon>menu</mat-icon>
+      </button>
+
+      <span class="toolbar-spacer"></span>
+
+      <!-- 主題切換 -->
+      <button
+        mat-icon-button
+        (click)="toggleTheme()"
+        [matTooltip]="currentTheme() === 'dark' ? '切換至亮色模式' : '切換至暗色模式'"
+      >
+        @if (currentTheme() === 'dark') {
+          <mat-icon>light_mode</mat-icon>
+        } @else {
+          <mat-icon>dark_mode</mat-icon>
+        }
+      </button>
+
+      <!-- 通知 -->
+      <button
+        mat-icon-button
+        matTooltip="通知"
+      >
+        <mat-icon matBadge="3" matBadgeColor="warn">notifications</mat-icon>
+      </button>
+
+      <!-- 用戶選單 -->
+      <button
+        mat-button
+        [matMenuTriggerFor]="userMenu"
+        class="user-button"
+      >
+        <img
+          [src]="currentUser()?.avatarUrl || 'https://i.pravatar.cc/40'"
+          [alt]="currentUser()?.fullName || 'Admin'"
+          class="user-avatar"
+        />
+        <span class="user-name">{{ currentUser()?.fullName }}</span>
+        <mat-icon>arrow_drop_down</mat-icon>
+      </button>
+
+      <mat-menu #userMenu="matMenu">
+        <div class="user-menu-header">
+          <img
+            [src]="currentUser()?.avatarUrl || 'https://i.pravatar.cc/60'"
+            [alt]="currentUser()?.fullName || 'Admin'"
+            class="user-menu-avatar"
+          />
+          <div class="user-menu-info">
+            <div class="user-menu-name">{{ currentUser()?.fullName }}</div>
+            <div class="user-menu-role">管理員</div>
+          </div>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <button mat-menu-item routerLink="/profile">
+          <mat-icon>person</mat-icon>
+          <span>個人資料</span>
+        </button>
+
+        <button mat-menu-item routerLink="/settings">
+          <mat-icon>settings</mat-icon>
+          <span>設定</span>
+        </button>
+
+        <mat-divider></mat-divider>
+
+        <button mat-menu-item (click)="logout()">
+          <mat-icon color="warn">logout</mat-icon>
+          <span>登出</span>
+        </button>
+      </mat-menu>
+    </mat-toolbar>
+
+    <!-- 路由內容 -->
+    <div class="content-wrapper">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

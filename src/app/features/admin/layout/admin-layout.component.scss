@@ -1,0 +1,195 @@
+/**
+ * 管理後台 Layout 樣式
+ * Admin Layout Styles
+ */
+
+.admin-container {
+  height: 100vh;
+  overflow: hidden;
+}
+
+/**
+ * 側邊導航欄
+ */
+.admin-sidenav {
+  width: 260px;
+  border-right: 1px solid var(--border-color);
+  background-color: var(--surface-color);
+  display: flex;
+  flex-direction: column;
+
+  .sidenav-header {
+    padding: 1.5rem 1rem;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      color: white;
+
+      .logo-icon {
+        font-size: 32px;
+        width: 32px;
+        height: 32px;
+      }
+
+      .logo-text {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 600;
+      }
+    }
+  }
+
+  .nav-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0.5rem 0;
+
+    .nav-item {
+      margin: 0.25rem 0.5rem;
+      border-radius: 8px;
+      transition: background-color 0.2s ease;
+
+      &:hover {
+        background-color: var(--hover-color);
+      }
+
+      &.active {
+        background-color: var(--primary-color-light);
+        color: var(--primary-color);
+        font-weight: 500;
+
+        mat-icon {
+          color: var(--primary-color);
+        }
+      }
+
+      mat-icon {
+        color: var(--text-secondary);
+      }
+    }
+  }
+
+  .sidenav-footer {
+    padding: 0.5rem;
+    border-top: 1px solid var(--border-color);
+
+    .footer-action {
+      width: 100%;
+      border-radius: 8px;
+      color: var(--text-secondary);
+
+      &:hover {
+        background-color: var(--hover-color);
+      }
+    }
+  }
+}
+
+/**
+ * 主內容區
+ */
+.admin-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: var(--background);
+
+  .admin-toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    .toolbar-spacer {
+      flex: 1;
+    }
+
+    .user-button {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-left: 0.5rem;
+
+      .user-avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+
+      .user-name {
+        @media (max-width: 768px) {
+          display: none;
+        }
+      }
+    }
+  }
+
+  .content-wrapper {
+    flex: 1;
+    overflow-y: auto;
+    padding: 2rem;
+
+    @media (max-width: 768px) {
+      padding: 1rem;
+    }
+  }
+}
+
+/**
+ * 用戶選單
+ */
+.user-menu-header {
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+
+  .user-menu-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .user-menu-info {
+    flex: 1;
+
+    .user-menu-name {
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.25rem;
+    }
+
+    .user-menu-role {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+  }
+}
+
+/**
+ * 響應式設計
+ */
+@media (max-width: 768px) {
+  .admin-sidenav {
+    width: 220px;
+  }
+}
+
+/**
+ * 暗色主題
+ */
+.dark-theme {
+  .admin-sidenav {
+    background-color: var(--background-paper);
+    border-right-color: rgba(255, 255, 255, 0.12);
+  }
+
+  .admin-content {
+    background-color: var(--background);
+  }
+}

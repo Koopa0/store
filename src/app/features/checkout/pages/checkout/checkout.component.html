@@ -97,6 +97,58 @@
       <div class="step-content">
         <h2>{{ 'checkout.step2.shipping_address' | translate }}</h2>
 
+        <!-- 地址選擇器 -->
+        <div class="address-selector">
+          <h3>選擇配送地址</h3>
+          <div class="saved-addresses">
+            @for (address of savedAddresses(); track address.id) {
+              <mat-card
+                class="address-card"
+                [class.selected]="selectedAddressId() === address.id"
+                (click)="selectAddress(address.id)"
+              >
+                <mat-card-content>
+                  <div class="address-header">
+                    <mat-icon>{{ getAddressIcon(address.label) }}</mat-icon>
+                    <span class="address-label">{{ getAddressLabel(address) }}</span>
+                    @if (address.isDefault) {
+                      <mat-chip class="default-chip">預設</mat-chip>
+                    }
+                  </div>
+                  <div class="address-details">
+                    <p class="recipient">{{ address.recipientName }} {{ address.recipientPhone }}</p>
+                    <p class="full-address">
+                      {{ address.postalCode }} {{ address.city }}{{ address.district }}{{ address.streetAddress }}
+                      @if (address.buildingFloor) {
+                        {{ address.buildingFloor }}
+                      }
+                    </p>
+                  </div>
+                  @if (selectedAddressId() === address.id) {
+                    <mat-icon class="check-icon">check_circle</mat-icon>
+                  }
+                </mat-card-content>
+              </mat-card>
+            }
+
+            <!-- 新增地址選項 -->
+            <mat-card
+              class="address-card new-address-card"
+              [class.selected]="selectedAddressId() === 'new'"
+              (click)="selectAddress('new')"
+            >
+              <mat-card-content>
+                <div class="new-address-content">
+                  <mat-icon>add_location</mat-icon>
+                  <span>使用新地址</span>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </div>
+
+        <mat-divider></mat-divider>
+
         <form [formGroup]="shippingForm" class="shipping-form">
           <!-- 收件人資訊 -->
           <div class="form-section">

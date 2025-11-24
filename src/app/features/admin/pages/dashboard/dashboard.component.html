@@ -1,0 +1,113 @@
+<!--
+  管理後台儀表板
+  Admin Dashboard
+-->
+
+<div class="dashboard">
+  <div class="dashboard-header">
+    <h1>管理儀表板</h1>
+    <p>歡迎回來！以下是您商店的即時概況</p>
+  </div>
+
+  <!-- 統計卡片 -->
+  <div class="stats-grid">
+    @for (stat of stats(); track stat.title) {
+      <mat-card class="stat-card" [class.clickable]="stat.route" (click)="navigateToStat(stat.route)">
+        <mat-card-content>
+          <div class="stat-icon" [style.background-color]="stat.color">
+            <mat-icon>{{ stat.icon }}</mat-icon>
+          </div>
+          <div class="stat-content">
+            <div class="stat-title">{{ stat.title }}</div>
+            <div class="stat-value">{{ stat.value }}</div>
+            <div class="stat-change" [class.increase]="stat.changeType === 'increase'" [class.decrease]="stat.changeType === 'decrease'">
+              @if (stat.changeType === 'increase') {
+                <mat-icon>trending_up</mat-icon>
+              } @else {
+                <mat-icon>trending_down</mat-icon>
+              }
+              <span>{{ stat.change }}</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    }
+  </div>
+
+  <div class="content-grid">
+    <!-- 待處理事項 -->
+    <mat-card class="pending-tasks-card">
+      <mat-card-header>
+        <mat-icon mat-card-avatar>pending_actions</mat-icon>
+        <mat-card-title>待處理事項</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="task-list">
+          @for (task of pendingTasks(); track task.title) {
+            <div class="task-item" [routerLink]="task.route">
+              <div class="task-icon" [style.background-color]="task.color + '20'">
+                <mat-icon [style.color]="task.color">{{ task.icon }}</mat-icon>
+              </div>
+              <div class="task-content">
+                <div class="task-title">{{ task.title }}</div>
+                <div class="task-count">{{ task.count }} 個項目</div>
+              </div>
+              <mat-icon class="task-arrow">chevron_right</mat-icon>
+            </div>
+          }
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- 最近訂單 -->
+    <mat-card class="recent-orders-card">
+      <mat-card-header>
+        <mat-icon mat-card-avatar>receipt_long</mat-icon>
+        <mat-card-title>最近訂單</mat-card-title>
+        <button mat-button routerLink="/admin/orders" class="view-all-btn">
+          查看全部
+          <mat-icon>arrow_forward</mat-icon>
+        </button>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="orders-list">
+          @for (order of recentOrders(); track order.id) {
+            <div class="order-item">
+              <div class="order-info">
+                <div class="order-id">{{ order.id }}</div>
+                <div class="order-customer">{{ order.customer }}</div>
+              </div>
+              <div class="order-amount">{{ order.amount }}</div>
+              <div class="order-status" [style.color]="getStatusColor(order.status)">
+                {{ getStatusText(order.status) }}
+              </div>
+            </div>
+          }
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- 快捷操作 -->
+  <div class="quick-actions">
+    <h2>快捷操作</h2>
+    <div class="actions-grid">
+      <button mat-raised-button color="primary" routerLink="/admin/products/create">
+        <mat-icon>add</mat-icon>
+        新增商品
+      </button>
+      <button mat-raised-button routerLink="/admin/orders">
+        <mat-icon>shopping_cart</mat-icon>
+        查看訂單
+      </button>
+      <button mat-raised-button routerLink="/admin/coupons/create">
+        <mat-icon>local_offer</mat-icon>
+        建立優惠券
+      </button>
+      <button mat-raised-button routerLink="/admin/reports">
+        <mat-icon>assessment</mat-icon>
+        查看報表
+      </button>
+    </div>
+  </div>
+</div>

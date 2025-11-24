@@ -1,0 +1,199 @@
+<!--訂單管理頁面-->
+<div class="order-management">
+  <div class="page-header">
+    <div class="header-content">
+      <h1>訂單管理</h1>
+      <p>管理所有商店訂單、狀態和配送</p>
+    </div>
+    <button mat-stroked-button (click)="exportOrders()">
+      <mat-icon>download</mat-icon>匯出資料
+    </button>
+  </div>
+
+  <!-- 統計卡片 -->
+  <div class="stats-grid">
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-icon" style="background-color: #1976d2;">
+          <mat-icon>shopping_cart</mat-icon>
+        </div>
+        <div class="stat-content">
+          <div class="stat-value">{{ stats().total }}</div>
+          <div class="stat-label">總訂單</div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-icon" style="background-color: #f57c00;">
+          <mat-icon>pending_actions</mat-icon>
+        </div>
+        <div class="stat-content">
+          <div class="stat-value">{{ stats().pending }}</div>
+          <div class="stat-label">待處理</div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-icon" style="background-color: #9c27b0;">
+          <mat-icon>local_shipping</mat-icon>
+        </div>
+        <div class="stat-content">
+          <div class="stat-value">{{ stats().shipped }}</div>
+          <div class="stat-label">已出貨</div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-icon" style="background-color: #388e3c;">
+          <mat-icon>check_circle</mat-icon>
+        </div>
+        <div class="stat-content">
+          <div class="stat-value">{{ stats().completed }}</div>
+          <div class="stat-label">已完成</div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- 搜尋和篩選 -->
+  <mat-card class="filter-card">
+    <mat-card-content>
+      <div class="filters">
+        <mat-form-field class="search-field" appearance="outline">
+          <mat-label>搜尋訂單</mat-label>
+          <input matInput [(ngModel)]="searchTerm" placeholder="輸入訂單編號或客戶姓名..." />
+          <mat-icon matPrefix>search</mat-icon>
+          @if (searchTerm()) {
+            <button matSuffix mat-icon-button (click)="searchTerm.set('')">
+              <mat-icon>clear</mat-icon>
+            </button>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>訂單狀態</mat-label>
+          <mat-select [(ngModel)]="statusFilter">
+            @for (status of orderStatuses; track status.value) {
+              <mat-option [value]="status.value">{{ status.label }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <button mat-stroked-button (click)="resetFilters()" class="reset-btn">
+          <mat-icon>refresh</mat-icon>重置篩選
+        </button>
+      </div>
+      <div class="filter-results">
+        <span>顯示 {{ totalOrders() }} 筆訂單</span>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- 訂單列表表格 -->
+  <mat-card class="table-card">
+    <mat-card-content>
+      <div class="table-container">
+        <table mat-table [dataSource]="pagedOrders()" class="orders-table">
+          <ng-container matColumnDef="orderId">
+            <th mat-header-cell *matHeaderCellDef>訂單編號</th>
+            <td mat-cell *matCellDef="let order">
+              <div class="order-id">{{ order.id }}</div>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="customer">
+            <th mat-header-cell *matHeaderCellDef>客戶</th>
+            <td mat-cell *matCellDef="let order">
+              <div class="customer-info">
+                <div class="customer-name">{{ order.shippingAddress.recipientName }}</div>
+                <div class="customer-phone">{{ order.shippingAddress.recipientPhone }}</div>
+              </div>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="date">
+            <th mat-header-cell *matHeaderCellDef>下單時間</th>
+            <td mat-cell *matCellDef="let order">{{ formatDate(order.createdAt) }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="items">
+            <th mat-header-cell *matHeaderCellDef>商品數</th>
+            <td mat-cell *matCellDef="let order">{{ order.items.length }} 項</td>
+          </ng-container>
+
+          <ng-container matColumnDef="total">
+            <th mat-header-cell *matHeaderCellDef>總金額</th>
+            <td mat-cell *matCellDef="let order">
+              <div class="total-amount">{{ order.totalAmount | currencyFormat:'TWD':'symbol' }}</div>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef>狀態</th>
+            <td mat-cell *matCellDef="let order">
+              <mat-chip [style.background-color]="getStatusColor(order.status)">
+                {{ getStatusText(order.status) }}
+              </mat-chip>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>操作</th>
+            <td mat-cell *matCellDef="let order">
+              <button mat-icon-button [matMenuTriggerFor]="menu">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #menu="matMenu">
+                <button mat-menu-item (click)="viewOrderDetail(order.id)">
+                  <mat-icon>visibility</mat-icon><span>查看詳情</span>
+                </button>
+                <mat-divider></mat-divider>
+                <button mat-menu-item (click)="changeOrderStatus(order, OrderStatus.PROCESSING)" [disabled]="order.status !== OrderStatus.PENDING">
+                  <mat-icon>play_arrow</mat-icon><span>開始處理</span>
+                </button>
+                <button mat-menu-item (click)="changeOrderStatus(order, OrderStatus.SHIPPED)" [disabled]="order.status !== OrderStatus.PROCESSING">
+                  <mat-icon>local_shipping</mat-icon><span>標記為已出貨</span>
+                </button>
+                <button mat-menu-item (click)="changeOrderStatus(order, OrderStatus.COMPLETED)" [disabled]="order.status !== OrderStatus.SHIPPED">
+                  <mat-icon>check_circle</mat-icon><span>標記為已完成</span>
+                </button>
+                <mat-divider></mat-divider>
+                <button mat-menu-item (click)="cancelOrder(order)" [disabled]="order.status === OrderStatus.COMPLETED || order.status === OrderStatus.CANCELLED" class="delete-action">
+                  <mat-icon>cancel</mat-icon><span>取消訂單</span>
+                </button>
+              </mat-menu>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns" class="order-row"></tr>
+
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" [attr.colspan]="displayedColumns.length">
+              <div class="no-data">
+                <mat-icon>inbox</mat-icon>
+                <p>沒有找到符合條件的訂單</p>
+                <button mat-stroked-button (click)="resetFilters()">重置篩選條件</button>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <mat-paginator
+        [length]="totalOrders()"
+        [pageSize]="pageSize()"
+        [pageIndex]="pageIndex()"
+        [pageSizeOptions]="[5, 10, 25, 50]"
+        (page)="onPageChange($event)"
+        showFirstLastButtons>
+      </mat-paginator>
+    </mat-card-content>
+  </mat-card>
+</div>

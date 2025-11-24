@@ -109,6 +109,9 @@
   border-radius: 50%;
   background-color: var(--background);
   transition: all var(--transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   &:hover {
     transform: translateY(-2px);
@@ -119,6 +122,9 @@
     font-size: 20px;
     width: 20px;
     height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 

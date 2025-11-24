@@ -50,17 +50,59 @@
     <div class="products-grid">
       @for (product of featuredProducts(); track product.id) {
         <mat-card class="product-card" (click)="goToProduct(product.id)">
-          <div class="product-image-wrapper">
+          <!-- 商品圖片 -->
+          <div class="product-image-container">
             <img [src]="product.primaryImageUrl" [alt]="product.name" class="product-image">
-            <mat-chip class="featured-badge">精選</mat-chip>
+
+            <!-- 折扣標籤 -->
+            @if (product.comparePrice && product.comparePrice > product.price) {
+              <div class="discount-badge">
+                -{{ getDiscountPercentage(product) }}%
+              </div>
+            }
+
+            <!-- 精選標籤 -->
+            <mat-chip class="featured-chip">
+              <mat-icon>star</mat-icon>
+              精選
+            </mat-chip>
           </div>
-          <mat-card-content>
+
+          <!-- 商品資訊 -->
+          <mat-card-content class="product-info">
+            <!-- 分類 -->
+            <div class="product-category">{{ product.categoryName }}</div>
+
+            <!-- 商品名稱 -->
             <h3 class="product-name">{{ product.name }}</h3>
-            <p class="product-price">{{ product.price | currencyFormat:'TWD':'symbol' }}</p>
-            <button mat-button color="primary" class="product-action" (click)="addToCart(product, $event)">
-              <mat-icon>shopping_cart</mat-icon>
-              加入購物車
-            </button>
+
+            <!-- 簡短描述 -->
+            <p class="product-description">{{ product.summary }}</p>
+
+            <!-- 評分和銷量 -->
+            <div class="product-meta">
+              <div class="rating">
+                <mat-icon class="star-icon">star</mat-icon>
+                <span class="rating-value">{{ product.ratingAverage }}</span>
+                <span class="review-count">({{ product.reviewCount }})</span>
+              </div>
+              <div class="sold-count">已售 {{ product.totalSold }}</div>
+            </div>
+
+            <!-- 價格和購買 -->
+            <div class="product-footer">
+              <div class="price-container">
+                @if (product.comparePrice && product.comparePrice > product.price) {
+                  <span class="compare-price">{{ product.comparePrice | currencyFormat:'TWD':'symbol' }}</span>
+                }
+                <span class="current-price">{{ product.price | currencyFormat:'TWD':'symbol' }}</span>
+              </div>
+
+              <button mat-raised-button color="primary" class="add-to-cart-btn" (click)="addToCart(product, $event)">
+                <mat-icon>shopping_cart</mat-icon>
+                加入購物車
+              </button>
+            </div>
           </mat-card-content>
         </mat-card>
       }
@@ -77,17 +119,59 @@
     <div class="products-grid">
       @for (product of newArrivals(); track product.id) {
         <mat-card class="product-card" (click)="goToProduct(product.id)">
-          <div class="product-image-wrapper">
+          <!-- 商品圖片 -->
+          <div class="product-image-container">
             <img [src]="product.primaryImageUrl" [alt]="product.name" class="product-image">
-            <mat-chip class="new-badge">新品</mat-chip>
+
+            <!-- 折扣標籤 -->
+            @if (product.comparePrice && product.comparePrice > product.price) {
+              <div class="discount-badge">
+                -{{ getDiscountPercentage(product) }}%
+              </div>
+            }
+
+            <!-- 新品標籤 -->
+            <mat-chip class="new-chip">
+              <mat-icon>new_releases</mat-icon>
+              新品
+            </mat-chip>
           </div>
-          <mat-card-content>
+
+          <!-- 商品資訊 -->
+          <mat-card-content class="product-info">
+            <!-- 分類 -->
+            <div class="product-category">{{ product.categoryName }}</div>
+
+            <!-- 商品名稱 -->
             <h3 class="product-name">{{ product.name }}</h3>
-            <p class="product-price">{{ product.price | currencyFormat:'TWD':'symbol' }}</p>
-            <button mat-button color="primary" class="product-action" (click)="addToCart(product, $event)">
-              <mat-icon>shopping_cart</mat-icon>
-              加入購物車
-            </button>
+
+            <!-- 簡短描述 -->
+            <p class="product-description">{{ product.summary }}</p>
+
+            <!-- 評分和銷量 -->
+            <div class="product-meta">
+              <div class="rating">
+                <mat-icon class="star-icon">star</mat-icon>
+                <span class="rating-value">{{ product.ratingAverage }}</span>
+                <span class="review-count">({{ product.reviewCount }})</span>
+              </div>
+              <div class="sold-count">已售 {{ product.totalSold }}</div>
+            </div>
+
+            <!-- 價格和購買 -->
+            <div class="product-footer">
+              <div class="price-container">
+                @if (product.comparePrice && product.comparePrice > product.price) {
+                  <span class="compare-price">{{ product.comparePrice | currencyFormat:'TWD':'symbol' }}</span>
+                }
+                <span class="current-price">{{ product.price | currencyFormat:'TWD':'symbol' }}</span>
+              </div>
+
+              <button mat-raised-button color="primary" class="add-to-cart-btn" (click)="addToCart(product, $event)">
+                <mat-icon>shopping_cart</mat-icon>
+                加入購物車
+              </button>
+            </div>
           </mat-card-content>
         </mat-card>
       }
